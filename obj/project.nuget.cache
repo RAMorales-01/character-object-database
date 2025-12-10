@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "u9Y3Swnxk+w=",
+  "dgSpecHash": "G2tSQKrKf78=",
   "success": true,
-  "projectFilePath": "C:\\Users\\ruben\\Desktop\\practice\\characterPartyDatabase\\characterPartyDatabase.csproj",
+  "projectFilePath": "C:\\Users\\ruben\\desktop\\practice\\characterPartyDatabase\\characterPartyDatabase.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ruben\\.nuget\\packages\\microsoft.data.sqlite\\10.0.1\\microsoft.data.sqlite.10.0.1.nupkg.sha512",
     "C:\\Users\\ruben\\.nuget\\packages\\microsoft.data.sqlite.core\\10.0.1\\microsoft.data.sqlite.core.10.0.1.nupkg.sha512",
