@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "characterPartyDatabase/1.0.0": {
+        "runtime": {
+          "characterPartyDatabase.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "characterPartyDatabase/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -1,0 +1,14 @@
+C:\Users\ruben\desktop\practice\characterPartyDatabase\bin\Debug\net9.0\characterPartyDatabase.exe
+C:\Users\ruben\desktop\practice\characterPartyDatabase\bin\Debug\net9.0\characterPartyDatabase.deps.json
+C:\Users\ruben\desktop\practice\characterPartyDatabase\bin\Debug\net9.0\characterPartyDatabase.runtimeconfig.json
+C:\Users\ruben\desktop\practice\characterPartyDatabase\bin\Debug\net9.0\characterPartyDatabase.dll
+C:\Users\ruben\desktop\practice\characterPartyDatabase\bin\Debug\net9.0\characterPartyDatabase.pdb
+C:\Users\ruben\desktop\practice\characterPartyDatabase\obj\Debug\net9.0\characterPartyDatabase.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ruben\desktop\practice\characterPartyDatabase\obj\Debug\net9.0\characterPartyDatabase.AssemblyInfoInputs.cache
+C:\Users\ruben\desktop\practice\characterPartyDatabase\obj\Debug\net9.0\characterPartyDatabase.AssemblyInfo.cs
+C:\Users\ruben\desktop\practice\characterPartyDatabase\obj\Debug\net9.0\characterPartyDatabase.csproj.CoreCompileInputs.cache
+C:\Users\ruben\desktop\practice\characterPartyDatabase\obj\Debug\net9.0\characterPartyDatabase.dll
+C:\Users\ruben\desktop\practice\characterPartyDatabase\obj\Debug\net9.0\refint\characterPartyDatabase.dll
+C:\Users\ruben\desktop\practice\characterPartyDatabase\obj\Debug\net9.0\characterPartyDatabase.pdb
+C:\Users\ruben\desktop\practice\characterPartyDatabase\obj\Debug\net9.0\characterPartyDatabase.genruntimeconfig.cache
+C:\Users\ruben\desktop\practice\characterPartyDatabase\obj\Debug\net9.0\ref\characterPartyDatabase.dll
