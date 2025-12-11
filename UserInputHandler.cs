@@ -4,10 +4,15 @@ namespace PartyDatabase
 {
     class UserInputHandler
     {
-        private static int nameLengthLimit = 10;
-
+        ///<summary>
+        ///To enter the name of each character, length limit to 10 characters long.
+        ///</summary>
+        ///<param name="prompt">prompts user to enter a name</param>
+        ///<returns>string for the name of the character</returns>
         public static string AddName(string prompt)
         {
+            const int nameLengthLimit = 10;//name length limit
+
             string nameInput = string.Empty;
 
             while(true)
@@ -30,6 +35,15 @@ namespace PartyDatabase
             }
         }
 
+        ///<summary>
+        ///To add points to each stat value(starts at 10 to a maximum of 20 for each stat)
+        ///</summary>
+        ///<param name="prompt">prompts user to add the desire points to the current stat</param>
+        ///<param name="statName">name of the current stat</param>
+        ///<param name="minValue">limits the minimum value each stat can have</param>
+        ///<param name="maxValue">limits the maximum value each stat can have</param>
+        ///<param name="points">quantity of points the user can add to each character</param>
+        ///<returns>int which is the final stat value after the allocation of the available points</returns>
         public static int AddStatValue(string prompt, string statName, int minValue, int maxValue, ref int points)
         {
             while(true)
@@ -74,6 +88,13 @@ namespace PartyDatabase
             }
         }
 
+        ///<summary>
+        ///Helper method for AddStatValue, to confirm the added points
+        ///</summary>
+        ///<param name="prompt">ask user to confirm is the points allocated to the current stat is correct</param>
+        ///<param name="statInput">int input for how many points the user choose to add to the current stat</param>
+        ///<param name="statName">name of the current stat at work</param>
+        ///<returns>boolean, if true user confirm stat allocation as correct else user can change the points allocated</returns>
         private static bool PointsConfirmation(string prompt, int statInput, string statName)
         {
             while(true)

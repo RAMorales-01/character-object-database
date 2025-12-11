@@ -12,6 +12,7 @@ namespace PartyDatabase
 
         ///<summary>
         ///Ensures the database and folder exist
+        ///</summary>
         public static void VerifyDatabaseIsCreated()
         {
             Directory.CreateDirectory(Path.GetDirectoryName(_databasePathFile));
@@ -27,6 +28,10 @@ namespace PartyDatabase
             }
         }
 
+        ///<summary>
+        ///Insert the character object to the database
+        ///</summary>
+        ///<param name="character">current character object to be inserted to the database</param>
         private static void InsertCharacter(Character character)
         {
             using(SqliteConnection connection = new SqliteConnection(_connectionString))
@@ -46,6 +51,28 @@ namespace PartyDatabase
                 addCharacterCommand.ExecuteNonQuery();
             }
         }
+
+        ///<summary>
+        ///To create the an instance of the Character class
+        ///</summary>
+        ///<returns>instance of the Character class</returns>
+        public static Character CreateCharacter(int id)
+        {
+            int points = 30;
+
+            var name = UserInputHandler.AddName("Enter name: ");
+            var strength = UserInputHandler.AddStatValue("Add points: ", "Strength", Character._minStatValue, Character._maxStatValue, ref points);
+            var constitution = UserInputHandler.AddStatValue("Add points: ", "Constitution", Character._minStatValue, Character._maxStatValue, ref points);
+            var dexterity = UserInputHandler.AddStatValue("Add points: ", "Dexterity", Character._minStatValue, Character._maxStatValue, ref points);
+            var intelligence = UserInputHandler.AddStatValue("Add points: ", "Intelligence", Character._minStatValue, Character._maxStatValue, ref points);
+            var wisdom = UserInputHandler.AddStatValue("Add points: ", "Wisdom", Character._minStatValue, Character._maxStatValue, ref points);
+            var charisma = UserInputHandler.AddStatValue("Add points: ", "Charisma", Character._minStatValue, Character._maxStatValue, ref points);
+
+            Character character = new Character(id, name, strength, constitution, dexterity, intelligence, wisdom, charisma);
+
+            return character; 
+        }
+        
         //TODO: GetAllCharacters method
     }
 }

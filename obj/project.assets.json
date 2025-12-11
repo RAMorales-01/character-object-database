@@ -345,11 +345,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ruben\\Desktop\\practice\\characterPartyDatabase\\characterPartyDatabase.csproj",
+      "projectUniqueName": "C:\\Users\\ruben\\desktop\\practice\\characterPartyDatabase\\characterPartyDatabase.csproj",
       "projectName": "characterPartyDatabase",
-      "projectPath": "C:\\Users\\ruben\\Desktop\\practice\\characterPartyDatabase\\characterPartyDatabase.csproj",
+      "projectPath": "C:\\Users\\ruben\\desktop\\practice\\characterPartyDatabase\\characterPartyDatabase.csproj",
       "packagesPath": "C:\\Users\\ruben\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ruben\\Desktop\\practice\\characterPartyDatabase\\obj\\",
+      "outputPath": "C:\\Users\\ruben\\desktop\\practice\\characterPartyDatabase\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ruben\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -358,6 +358,7 @@
         "net9.0"
       ],
       "sources": {
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
