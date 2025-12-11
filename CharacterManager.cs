@@ -20,13 +20,32 @@ namespace PartyDatabase
             {
                 connection.Open();
                 SqliteCommand command = connection.CreateCommand();
-                command.CommandText(@"CREATE TABLE IF NOT EXISTS Characters (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                command.CommandText = @"CREATE TABLE IF NOT EXISTS Characters (id INTEGER PRIMARY KEY AUTOINCREMENT, 
                 Name TEXT NOT NULL, Strength INTEGER NOT NULL, Constitution INTEGER NOT NULL, Dexterity INTEGER NOT NULL, 
-                Intelligence INTEGER NOT NULL, Wisdom INTEGER NOT NULL, Charisma INTEGER NOT NULL);");
+                Intelligence INTEGER NOT NULL, Wisdom INTEGER NOT NULL, Charisma INTEGER NOT NULL);";
                 command.ExecuteNonQuery();
             }
         }
 
-        //TODO: InsertCharacter methods and GetAllCharacters method
+        private static void InsertCharacter(Character character)
+        {
+            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open(); 
+
+                SqliteCommand addCharacterCommand = connection.CreateCommand();
+                addCharacterCommand.CommandText = @"INSERT INTO Characters (Name, Strength, Constitution, Dexterity, Intelligence, Wisdom, Charisma) 
+                VALUES (@name, @strength, @constitution, @dexterity, @intelligence, @wisdom, @charisma)";
+                addCharacterCommand.Parameters.AddWithValue("@name", character.Name);
+                addCharacterCommand.Parameters.AddWithValue("@strength", character.Strength);
+                addCharacterCommand.Parameters.AddWithValue("@constitution", character.Constitution);
+                addCharacterCommand.Parameters.AddWithValue("@dexterity", character.Dexterity);
+                addCharacterCommand.Parameters.AddWithValue("@intelligence", character.Intelligence);
+                addCharacterCommand.Parameters.AddWithValue("@wisdom", character.Wisdom);
+                addCharacterCommand.Parameters.AddWithValue("@charisma", character.Charisma);
+                addCharacterCommand.ExecuteNonQuery();
+            }
+        }
+        //TODO: GetAllCharacters method
     }
 }
