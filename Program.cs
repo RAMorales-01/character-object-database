@@ -12,19 +12,20 @@ namespace PartyDatabase
             Console.WriteLine("\nPress any key to begin.");
             Console.ReadKey(true);
             
-
-            //for testing, remove after
-            int id = 1;
-            var character = CharacterManager.CreateCharacter(id);
-
-            Console.Clear();
-            Console.WriteLine($"Name: {character.Name}\n");
-            Console.WriteLine($"Strength: {character.Strength}");
-            Console.WriteLine($"Constitution: {character.Constitution}");
-            Console.WriteLine($"Dexterity: {character.Dexterity}");
-            Console.WriteLine($"Intelligence: {character.Intelligence}");
-            Console.WriteLine($"Wisdom: {character.Wisdom}");
-            Console.WriteLine($"Charisma: {character.Charisma}\n");
+            //for testing remove after
+            Console.WriteLine("--Database Open--");
+            Console.WriteLine("\nDo you want to create and insert a character?");
+            Console.Write("Y/N: ");
+            string userInput = Console.ReadLine();
+            
+            if(userInput == "y")
+            {
+                CharacterManager.VerifyDatabaseIsCreated();
+            }
+            else
+            {
+                Console.WriteLine("\nGoodbye!");
+            }
         }
     }
 }

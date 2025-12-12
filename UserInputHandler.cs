@@ -98,8 +98,9 @@ namespace PartyDatabase
         ///Helper method for AddStatValue to confirm the added points are correct.
         ///</summary>
         ///<param name="prompt">ask user to confirm is the points allocated to the current stat is correct</param>
-        ///<param name="statInput">int input for how many points the user choose to add to the current stat</param>
         ///<param name="statName">name of the current stat at work</param>
+        ///<param name="statInput">int input for how many points the user choose to add to the current stat</param>
+        ///<param name="points">currently available points to distribute across all stats</param>
         ///<returns>boolean, if true user confirm stat allocation as correct else user can change the points allocated</returns>
         private static bool PointsConfirmation(string prompt, string statName, int statInput, ref int points)
         {
@@ -108,7 +109,7 @@ namespace PartyDatabase
                 while(true)
                 {
                     Console.WriteLine($"\nYou added +{statInput} points to the stat of {statName}, is this correct?");
-                    Console.Write(prompt);
+                    Console.Write("Y/N: ");
                     string userInput = Console.ReadLine().ToLower();
 
                     if(string.Equals(userInput, "y", StringComparison.OrdinalIgnoreCase) || string.Equals(userInput, "yes", StringComparison.OrdinalIgnoreCase))
@@ -147,12 +148,18 @@ namespace PartyDatabase
         ///<param name="wisdom">current wisdom stat of the character</param>
         ///<param name="charisma">current charisma stat of the character</param>
         ///<returns>boolean to confirm the current stats before creating the character instance</returns>
-        public static bool StatsConfirmation(int strength, int constitution, int dexterity, int intelligence, int wisdom, int charisma)
+        public static bool StatsConfirmation(int strength, int constitution, int dexterity, int intelligence, int wisdom, int charisma, ref int points)
         {
             while(true)
             {
                 Console.Clear();
-                Console.WriteLine("Proceed with this stats?\n");
+
+                if(points > 0)
+                {
+                    Console.WriteLine($"WARNING: You have {points} points unassiged, these points will be lost if you dont use them.");
+                }
+
+                Console.WriteLine("\nProceed with this stats?\n");
                 Console.WriteLine($"Str: {strength}");
                 Console.WriteLine($"Con: {constitution}");
                 Console.WriteLine($"Dex: {dexterity}");

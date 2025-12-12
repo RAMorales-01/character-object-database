@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
 
 namespace PartyDatabase
@@ -25,6 +26,8 @@ namespace PartyDatabase
                 Name TEXT NOT NULL, Strength INTEGER NOT NULL, Constitution INTEGER NOT NULL, Dexterity INTEGER NOT NULL, 
                 Intelligence INTEGER NOT NULL, Wisdom INTEGER NOT NULL, Charisma INTEGER NOT NULL);";
                 command.ExecuteNonQuery();
+
+                InsertCharacter(CreateCharacter());
             }
         }
 
@@ -56,13 +59,13 @@ namespace PartyDatabase
         ///To create an instance of the Character class after all the parameters have been confirmed by user.
         ///</summary>
         ///<returns>an instance of the Character class</returns>
-        public static Character CreateCharacter(int id)
+        public static Character CreateCharacter()
         {
-            var name = UserInputHandler.AddName("Enter name: ");
+            var name = UserInputHandler.AddName("Name: ");
 
             while(true)
             {
-                int points = 30;
+                int points = 30;//each new character have a total of 30 points to distribute between the 6 stats.
 
                 var strength = UserInputHandler.AddStatValue("Add points: ", "Strength", Character._minStatValue, Character._maxStatValue, ref points);
                 var constitution = UserInputHandler.AddStatValue("Add points: ", "Constitution", Character._minStatValue, Character._maxStatValue, ref points);
@@ -71,16 +74,37 @@ namespace PartyDatabase
                 var wisdom = UserInputHandler.AddStatValue("Add points: ", "Wisdom", Character._minStatValue, Character._maxStatValue, ref points);
                 var charisma = UserInputHandler.AddStatValue("Add points: ", "Charisma", Character._minStatValue, Character._maxStatValue, ref points);
 
-                bool proceed = UserInputHandler.StatsConfirmation(strength, constitution, dexterity, intelligence, wisdom, charisma);
+                bool proceed = UserInputHandler.StatsConfirmation(strength, constitution, dexterity, intelligence, wisdom, charisma, ref points);
 
                 if(proceed == true)
                 {
-                    Character character = new Character(id, name, strength, constitution, dexterity, intelligence, wisdom, charisma);
+                    Character character = new Character(name, strength, constitution, dexterity, intelligence, wisdom, charisma);
                     return character;
                 }
             } 
         }
         
-        //TODO: GetAllCharacters method
+        public static List<string> GetAllCharacters()
+        {
+            List<string> characters = new List<string>();
+
+            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand retriveCharacters = connection.CreateCommand();
+                retriveCharacters.CommandText = @"SELECT ALL (Name) FROM (Characters);";
+
+                using(SqliteDataReader reader = retriveCharacters.ExecuteReader())
+                {
+                    while(reader.Read())
+                    {
+                        characters.Add(reader.GetString(0));
+                    }
+                }
+            }
+
+            return characters;
+        }
     }
 }
