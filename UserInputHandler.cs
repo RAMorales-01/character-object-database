@@ -5,20 +5,21 @@ namespace PartyDatabase
     class UserInputHandler
     {
         ///<summary>
-        ///To enter the name of each character, length limit to 10 characters long.
+        ///To enter the name of each character or account.
         ///</summary>
         ///<param name="prompt">prompts user to enter a name</param>
         ///<returns>string for the name of the character</returns>
         public static string AddName(string prompt)
         {
-            const int nameLengthLimit = 10;//name length limit
+            const int nameLengthLimit = 10;
 
             string nameInput = string.Empty;
 
             while(true)
             {
                 Console.Clear();
-                Console.WriteLine("NOTE: Character name cannot have more than 10 character in length.");
+                Console.WriteLine($"NOTE: Character name cannot have more than {nameLengthLimit} character in length.\n");
+                Console.WriteLine("Enter the name of this new character.");
                 Console.Write(prompt);
                 nameInput = Console.ReadLine();
 
@@ -28,7 +29,7 @@ namespace PartyDatabase
                 }
                 else
                 {
-                    Console.WriteLine("\nERROR: Invalid input, name cannot be Null or Empty and must have less than 10 characters.\n");
+                    Console.WriteLine($"\nERROR: Invalid input, name cannot be Null or Empty and must have less than {nameLengthLimit} characters.\n");
                     Console.WriteLine("Press any key to try again.");
                     Console.ReadKey();
                 }
@@ -46,24 +47,29 @@ namespace PartyDatabase
         ///<returns>int which is the final stat value after the allocation of the available points</returns>
         public static int AddStatValue(string prompt, string statName, int minValue, int maxValue, ref int points)
         {
+            if(points <= 0)
+            {
+                return minValue;
+            }
+
             while(true)
             {
                 int statTotal = 0;
 
                 Console.Clear();
-                Console.WriteLine("NOTE: Stat cannot be less than 10 and greater than 20.\n");
-                Console.WriteLine($"Available points: {points}");
-                Console.WriteLine($"Current {statName}: {minValue}\n");
+                Console.WriteLine($"NOTE: Each stat value cannot be less than {minValue} and greater than {maxValue}.\n");
+                Console.WriteLine($"You have {points} points remaining\n");
+                Console.WriteLine($"Current {statName} --> {minValue}");
                 Console.Write(prompt);
 
                 if(int.TryParse(Console.ReadLine(), out int statInput))
                 {
-                    statTotal = minValue + statInput;
-
-                    bool userConfirmation = PointsConfirmation("Y/N: ", statInput, statName);
+                    bool userConfirmation = PointsConfirmation("Y/N: ", statName, statInput, ref points);
 
                     if(userConfirmation == true)
                     {
+                        statTotal = minValue + statInput;
+                        
                         if(statTotal <= maxValue)
                         {
                             points -= statInput;
@@ -89,19 +95,71 @@ namespace PartyDatabase
         }
 
         ///<summary>
-        ///Helper method for AddStatValue, to confirm the added points
+        ///Helper method for AddStatValue to confirm the added points are correct.
         ///</summary>
         ///<param name="prompt">ask user to confirm is the points allocated to the current stat is correct</param>
         ///<param name="statInput">int input for how many points the user choose to add to the current stat</param>
         ///<param name="statName">name of the current stat at work</param>
         ///<returns>boolean, if true user confirm stat allocation as correct else user can change the points allocated</returns>
-        private static bool PointsConfirmation(string prompt, int statInput, string statName)
+        private static bool PointsConfirmation(string prompt, string statName, int statInput, ref int points)
+        {
+            if(statInput <= points)
+            {
+                while(true)
+                {
+                    Console.WriteLine($"\nYou added +{statInput} points to the stat of {statName}, is this correct?");
+                    Console.Write(prompt);
+                    string userInput = Console.ReadLine().ToLower();
+
+                    if(string.Equals(userInput, "y", StringComparison.OrdinalIgnoreCase) || string.Equals(userInput, "yes", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                    else if(string.Equals(userInput, "n", StringComparison.OrdinalIgnoreCase) || string.Equals(userInput, "no", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nERROR: Invalid input, expected 'y' for yes or 'n' for no. Press any key to try again.");
+                        Console.ReadKey();
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"\nERROR: Invalid input, you cannot add more points than you currently have available --> {points}");
+                Console.WriteLine("Press any key to try again.");
+                Console.ReadKey();
+                
+                return false;
+            }
+        }
+
+        ///<summary>
+        ///Displays to the user the current stats for the characters and to confirm the distribution of points
+        ///is correct before creating the instance of the character class.
+        ///</summary>
+        ///<param name="strength">current strength stat of the character</param>
+        ///<param name="constitution">current constitution stat of the character</param>
+        ///<param name="dexterity">current dexterity stat of the character</param>
+        ///<param name="intelligence">current intelligence stat of the character</param>
+        ///<param name="wisdom">current wisdom stat of the character</param>
+        ///<param name="charisma">current charisma stat of the character</param>
+        ///<returns>boolean to confirm the current stats before creating the character instance</returns>
+        public static bool StatsConfirmation(int strength, int constitution, int dexterity, int intelligence, int wisdom, int charisma)
         {
             while(true)
             {
                 Console.Clear();
-                Console.WriteLine($"You added {statInput} points to the stat of {statName}, is this correct?");
-                Console.Write(prompt);
+                Console.WriteLine("Proceed with this stats?\n");
+                Console.WriteLine($"Str: {strength}");
+                Console.WriteLine($"Con: {constitution}");
+                Console.WriteLine($"Dex: {dexterity}");
+                Console.WriteLine($"Int: {intelligence}");
+                Console.WriteLine($"Wis: {wisdom}");
+                Console.WriteLine($"Cha: {charisma}\n");
+                Console.Write("Y/N: ");
                 string userInput = Console.ReadLine().ToLower();
 
                 if(string.Equals(userInput, "y", StringComparison.OrdinalIgnoreCase) || string.Equals(userInput, "yes", StringComparison.OrdinalIgnoreCase))

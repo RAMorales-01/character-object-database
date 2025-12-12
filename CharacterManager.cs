@@ -53,24 +53,32 @@ namespace PartyDatabase
         }
 
         ///<summary>
-        ///To create the an instance of the Character class
+        ///To create an instance of the Character class after all the parameters have been confirmed by user.
         ///</summary>
-        ///<returns>instance of the Character class</returns>
+        ///<returns>an instance of the Character class</returns>
         public static Character CreateCharacter(int id)
         {
-            int points = 30;
-
             var name = UserInputHandler.AddName("Enter name: ");
-            var strength = UserInputHandler.AddStatValue("Add points: ", "Strength", Character._minStatValue, Character._maxStatValue, ref points);
-            var constitution = UserInputHandler.AddStatValue("Add points: ", "Constitution", Character._minStatValue, Character._maxStatValue, ref points);
-            var dexterity = UserInputHandler.AddStatValue("Add points: ", "Dexterity", Character._minStatValue, Character._maxStatValue, ref points);
-            var intelligence = UserInputHandler.AddStatValue("Add points: ", "Intelligence", Character._minStatValue, Character._maxStatValue, ref points);
-            var wisdom = UserInputHandler.AddStatValue("Add points: ", "Wisdom", Character._minStatValue, Character._maxStatValue, ref points);
-            var charisma = UserInputHandler.AddStatValue("Add points: ", "Charisma", Character._minStatValue, Character._maxStatValue, ref points);
 
-            Character character = new Character(id, name, strength, constitution, dexterity, intelligence, wisdom, charisma);
+            while(true)
+            {
+                int points = 30;
 
-            return character; 
+                var strength = UserInputHandler.AddStatValue("Add points: ", "Strength", Character._minStatValue, Character._maxStatValue, ref points);
+                var constitution = UserInputHandler.AddStatValue("Add points: ", "Constitution", Character._minStatValue, Character._maxStatValue, ref points);
+                var dexterity = UserInputHandler.AddStatValue("Add points: ", "Dexterity", Character._minStatValue, Character._maxStatValue, ref points);
+                var intelligence = UserInputHandler.AddStatValue("Add points: ", "Intelligence", Character._minStatValue, Character._maxStatValue, ref points);
+                var wisdom = UserInputHandler.AddStatValue("Add points: ", "Wisdom", Character._minStatValue, Character._maxStatValue, ref points);
+                var charisma = UserInputHandler.AddStatValue("Add points: ", "Charisma", Character._minStatValue, Character._maxStatValue, ref points);
+
+                bool proceed = UserInputHandler.StatsConfirmation(strength, constitution, dexterity, intelligence, wisdom, charisma);
+
+                if(proceed == true)
+                {
+                    Character character = new Character(id, name, strength, constitution, dexterity, intelligence, wisdom, charisma);
+                    return character;
+                }
+            } 
         }
         
         //TODO: GetAllCharacters method

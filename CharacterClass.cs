@@ -20,7 +20,7 @@ namespace PartyDatabase
             {
                 if(value < _minIdValue || value > _maxIdValue)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(Id), "Character id must be between 1 and 6.");
+                    throw new ArgumentOutOfRangeException(nameof(Id), $"Character id must be between {_minIdValue} and {_maxIdValue}.");
                 }
 
                 _id = value;
