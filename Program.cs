@@ -11,9 +11,8 @@ namespace PartyDatabase
             Console.WriteLine("Finally the user will be able to add the character(or account) to the database, delete an existing one or create a new one.\n");
             Console.WriteLine("\nPress any key to begin.");
             Console.ReadKey(true);
-            
-            //for testing remove after
-            /*Console.WriteLine("--Database Open--");
+
+            Console.WriteLine("--Database Open--");
             Console.WriteLine("\nDo you want to retrive the information of a character?");
             Console.Write("Y/N: ");
             string userInput = Console.ReadLine();
@@ -25,10 +24,7 @@ namespace PartyDatabase
             else
             {
                 Console.WriteLine("\nGoodbye!");
-            }*/
-
-            //for testing, remove after.
-            var character = CharacterManager.CreateCharacter();
+            }
         }
     }
 }

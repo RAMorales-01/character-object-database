@@ -27,15 +27,27 @@ namespace PartyDatabase
                 Intelligence INTEGER NOT NULL, Wisdom INTEGER NOT NULL, Charisma INTEGER NOT NULL);";
                 command.ExecuteNonQuery();
 
-                //InsertCharacter(CreateCharacter());
-                //for testing remove after
-                var listOfCharacters = GetListOfNames();
+               
+                InsertCharacter(CreateCharacter());
+                
+                var listOfCharacters = GetIdAndName();
 
-                foreach(var name in listOfCharacters)
+                if(listOfCharacters.Count == 0)
                 {
-                    Console.WriteLine(name);
+                    Console.WriteLine("\nThere are currently no characters\n");
                 }
-                Console.ReadKey();
+                else
+                {
+                    foreach(KeyValuePair<int, string> kvp in listOfCharacters)
+                    {
+                        Console.WriteLine($"{kvp.Key} --- {kvp.Value}");
+                    }
+                }
+
+                Console.WriteLine("\nDelete character?");
+                Console.Write("id: ");
+                int.TryParse(Console.ReadLine(), out int characterId);
+                DeleteCharacter(characterId);
             }
         }
 
@@ -95,28 +107,43 @@ namespace PartyDatabase
         ///<summary>
         ///Retrives all the values from the column name from the database.
         ///</summary>
-        ///<returns>A list of strings with the values form the column name of table characters</returns>
-        public static List<string> GetListOfNames()
+        ///<returns>A dictionary with the id and name of the character</returns>
+        public static Dictionary<int, string> GetIdAndName()
         {
-            List<string> characters = new List<string>();//To stores all the names form the database
+            Dictionary<int, string> characters = new Dictionary<int, string>();//To stores all the names form the database
 
             using(SqliteConnection connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
 
                 SqliteCommand retriveCharacters = connection.CreateCommand();
-                retriveCharacters.CommandText = @"SELECT ALL (Name) FROM (Characters);";
+                retriveCharacters.CommandText = @"SELECT ALL id, Name FROM Characters;";
 
                 using(SqliteDataReader reader = retriveCharacters.ExecuteReader())
                 {
                     while(reader.Read())
                     {
-                        characters.Add(reader.GetString(0));//read names and add them to the list
+                        int id = reader.GetInt32(0);//reads column index 0
+                        string name = reader.GetString(1);//reads column index 1
+                        characters.Add(id, name);
                     }
                 }
             }
 
             return characters;
+        }
+
+        public static void DeleteCharacter(int characterId)
+        {
+            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand deleteCharacterCommand = connection.CreateCommand();
+                deleteCharacterCommand.CommandText = @"DELETE FROM Characters WHERE id = @id";
+                deleteCharacterCommand.Parameters.AddWithValue("@id", characterId);
+                deleteCharacterCommand.ExecuteNonQuery();
+            }
         }
     }
 }
