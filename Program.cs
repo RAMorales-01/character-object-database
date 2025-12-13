@@ -13,8 +13,8 @@ namespace PartyDatabase
             Console.ReadKey(true);
             
             //for testing remove after
-            Console.WriteLine("--Database Open--");
-            Console.WriteLine("\nDo you want to create and insert a character?");
+            /*Console.WriteLine("--Database Open--");
+            Console.WriteLine("\nDo you want to retrive the information of a character?");
             Console.Write("Y/N: ");
             string userInput = Console.ReadLine();
             
@@ -25,7 +25,10 @@ namespace PartyDatabase
             else
             {
                 Console.WriteLine("\nGoodbye!");
-            }
+            }*/
+
+            //for testing, remove after.
+            var character = CharacterManager.CreateCharacter();
         }
     }
 }

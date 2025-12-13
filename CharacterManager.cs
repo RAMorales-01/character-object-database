@@ -27,7 +27,15 @@ namespace PartyDatabase
                 Intelligence INTEGER NOT NULL, Wisdom INTEGER NOT NULL, Charisma INTEGER NOT NULL);";
                 command.ExecuteNonQuery();
 
-                InsertCharacter(CreateCharacter());
+                //InsertCharacter(CreateCharacter());
+                //for testing remove after
+                var listOfCharacters = GetListOfNames();
+
+                foreach(var name in listOfCharacters)
+                {
+                    Console.WriteLine(name);
+                }
+                Console.ReadKey();
             }
         }
 
@@ -84,9 +92,13 @@ namespace PartyDatabase
             } 
         }
         
-        public static List<string> GetAllCharacters()
+        ///<summary>
+        ///Retrives all the values from the column name from the database.
+        ///</summary>
+        ///<returns>A list of strings with the values form the column name of table characters</returns>
+        public static List<string> GetListOfNames()
         {
-            List<string> characters = new List<string>();
+            List<string> characters = new List<string>();//To stores all the names form the database
 
             using(SqliteConnection connection = new SqliteConnection(_connectionString))
             {
@@ -99,7 +111,7 @@ namespace PartyDatabase
                 {
                     while(reader.Read())
                     {
-                        characters.Add(reader.GetString(0));
+                        characters.Add(reader.GetString(0));//read names and add them to the list
                     }
                 }
             }

@@ -47,7 +47,7 @@ namespace PartyDatabase
         ///<returns>int which is the final stat value after the allocation of the available points</returns>
         public static int AddStatValue(string prompt, string statName, int minValue, int maxValue, ref int points)
         {
-            if(points <= 0)
+            if(points <= 0)//if no points left, return the minimum value(10) for the remaining stats
             {
                 return minValue;
             }
@@ -57,7 +57,8 @@ namespace PartyDatabase
                 int statTotal = 0;
 
                 Console.Clear();
-                Console.WriteLine($"NOTE: Each stat value cannot be less than {minValue} and greater than {maxValue}.\n");
+                Console.WriteLine($"NOTE: Each stat value cannot be less than {minValue} and greater than {maxValue}.");
+                Console.WriteLine($"HINT: If you don't want to add points to the current stat just add 0.\n");
                 Console.WriteLine($"You have {points} points remaining\n");
                 Console.WriteLine($"Current {statName} --> {minValue}");
                 Console.Write(prompt);
@@ -109,21 +110,15 @@ namespace PartyDatabase
                 while(true)
                 {
                     Console.WriteLine($"\nYou added +{statInput} points to the stat of {statName}, is this correct?");
-                    Console.Write("Y/N: ");
-                    string userInput = Console.ReadLine().ToLower();
+                    string confirm = YesNoConfirmation("Y/N: ");
 
-                    if(string.Equals(userInput, "y", StringComparison.OrdinalIgnoreCase) || string.Equals(userInput, "yes", StringComparison.OrdinalIgnoreCase))
+                    if(String.Equals(confirm, "yes"))
                     {
                         return true;
                     }
-                    else if(string.Equals(userInput, "n", StringComparison.OrdinalIgnoreCase) || string.Equals(userInput, "no", StringComparison.OrdinalIgnoreCase))
-                    {
-                        return false;
-                    }
                     else
                     {
-                        Console.WriteLine("\nERROR: Invalid input, expected 'y' for yes or 'n' for no. Press any key to try again.");
-                        Console.ReadKey();
+                        return false;
                     }
                 }
             }
@@ -166,16 +161,39 @@ namespace PartyDatabase
                 Console.WriteLine($"Int: {intelligence}");
                 Console.WriteLine($"Wis: {wisdom}");
                 Console.WriteLine($"Cha: {charisma}\n");
-                Console.Write("Y/N: ");
+                
+                string confirm = YesNoConfirmation("Y/N: ");
+
+                if(String.Equals(confirm, "yes"))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        ///<summary>
+        ///Prompts user for confirmation for an action
+        ///</summary>
+        ///<param name="prompt">prompts user for input of 'y' or 'n'</param>
+        ///<returns>string with value of "yes" or "no"</returns>
+        private static string YesNoConfirmation(string prompt)
+        {
+            while(true)
+            {
+                Console.Write(prompt);
                 string userInput = Console.ReadLine().ToLower();
 
                 if(string.Equals(userInput, "y", StringComparison.OrdinalIgnoreCase) || string.Equals(userInput, "yes", StringComparison.OrdinalIgnoreCase))
                 {
-                    return true;
+                    return "yes";
                 }
                 else if(string.Equals(userInput, "n", StringComparison.OrdinalIgnoreCase) || string.Equals(userInput, "no", StringComparison.OrdinalIgnoreCase))
                 {
-                    return false;
+                    return "no";
                 }
                 else
                 {
