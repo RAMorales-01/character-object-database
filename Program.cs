@@ -12,19 +12,8 @@ namespace PartyDatabase
             Console.WriteLine("\nPress any key to begin.");
             Console.ReadKey(true);
 
-            Console.WriteLine("--Database Open--");
-            Console.WriteLine("\nDo you want to retrive the information of a character?");
-            Console.Write("Y/N: ");
-            string userInput = Console.ReadLine();
-            
-            if(userInput == "y")
-            {
-                CharacterManager.VerifyDatabaseIsCreated();
-            }
-            else
-            {
-                Console.WriteLine("\nGoodbye!");
-            }
+            //testing, remove after
+            UserInputHandler.MainScreen();
         }
     }
 }

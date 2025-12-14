@@ -1,9 +1,18 @@
 using System;
+using System.Threading;
 
 namespace PartyDatabase
 {
     class UserInputHandler
     {
+        private enum DatabaseOptions
+        {
+            DisplayList = 1,
+            CreateCharacter,
+            DeleteCharacter,
+            ViewStats
+        }
+
         ///<summary>
         ///To enter the name of each character or account.
         ///</summary>
@@ -200,6 +209,78 @@ namespace PartyDatabase
                     Console.WriteLine("\nERROR: Invalid input, expected 'y' for yes or 'n' for no. Press any key to try again.");
                     Console.ReadKey();
                 }
+            }
+        }
+
+        ///<summary>
+        ///Main screen from where the user can select and manage the database.
+        ///</summary>
+        public static void MainScreen()
+        {
+            int minPermitedOption = (int)DatabaseOptions.DisplayList;
+            int maxPermitedOption = (int)DatabaseOptions.ViewStats;
+
+            while(true)
+            {
+                Console.Clear();
+                Console.WriteLine("----- DATABASE OPEN -----");
+                Thread.Sleep(1000);
+                Console.WriteLine("\nWhat do you want to do?.");
+                Thread.Sleep(1000);
+                Console.WriteLine("\n1- Display List of Characters\n2- Create new Character\n3- Delete Character\n4- See Character Stats");
+                Thread.Sleep(1000);
+                Console.Write("\nSelect option: ");
+
+                if(int.TryParse(Console.ReadLine(), out int userInput) && userInput >= minPermitedOption && userInput <= maxPermitedOption)
+                {
+                    try
+                    {
+                        //for testing remove after
+                        var result = DatabaseFunctions(userInput);
+                        Console.WriteLine($"user selected: {result}");
+                        Console.ReadKey();
+                    }
+                    catch(ArgumentException ex)
+                    {
+                        Console.WriteLine($"\nAn error occurred: {ex.Message}");
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine($"\nA general error occurred: {ex.Message}");
+                    }
+                }
+                else
+                {
+                        Console.WriteLine($"\nERROR: Invalid input expected integer between {minPermitedOption} and {maxPermitedOption}. Press any key to try again.");
+                        Console.ReadKey();
+                }
+            }
+        }
+
+        ///<summary>
+        ///Helper method for MainScreen, manage the four selectable operations the database can do.
+        ///Display name and id of the entries, Create a new entry, Delete an entry and display the rest of the columns
+        ///of an entry.
+        ///</summary>
+        ///<param name="selectedOption">int between 1 and 4 for the current available enums</param>
+        private static DatabaseOptions DatabaseFunctions(int selectedOption)
+        {
+           switch(selectedOption)
+            {
+                case 1:
+                    return DatabaseOptions.DisplayList;
+
+                case 2:
+                    return DatabaseOptions.CreateCharacter;
+
+                case 3:
+                    return DatabaseOptions.DeleteCharacter;
+
+                case 4:
+                    return DatabaseOptions.ViewStats;
+
+                default:
+                    throw new ArgumentException($"Invalid operation selected", nameof(selectedOption));
             }
         }
     }
