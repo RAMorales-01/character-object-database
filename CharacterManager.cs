@@ -27,22 +27,6 @@ namespace PartyDatabase
                 Intelligence INTEGER NOT NULL, Wisdom INTEGER NOT NULL, Charisma INTEGER NOT NULL);";
                 command.ExecuteNonQuery();
 
-               
-                //InsertCharacter(CreateCharacter());
-                
-                var listOfCharacters = GetIdAndName();
-
-                if(listOfCharacters.Count == 0)
-                {
-                    Console.WriteLine("\nThere are currently no characters\n");
-                }
-                else
-                {
-                    foreach(KeyValuePair<int, string> kvp in listOfCharacters)
-                    {
-                        Console.WriteLine($"{kvp.Key} --- {kvp.Value}");
-                    }
-                }
 
                 /*Console.WriteLine("\nDelete character?");
                 Console.Write("id: ");

@@ -235,10 +235,7 @@ namespace PartyDatabase
                 {
                     try
                     {
-                        //for testing remove after
-                        var result = DatabaseFunctions(userInput);
-                        Console.WriteLine($"user selected: {result}");
-                        Console.ReadKey();
+                        DatabaseFunctions(userInput);
                     }
                     catch(ArgumentException ex)
                     {
@@ -263,25 +260,50 @@ namespace PartyDatabase
         ///of an entry.
         ///</summary>
         ///<param name="selectedOption">int between 1 and 4 for the current available enums</param>
-        private static DatabaseOptions DatabaseFunctions(int selectedOption)
+        private static void DatabaseFunctions(int selectedOption)
         {
            switch(selectedOption)
             {
-                case 1:
-                    return DatabaseOptions.DisplayList;
+                case 1: DisplayCharacterList(CharacterManager.GetIdAndName());
+                    break;
 
-                case 2:
-                    return DatabaseOptions.CreateCharacter;
+                case 2: Console.WriteLine("TEST");
+                    break;
 
-                case 3:
-                    return DatabaseOptions.DeleteCharacter;
+                case 3: Console.WriteLine("TEST");
+                    break;
 
-                case 4:
-                    return DatabaseOptions.ViewStats;
+                case 4: Console.WriteLine("TEST");
+                    break;
 
                 default:
                     throw new ArgumentException($"Invalid operation selected", nameof(selectedOption));
             }
+        }
+
+        ///<summary>
+        ///Helper method to display the a list with the current characters inside the database
+        ///Displays Name and id(primary key).
+        ///</summary>
+        ///<param name="characterList">dictionary with id(primary key) and name of character</param>
+        private static void DisplayCharacterList(Dictionary<int, string> characterList)
+        {
+            if(characterList.Count == 0)
+            {
+                Console.WriteLine("\nThere are currently no characters\n");
+            }
+            else
+            {
+                Console.WriteLine("\n ----- Available Characters -----\n");
+
+                foreach(KeyValuePair<int, string> kvp in characterList)
+                {
+                    Console.WriteLine($"{kvp.Key} - {kvp.Value}");
+                }
+            }
+
+            //for testing
+            Console.ReadKey();
         }
     }
 }
