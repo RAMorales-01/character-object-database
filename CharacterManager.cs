@@ -28,7 +28,7 @@ namespace PartyDatabase
                 command.ExecuteNonQuery();
 
                
-                InsertCharacter(CreateCharacter());
+                //InsertCharacter(CreateCharacter());
                 
                 var listOfCharacters = GetIdAndName();
 
@@ -44,10 +44,24 @@ namespace PartyDatabase
                     }
                 }
 
-                Console.WriteLine("\nDelete character?");
+                /*Console.WriteLine("\nDelete character?");
                 Console.Write("id: ");
                 int.TryParse(Console.ReadLine(), out int characterId);
-                DeleteCharacter(characterId);
+                DeleteCharacter(characterId);*/
+
+                Console.WriteLine("Want to see his stats?");
+                Console.Write("id: ");
+                int.TryParse(Console.ReadLine(), out int characterId);
+                var characterStats = GetStatsFromId(characterId);
+
+                Console.WriteLine();
+
+                foreach(var stats in characterStats)
+                {
+                    Console.WriteLine($"{stats.Item1} --> {stats.Item2}");
+                }
+
+                Console.ReadKey();
             }
         }
 
@@ -105,9 +119,9 @@ namespace PartyDatabase
         }
         
         ///<summary>
-        ///Retrives all the values from the column name from the database.
+        ///Retreives all the values from the column name from the database.
         ///</summary>
-        ///<returns>A dictionary with the id and name of the character</returns>
+        ///<returns>A dictionary with the id and name of all the current character in the database</returns>
         public static Dictionary<int, string> GetIdAndName()
         {
             Dictionary<int, string> characters = new Dictionary<int, string>();//To stores all the names form the database
@@ -116,10 +130,10 @@ namespace PartyDatabase
             {
                 connection.Open();
 
-                SqliteCommand retriveCharacters = connection.CreateCommand();
-                retriveCharacters.CommandText = @"SELECT ALL id, Name FROM Characters;";
+                SqliteCommand retrieveCharacters = connection.CreateCommand();
+                retrieveCharacters.CommandText = @"SELECT ALL id, Name FROM Characters;";
 
-                using(SqliteDataReader reader = retriveCharacters.ExecuteReader())
+                using(SqliteDataReader reader = retrieveCharacters.ExecuteReader())
                 {
                     while(reader.Read())
                     {
@@ -133,6 +147,10 @@ namespace PartyDatabase
             return characters;
         }
 
+        ///<summary>
+        ///To delete an entry inside the database using the id(primary key)
+        ///</summary>
+        ///<param name="characterId">the primary key of each entry inside the database</param>
         public static void DeleteCharacter(int characterId)
         {
             using(SqliteConnection connection = new SqliteConnection(_connectionString))
@@ -144,6 +162,42 @@ namespace PartyDatabase
                 deleteCharacterCommand.Parameters.AddWithValue("@id", characterId);
                 deleteCharacterCommand.ExecuteNonQuery();
             }
+        }
+
+        ///<summary>
+        ///Retrieves all the columns and values from a row using the primary key
+        ///</summary>
+        ///<param name="characterId">primary key form each row</param>
+        ///<returns>a List of Tuple string for the column name and int for the value on each column</returns> 
+        public static List<Tuple<string, int>> GetStatsFromId(int characterId)
+        {
+            List<Tuple<string, int>> characterStats = new List<Tuple<string, int>>();
+
+            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand retrieveStatsCommand = connection.CreateCommand();
+                retrieveStatsCommand.CommandText = @"SELECT Strength, Constitution, Dexterity, Intelligence, Wisdom,
+                Charisma FROM Characters WHERE id = @id";
+                retrieveStatsCommand.Parameters.AddWithValue("@id", characterId);
+                
+                using(SqliteDataReader reader = retrieveStatsCommand.ExecuteReader())
+                {
+                   while(reader.Read())
+                   {
+                        for(int i = 0; i < reader.FieldCount; i++)//FieldCount gets the number of columns in the current row.
+                        {
+                            string statName = reader.GetName(i);
+                            int statValue = Convert.ToInt32(reader.GetValue(i));
+
+                            characterStats.Add(new Tuple<string, int>(statName, statValue));
+                        }
+                   }
+                }
+            }
+
+            return characterStats;
         }
     }
 }
