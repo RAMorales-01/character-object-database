@@ -220,6 +220,8 @@ namespace PartyDatabase
             int minPermitedOption = (int)DatabaseOptions.DisplayList;
             int maxPermitedOption = (int)DatabaseOptions.ViewStats;
 
+            CharacterManager.VerifyDatabaseIsCreated();
+            
             while(true)
             {
                 Console.Clear();
@@ -264,10 +266,10 @@ namespace PartyDatabase
         {
            switch(selectedOption)
             {
-                case 1: DisplayCharacterList(CharacterManager.GetIdAndName());
+                case 1: DisplayCharacterList(CharacterManager.GetIdAndName(), DatabaseOptions.DisplayList);
                     break;
 
-                case 2: Console.WriteLine("TEST");
+                case 2: CharacterManager.InsertCharacter(CharacterManager.CreateCharacter());
                     break;
 
                 case 3: Console.WriteLine("TEST");
@@ -286,7 +288,7 @@ namespace PartyDatabase
         ///Displays Name and id(primary key).
         ///</summary>
         ///<param name="characterList">dictionary with id(primary key) and name of character</param>
-        private static void DisplayCharacterList(Dictionary<int, string> characterList)
+        private static void DisplayCharacterList(Dictionary<int, string> characterList, DatabaseOptions selectedOperation)
         {
             if(characterList.Count == 0)
             {
@@ -302,7 +304,7 @@ namespace PartyDatabase
                 }
             }
 
-            //for testing
+            Console.WriteLine("\nPress any key to return.");
             Console.ReadKey();
         }
     }

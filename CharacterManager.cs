@@ -6,8 +6,7 @@ using Microsoft.Data.Sqlite;
 namespace PartyDatabase
 {
     class CharacterManager
-    {
-        private static readonly int _maxCapacity = 6;//defines the maximum permited capacity for the characters inside the table  
+    {  
         private static readonly string _databasePathFile = Path.Combine(Directory.GetCurrentDirectory(), "Data", "characters.db");
         private static readonly string _connectionString = $"Data Source={_databasePathFile}";
 
@@ -33,7 +32,7 @@ namespace PartyDatabase
                 int.TryParse(Console.ReadLine(), out int characterId);
                 DeleteCharacter(characterId);*/
 
-                Console.WriteLine("Want to see his stats?");
+                /*Console.WriteLine("Want to see his stats?");
                 Console.Write("id: ");
                 int.TryParse(Console.ReadLine(), out int characterId);
                 var characterStats = GetStatsFromId(characterId);
@@ -45,7 +44,7 @@ namespace PartyDatabase
                     Console.WriteLine($"{stats.Item1} --> {stats.Item2}");
                 }
 
-                Console.ReadKey();
+                Console.ReadKey();*/
             }
         }
 
@@ -53,7 +52,7 @@ namespace PartyDatabase
         ///Insert the character object to the database
         ///</summary>
         ///<param name="character">current character object to be inserted to the database</param>
-        private static void InsertCharacter(Character character)
+        public static void InsertCharacter(Character character)
         {
             using(SqliteConnection connection = new SqliteConnection(_connectionString))
             {
