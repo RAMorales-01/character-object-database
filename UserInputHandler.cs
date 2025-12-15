@@ -220,8 +220,6 @@ namespace PartyDatabase
             int minPermitedOption = (int)DatabaseOptions.DisplayList;
             int maxPermitedOption = (int)DatabaseOptions.ViewStats;
 
-            CharacterManager.VerifyDatabaseIsCreated();
-            
             while(true)
             {
                 Console.Clear();
@@ -264,15 +262,28 @@ namespace PartyDatabase
         ///<param name="selectedOption">int between 1 and 4 for the current available enums</param>
         private static void DatabaseFunctions(int selectedOption)
         {
-           switch(selectedOption)
+
+            switch(selectedOption)
             {
-                case 1: DisplayCharacterList(CharacterManager.GetIdAndName(), DatabaseOptions.DisplayList);
+                case 1: DisplayCharacterList(CharacterManager.GetIdAndName());
                     break;
 
                 case 2: CharacterManager.InsertCharacter(CharacterManager.CreateCharacter());
                     break;
 
-                case 3: Console.WriteLine("TEST");
+                case 3: DisplayCharacterList(CharacterManager.GetIdAndName());
+                        var verification = IsValidId("Delete: ", CharacterManager.GetIdAndName()); 
+
+                        if(verification.exist == true)
+                        {
+                            CharacterManager.DeleteCharacter(verification.characterId);
+                        }
+                        else
+                        {
+                            Console.WriteLine("\nINVALID: Choosen id does not exist inside the database. Press any key to return.");
+                            Console.ReadKey();
+                        }
+
                     break;
 
                 case 4: Console.WriteLine("TEST");
@@ -288,7 +299,7 @@ namespace PartyDatabase
         ///Displays Name and id(primary key).
         ///</summary>
         ///<param name="characterList">dictionary with id(primary key) and name of character</param>
-        private static void DisplayCharacterList(Dictionary<int, string> characterList, DatabaseOptions selectedOperation)
+        private static void DisplayCharacterList(Dictionary<int, string> characterList)
         {
             if(characterList.Count == 0)
             {
@@ -304,8 +315,39 @@ namespace PartyDatabase
                 }
             }
 
-            Console.WriteLine("\nPress any key to return.");
+            Console.WriteLine("\nPress any key to continue\n.");
             Console.ReadKey();
+        }
+
+        ///<summary>
+        ///Helper method to validate that the user choosen id exist within the database
+        ///</summary>
+        ///<param name="prompt">prompts user the selected operation</param>
+        ///<param name="characterList">Dictionary with primary key(character id) and name of the character</param>
+        ///<returns>Tupel, boolean if true id exist else id doesn't, integer corresponding to the id choosen</returns>
+        private static (bool exist, int characterId) IsValidId(string prompt, Dictionary<int, string> characterList)
+        {
+            while(true)
+            {
+                Console.WriteLine("Enter the id of the character to...");
+                Console.Write(prompt);
+
+                if(int.TryParse(Console.ReadLine(), out int userInput))
+                {
+                    if(characterList.ContainsKey(userInput))
+                    {
+                        return (true, userInput);
+                    }
+                    else
+                    {
+                        return (false, userInput);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("\nERROR:invalid input expected positive integer(Character Id). Press any key to try again.");
+                }
+            }
         }
     }
 }
