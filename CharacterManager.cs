@@ -25,26 +25,6 @@ namespace PartyDatabase
                 Name TEXT NOT NULL, Strength INTEGER NOT NULL, Constitution INTEGER NOT NULL, Dexterity INTEGER NOT NULL, 
                 Intelligence INTEGER NOT NULL, Wisdom INTEGER NOT NULL, Charisma INTEGER NOT NULL);";
                 command.ExecuteNonQuery();
-
-
-                /*Console.WriteLine("\nDelete character?");
-                Console.Write("id: ");
-                int.TryParse(Console.ReadLine(), out int characterId);
-                DeleteCharacter(characterId);*/
-
-                /*Console.WriteLine("Want to see his stats?");
-                Console.Write("id: ");
-                int.TryParse(Console.ReadLine(), out int characterId);
-                var characterStats = GetStatsFromId(characterId);
-
-                Console.WriteLine();
-
-                foreach(var stats in characterStats)
-                {
-                    Console.WriteLine($"{stats.Item1} --> {stats.Item2}");
-                }
-
-                Console.ReadKey();*/
             }
         }
 

@@ -272,11 +272,11 @@ namespace PartyDatabase
                     break;
 
                 case 3: DisplayCharacterList(CharacterManager.GetIdAndName());
-                        var verification = IsValidId("Delete: ", CharacterManager.GetIdAndName()); 
+                        var verificationDelete = IsValidId("Delete: ", CharacterManager.GetIdAndName()); 
 
-                        if(verification.exist == true)
+                        if(verificationDelete.exist == true)
                         {
-                            CharacterManager.DeleteCharacter(verification.characterId);
+                            CharacterManager.DeleteCharacter(verificationDelete.characterId);
                         }
                         else
                         {
@@ -286,7 +286,19 @@ namespace PartyDatabase
 
                     break;
 
-                case 4: Console.WriteLine("TEST");
+                case 4: DisplayCharacterList(CharacterManager.GetIdAndName());
+                        var verificationStats = IsValidId("Show stats: ",  CharacterManager.GetIdAndName());
+
+                        if(verificationStats.exist == true)
+                        {
+                            DisplayCharacterStats(CharacterManager.GetStatsFromId(verificationStats.characterId));
+                        }
+                        else
+                        {
+                            Console.WriteLine("\nINVALID: Choosen id does not exist inside the database. Press any key to return.");
+                            Console.ReadKey();
+                        }
+
                     break;
 
                 default:
@@ -316,6 +328,24 @@ namespace PartyDatabase
             }
 
             Console.WriteLine("\nPress any key to continue\n.");
+            Console.ReadKey();
+        }
+
+        ///<summary>
+        ///Helper method to display the stats of the selected character
+        ///Displays Strength, Constitution, Dexterity, Intelligence, Wisdom and Charisma
+        ///</summary>
+        ///<param name="characterStats">List of tuple, string with the name of the column and int with the value of the column</param>
+        private static void DisplayCharacterStats(List<Tuple<string, int>> characterStats)
+        {
+            Console.WriteLine("\n----- Stats -----\n");
+
+            foreach(var stats in characterStats)
+            {
+                Console.WriteLine($"{stats.Item1} --> {stats.Item2}");
+            }
+
+            Console.WriteLine("\nPress any key to return\n.");
             Console.ReadKey();
         }
 
