@@ -10,7 +10,8 @@ namespace PartyDatabase
             DisplayList = 'L',
             CreateCharacter = 'C',
             DeleteCharacter = 'D',
-            ViewStats = 'S'
+            ViewStats = 'S',
+            GoBack = 'B'
         }
 
         private static Dictionary<char, DatabaseOptions> operations = new Dictionary<char, DatabaseOptions>
@@ -18,20 +19,22 @@ namespace PartyDatabase
             { 'L', DatabaseOptions.DisplayList },
             { 'C', DatabaseOptions.CreateCharacter },
             { 'D', DatabaseOptions.DeleteCharacter },
-            { 'S', DatabaseOptions.ViewStats }
+            { 'S', DatabaseOptions.ViewStats },
+            { 'B', DatabaseOptions.GoBack }
         };
 
         ///<summary>
         ///Selection screen for the available options for the user depending of on
         ///what screen is currently.
         ///</summary>
-        public static void SelectionScreen(string prompt)
+        public static void SelectionScreen()
         {
             while(true)
             {
+                Console.Clear();
                 Console.WriteLine("\nWhat do you want to do?.\n");
                 Thread.Sleep(1000);
-                Console.WriteLine(prompt);
+                Console.WriteLine("L- List Characters\nC- Create Character\nD- Delete Character\nS- Stats Character");
                 Thread.Sleep(1000);
                 Console.Write("\nSelect: ");
                 string userInput = Console.ReadLine().ToUpper();
@@ -70,44 +73,76 @@ namespace PartyDatabase
 
             switch(selectedOption)
             {
-                case 'L': DisplayCharacterList(CharacterManager.GetIdAndName());
+                case 'L': HandleListSubMenu();
                     break;
 
                 case 'C': CharacterManager.InsertCharacter(CharacterManager.CreateCharacter());
                     break;
 
-                case 'D': DisplayCharacterList(CharacterManager.GetIdAndName());
-                        var verificationDelete = IsValidId("Delete: ", CharacterManager.GetIdAndName()); 
-
-                        if(verificationDelete.exist == true)
-                        {
-                            CharacterManager.DeleteCharacter(verificationDelete.characterId);
-                        }
-                        else
-                        {
-                            Console.WriteLine("\nINVALID: Choosen id does not exist inside the database. Press any key to return.");
-                            Console.ReadKey();
-                        }
-
-                    break;
-
-                case 'S': DisplayCharacterList(CharacterManager.GetIdAndName());
-                        var verificationStats = IsValidId("Show stats: ",  CharacterManager.GetIdAndName());
-
-                        if(verificationStats.exist == true)
-                        {
-                            DisplayCharacterStats(CharacterManager.GetStatsFromId(verificationStats.characterId));
-                        }
-                        else
-                        {
-                            Console.WriteLine("\nINVALID: Choosen id does not exist inside the database. Press any key to return.");
-                            Console.ReadKey();
-                        }
-
-                    break;
-
                 default:
                     throw new ArgumentException($"Invalid operation selected", nameof(selectedOption));
+            }
+        }
+
+        private static void HandleListSubMenu()
+        {
+            while(true)
+            {
+                DisplayCharacterList(CharacterManager.GetIdAndName());
+
+                Console.WriteLine("\nThe Characters are displayed above.");
+                Console.WriteLine("What do you want to do with these characters.\n");
+                Console.WriteLine("D- Delete Character\nS- Stats Character\nB- Go back to main menu");
+                Console.Write("\nSelect: ");
+                string userInput = Console.ReadLine().ToUpper();
+
+                if(Char.TryParse(userInput, out char selectedOption) && operations.ContainsKey(selectedOption))
+                {
+                    switch(selectedOption)
+                    {
+                        case 'D':
+                            var verificationDelete = IsValidId("Delete: ", CharacterManager.GetIdAndName()); 
+
+                            if(verificationDelete.exist == true)
+                            {
+                                CharacterManager.DeleteCharacter(verificationDelete.characterId);
+                                Console.WriteLine("\nCharacter deleted. Press any key to continue.");
+                                Console.ReadKey();
+                            }
+                            else
+                            {
+                                Console.WriteLine("\nINVALID: Choosen id does not exist inside the database. Press any key to return.");
+                                Console.ReadKey();
+                            }
+                            break;
+
+                        case 'S':
+                            var verificationStats = IsValidId("Show stats: ", CharacterManager.GetIdAndName());
+                            
+                            if(verificationStats.exist == true)
+                            {
+                                DisplayCharacterStats(CharacterManager.GetStatsFromId(verificationStats.characterId));
+                            }
+                             else
+                            {
+                                Console.WriteLine("\nINVALID: Choosen id does not exist inside the database. Press any key to return.");
+                                Console.ReadKey();
+                            }
+                            break;
+
+                        case 'B': return; 
+
+                        default:
+                                Console.WriteLine($"\nERROR: Invalid input for this submenu. Expected 'D', 'S', or 'B'. Press any key to try again.");
+                                Console.ReadKey();
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"\nERROR: Invalid input expected char. Press any key to try again.");
+                    Console.ReadKey();
+                }
             }
         }
 
@@ -133,7 +168,7 @@ namespace PartyDatabase
                 }
             }
 
-            SelectionScreen("D- Delete Character\nS- Stats Character");
+            Console.WriteLine("\nPress any key to display the sub menu.");
             Console.ReadKey();
         }
 
@@ -165,7 +200,7 @@ namespace PartyDatabase
         {
             while(true)
             {
-                Console.WriteLine("Enter the id of the character to...");
+                Console.WriteLine("\nEnter the id of the character to...");
                 Console.Write(prompt);
 
                 if(int.TryParse(Console.ReadLine(), out int userInput))
@@ -325,7 +360,7 @@ namespace PartyDatabase
         ///<param name="wisdom">current wisdom stat of the character</param>
         ///<param name="charisma">current charisma stat of the character</param>
         ///<returns>boolean to confirm the current stats before creating the character instance</returns>
-        public static bool StatsConfirmation(int strength, int constitution, int dexterity, int intelligence, int wisdom, int charisma, ref int points)
+        public static bool StatsConfirmation(string characterName, int strength, int constitution, int dexterity, int intelligence, int wisdom, int charisma, ref int points)
         {
             while(true)
             {
@@ -336,6 +371,7 @@ namespace PartyDatabase
                     Console.WriteLine($"WARNING: You have {points} points unassiged, these points will be lost if you dont use them.");
                 }
 
+                Console.WriteLine($"Character: {characterName}");
                 Console.WriteLine("\nProceed with this stats?\n");
                 Console.WriteLine($"Str: {strength}");
                 Console.WriteLine($"Con: {constitution}");

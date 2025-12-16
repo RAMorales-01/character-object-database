@@ -71,7 +71,7 @@ namespace PartyDatabase
                 var wisdom = UserInputHandler.AddStatValue("Add points: ", "Wisdom", Character._minStatValue, Character._maxStatValue, ref points);
                 var charisma = UserInputHandler.AddStatValue("Add points: ", "Charisma", Character._minStatValue, Character._maxStatValue, ref points);
 
-                bool proceed = UserInputHandler.StatsConfirmation(strength, constitution, dexterity, intelligence, wisdom, charisma, ref points);
+                bool proceed = UserInputHandler.StatsConfirmation(name, strength, constitution, dexterity, intelligence, wisdom, charisma, ref points);
 
                 if(proceed == true)
                 {

@@ -33,7 +33,7 @@ namespace PartyDatabase
                 Console.WriteLine("\n----- ACCESS GRANTED -----");
                 Thread.Sleep(1500);
                 Console.Clear();
-                UserInputHandler.SelectionScreen("L- List Characters\nC- Create Character\nD- Delete Character\nS- Stats Character");
+                UserInputHandler.SelectionScreen();
             }
         }
     }
