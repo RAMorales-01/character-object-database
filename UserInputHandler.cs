@@ -7,10 +7,183 @@ namespace PartyDatabase
     {
         private enum DatabaseOptions
         {
-            DisplayList = 1,
-            CreateCharacter,
-            DeleteCharacter,
-            ViewStats
+            DisplayList = 'L',
+            CreateCharacter = 'C',
+            DeleteCharacter = 'D',
+            ViewStats = 'S'
+        }
+
+        private static Dictionary<char, DatabaseOptions> operations = new Dictionary<char, DatabaseOptions>
+        {
+            { 'L', DatabaseOptions.DisplayList },
+            { 'C', DatabaseOptions.CreateCharacter },
+            { 'D', DatabaseOptions.DeleteCharacter },
+            { 'S', DatabaseOptions.ViewStats }
+        };
+
+        ///<summary>
+        ///Selection screen for the available options for the user depending of on
+        ///what screen is currently.
+        ///</summary>
+        public static void SelectionScreen(string prompt)
+        {
+            while(true)
+            {
+                Console.WriteLine("\nWhat do you want to do?.\n");
+                Thread.Sleep(1000);
+                Console.WriteLine(prompt);
+                Thread.Sleep(1000);
+                Console.Write("\nSelect: ");
+                string userInput = Console.ReadLine().ToUpper();
+
+                if(Char.TryParse(userInput, out char selectedOption) && operations.ContainsKey(selectedOption))
+                {
+                    try
+                    {
+                        DatabaseFunctions(selectedOption);
+                    }
+                    catch(ArgumentException ex)
+                    {
+                        Console.WriteLine($"\nAn error occurred: {ex.Message}");
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine($"\nA general error occurred: {ex.Message}");
+                    }
+                }
+                else
+                {
+                        Console.WriteLine($"\nERROR: Invalid input expected char. Press any key to try again.");
+                        Console.ReadKey();
+                }
+            }
+        }
+
+        ///<summary>
+        ///Helper method for SelectionScreen, manage the current selectable operations the database can do.
+        ///Display name and id of the entries, Create a new entry, Delete an entry and display the rest of the columns
+        ///of an entry.
+        ///</summary>
+        ///<param name="selectedOption">int between 1 and 4 for the current available enums</param>
+        private static void DatabaseFunctions(char selectedOption)
+        {
+
+            switch(selectedOption)
+            {
+                case 'L': DisplayCharacterList(CharacterManager.GetIdAndName());
+                    break;
+
+                case 'C': CharacterManager.InsertCharacter(CharacterManager.CreateCharacter());
+                    break;
+
+                case 'D': DisplayCharacterList(CharacterManager.GetIdAndName());
+                        var verificationDelete = IsValidId("Delete: ", CharacterManager.GetIdAndName()); 
+
+                        if(verificationDelete.exist == true)
+                        {
+                            CharacterManager.DeleteCharacter(verificationDelete.characterId);
+                        }
+                        else
+                        {
+                            Console.WriteLine("\nINVALID: Choosen id does not exist inside the database. Press any key to return.");
+                            Console.ReadKey();
+                        }
+
+                    break;
+
+                case 'S': DisplayCharacterList(CharacterManager.GetIdAndName());
+                        var verificationStats = IsValidId("Show stats: ",  CharacterManager.GetIdAndName());
+
+                        if(verificationStats.exist == true)
+                        {
+                            DisplayCharacterStats(CharacterManager.GetStatsFromId(verificationStats.characterId));
+                        }
+                        else
+                        {
+                            Console.WriteLine("\nINVALID: Choosen id does not exist inside the database. Press any key to return.");
+                            Console.ReadKey();
+                        }
+
+                    break;
+
+                default:
+                    throw new ArgumentException($"Invalid operation selected", nameof(selectedOption));
+            }
+        }
+
+        ///<summary>
+        ///Helper method to display the a list with the current characters inside the database
+        ///Displays Name and id(primary key).
+        ///</summary>
+        ///<param name="characterList">dictionary with id(primary key) and name of character</param>
+        private static void DisplayCharacterList(Dictionary<int, string> characterList)
+        {
+            if(characterList.Count == 0)
+            {
+                Console.WriteLine("\nThere are currently no characters\n");
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("\n ----- Characters -----\n");
+
+                foreach(KeyValuePair<int, string> kvp in characterList)
+                {
+                    Console.WriteLine($"{kvp.Key} - {kvp.Value}");
+                }
+            }
+
+            SelectionScreen("D- Delete Character\nS- Stats Character");
+            Console.ReadKey();
+        }
+
+        ///<summary>
+        ///Helper method to display the stats of the selected character
+        ///Displays Strength, Constitution, Dexterity, Intelligence, Wisdom and Charisma
+        ///</summary>
+        ///<param name="characterStats">List of tuple, string with the name of the column and int with the value of the column</param>
+        private static void DisplayCharacterStats(List<Tuple<string, int>> characterStats)
+        {
+            Console.WriteLine("\n----- Stats -----\n");
+
+            foreach(var stats in characterStats)
+            {
+                Console.WriteLine($"{stats.Item1} --> {stats.Item2}");
+            }
+
+            Console.WriteLine("\nPress any key to return.\n");
+            Console.ReadKey();
+        }
+
+        ///<summary>
+        ///Helper method to validate that the user choosen id exist within the database
+        ///</summary>
+        ///<param name="prompt">prompts user the selected operation</param>
+        ///<param name="characterList">Dictionary with primary key(character id) and name of the character</param>
+        ///<returns>Tupel, boolean if true id exist else id doesn't, integer corresponding to the id choosen</returns>
+        private static (bool exist, int characterId) IsValidId(string prompt, Dictionary<int, string> characterList)
+        {
+            while(true)
+            {
+                Console.WriteLine("Enter the id of the character to...");
+                Console.Write(prompt);
+
+                if(int.TryParse(Console.ReadLine(), out int userInput))
+                {
+                    if(characterList.ContainsKey(userInput))
+                    {
+                        return (true, userInput);
+                    }
+                    else
+                    {
+                        return (false, userInput);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("\nERROR:invalid input expected positive integer(Character Id). Press any key to try again.");
+                }
+            }
         }
 
         ///<summary>
@@ -208,172 +381,6 @@ namespace PartyDatabase
                 {
                     Console.WriteLine("\nERROR: Invalid input, expected 'y' for yes or 'n' for no. Press any key to try again.");
                     Console.ReadKey();
-                }
-            }
-        }
-
-        ///<summary>
-        ///Main screen from where the user can select and manage the database.
-        ///</summary>
-        public static void SelectionScreen(string prompt, int minOptionPermited, int maxOptionPermited)
-        {
-            while(true)
-            {
-                Console.WriteLine("\nWhat do you want to do?.\n");
-                Thread.Sleep(1000);
-                Console.WriteLine(prompt);
-                Thread.Sleep(1000);
-                Console.Write("\nSelect option: ");
-
-                if(int.TryParse(Console.ReadLine(), out int userInput) && userInput >= minOptionPermited && userInput <= maxOptionPermited)
-                {
-                    try
-                    {
-                        DatabaseFunctions(userInput);
-                    }
-                    catch(ArgumentException ex)
-                    {
-                        Console.WriteLine($"\nAn error occurred: {ex.Message}");
-                    }
-                    catch(Exception ex)
-                    {
-                        Console.WriteLine($"\nA general error occurred: {ex.Message}");
-                    }
-                }
-                else
-                {
-                        Console.WriteLine($"\nERROR: Invalid input expected integer between {minOptionPermited} and {maxOptionPermited}. Press any key to try again.");
-                        Console.ReadKey();
-                }
-            }
-        }
-
-        ///<summary>
-        ///Helper method for MainScreen, manage the four selectable operations the database can do.
-        ///Display name and id of the entries, Create a new entry, Delete an entry and display the rest of the columns
-        ///of an entry.
-        ///</summary>
-        ///<param name="selectedOption">int between 1 and 4 for the current available enums</param>
-        private static void DatabaseFunctions(int selectedOption)
-        {
-
-            switch(selectedOption)
-            {
-                case 1: DisplayCharacterList(CharacterManager.GetIdAndName());
-                    break;
-
-                case 2: CharacterManager.InsertCharacter(CharacterManager.CreateCharacter());
-                    break;
-
-                case 3: DisplayCharacterList(CharacterManager.GetIdAndName());
-                        var verificationDelete = IsValidId("Delete: ", CharacterManager.GetIdAndName()); 
-
-                        if(verificationDelete.exist == true)
-                        {
-                            CharacterManager.DeleteCharacter(verificationDelete.characterId);
-                        }
-                        else
-                        {
-                            Console.WriteLine("\nINVALID: Choosen id does not exist inside the database. Press any key to return.");
-                            Console.ReadKey();
-                        }
-
-                    break;
-
-                case 4: DisplayCharacterList(CharacterManager.GetIdAndName());
-                        var verificationStats = IsValidId("Show stats: ",  CharacterManager.GetIdAndName());
-
-                        if(verificationStats.exist == true)
-                        {
-                            DisplayCharacterStats(CharacterManager.GetStatsFromId(verificationStats.characterId));
-                        }
-                        else
-                        {
-                            Console.WriteLine("\nINVALID: Choosen id does not exist inside the database. Press any key to return.");
-                            Console.ReadKey();
-                        }
-
-                    break;
-
-                default:
-                    throw new ArgumentException($"Invalid operation selected", nameof(selectedOption));
-            }
-        }
-
-        ///<summary>
-        ///Helper method to display the a list with the current characters inside the database
-        ///Displays Name and id(primary key).
-        ///</summary>
-        ///<param name="characterList">dictionary with id(primary key) and name of character</param>
-        private static void DisplayCharacterList(Dictionary<int, string> characterList)
-        {
-            int minOptionPermited = 1;
-            int maxOptionPermited = 2;
-
-            if(characterList.Count == 0)
-            {
-                Console.WriteLine("\nThere are currently no characters\n");
-            }
-            else
-            {
-                Console.Clear();
-                Console.WriteLine("\n ----- Characters -----\n");
-
-                foreach(KeyValuePair<int, string> kvp in characterList)
-                {
-                    Console.WriteLine($"{kvp.Key} - {kvp.Value}");
-                }
-            }
-
-            SelectionScreen("1- Delete Character\n2- Stats Character", minOptionPermited, maxOptionPermited);
-            Console.ReadKey();
-        }
-
-        ///<summary>
-        ///Helper method to display the stats of the selected character
-        ///Displays Strength, Constitution, Dexterity, Intelligence, Wisdom and Charisma
-        ///</summary>
-        ///<param name="characterStats">List of tuple, string with the name of the column and int with the value of the column</param>
-        private static void DisplayCharacterStats(List<Tuple<string, int>> characterStats)
-        {
-            Console.WriteLine("\n----- Stats -----\n");
-
-            foreach(var stats in characterStats)
-            {
-                Console.WriteLine($"{stats.Item1} --> {stats.Item2}");
-            }
-
-            Console.WriteLine("\nPress any key to return.\n");
-            Console.ReadKey();
-        }
-
-        ///<summary>
-        ///Helper method to validate that the user choosen id exist within the database
-        ///</summary>
-        ///<param name="prompt">prompts user the selected operation</param>
-        ///<param name="characterList">Dictionary with primary key(character id) and name of the character</param>
-        ///<returns>Tupel, boolean if true id exist else id doesn't, integer corresponding to the id choosen</returns>
-        private static (bool exist, int characterId) IsValidId(string prompt, Dictionary<int, string> characterList)
-        {
-            while(true)
-            {
-                Console.WriteLine("Enter the id of the character to...");
-                Console.Write(prompt);
-
-                if(int.TryParse(Console.ReadLine(), out int userInput))
-                {
-                    if(characterList.ContainsKey(userInput))
-                    {
-                        return (true, userInput);
-                    }
-                    else
-                    {
-                        return (false, userInput);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("\nERROR:invalid input expected positive integer(Character Id). Press any key to try again.");
                 }
             }
         }

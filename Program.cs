@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace PartyDatabase
 {
@@ -20,12 +21,19 @@ namespace PartyDatabase
 
             while(true)
             {
-                int minOptionPermited = 1;
-                int maxOptionPermited = 4;
-
                 Console.Clear();
-                Console.WriteLine("----- DATABASE OPEN -----");
-                UserInputHandler.SelectionScreen("1- List Characters\n2- Create Character\n3- Delete Character\n4- Stats Character", minOptionPermited, maxOptionPermited);
+                Console.WriteLine("----- ACCESSING DATABASE -----");
+                Thread.Sleep(1000);
+                Console.Write(".");
+                Thread.Sleep(1000);
+                Console.Write(".");
+                Thread.Sleep(1000);
+                Console.Write(".");
+                Thread.Sleep(1000);
+                Console.WriteLine("\n----- ACCESS GRANTED -----");
+                Thread.Sleep(1500);
+                Console.Clear();
+                UserInputHandler.SelectionScreen("L- List Characters\nC- Create Character\nD- Delete Character\nS- Stats Character");
             }
         }
     }
