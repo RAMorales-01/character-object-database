@@ -20,25 +20,25 @@ namespace PartyDatabase
         ///<returns>string for the name of the character</returns>
         public static string AddName(string prompt)
         {
-            const int nameLengthLimit = 10;
+            const int nameMaxLength = 10;
 
             string nameInput = string.Empty;
 
             while(true)
             {
                 Console.Clear();
-                Console.WriteLine($"NOTE: Character name cannot have more than {nameLengthLimit} character in length.\n");
+                Console.WriteLine($"NOTE: Character name cannot have more than {nameMaxLength} character in length.\n");
                 Console.WriteLine("Enter the name of this new character.");
                 Console.Write(prompt);
                 nameInput = Console.ReadLine();
 
-                if(!String.IsNullOrWhiteSpace(nameInput) && nameInput.Length <= nameLengthLimit)
+                if(!String.IsNullOrWhiteSpace(nameInput) && nameInput.Length <= nameMaxLength)
                 {
                     return nameInput;
                 }
                 else
                 {
-                    Console.WriteLine($"\nERROR: Invalid input, name cannot be Null or Empty and must have less than {nameLengthLimit} characters.\n");
+                    Console.WriteLine($"\nERROR: Invalid input, name cannot be Null or Empty and must have less than {nameMaxLength} characters.\n");
                     Console.WriteLine("Press any key to try again.");
                     Console.ReadKey();
                 }
@@ -215,23 +215,17 @@ namespace PartyDatabase
         ///<summary>
         ///Main screen from where the user can select and manage the database.
         ///</summary>
-        public static void MainScreen()
+        public static void SelectionScreen(string prompt, int minOptionPermited, int maxOptionPermited)
         {
-            int minPermitedOption = (int)DatabaseOptions.DisplayList;
-            int maxPermitedOption = (int)DatabaseOptions.ViewStats;
-
             while(true)
             {
-                Console.Clear();
-                Console.WriteLine("----- DATABASE OPEN -----");
+                Console.WriteLine("\nWhat do you want to do?.\n");
                 Thread.Sleep(1000);
-                Console.WriteLine("\nWhat do you want to do?.");
-                Thread.Sleep(1000);
-                Console.WriteLine("\n1- Display List of Characters\n2- Create new Character\n3- Delete Character\n4- See Character Stats");
+                Console.WriteLine(prompt);
                 Thread.Sleep(1000);
                 Console.Write("\nSelect option: ");
 
-                if(int.TryParse(Console.ReadLine(), out int userInput) && userInput >= minPermitedOption && userInput <= maxPermitedOption)
+                if(int.TryParse(Console.ReadLine(), out int userInput) && userInput >= minOptionPermited && userInput <= maxOptionPermited)
                 {
                     try
                     {
@@ -248,7 +242,7 @@ namespace PartyDatabase
                 }
                 else
                 {
-                        Console.WriteLine($"\nERROR: Invalid input expected integer between {minPermitedOption} and {maxPermitedOption}. Press any key to try again.");
+                        Console.WriteLine($"\nERROR: Invalid input expected integer between {minOptionPermited} and {maxOptionPermited}. Press any key to try again.");
                         Console.ReadKey();
                 }
             }
@@ -313,13 +307,17 @@ namespace PartyDatabase
         ///<param name="characterList">dictionary with id(primary key) and name of character</param>
         private static void DisplayCharacterList(Dictionary<int, string> characterList)
         {
+            int minOptionPermited = 1;
+            int maxOptionPermited = 2;
+
             if(characterList.Count == 0)
             {
                 Console.WriteLine("\nThere are currently no characters\n");
             }
             else
             {
-                Console.WriteLine("\n ----- Available Characters -----\n");
+                Console.Clear();
+                Console.WriteLine("\n ----- Characters -----\n");
 
                 foreach(KeyValuePair<int, string> kvp in characterList)
                 {
@@ -327,7 +325,7 @@ namespace PartyDatabase
                 }
             }
 
-            Console.WriteLine("\nPress any key to continue\n.");
+            SelectionScreen("1- Delete Character\n2- Stats Character", minOptionPermited, maxOptionPermited);
             Console.ReadKey();
         }
 
@@ -345,7 +343,7 @@ namespace PartyDatabase
                 Console.WriteLine($"{stats.Item1} --> {stats.Item2}");
             }
 
-            Console.WriteLine("\nPress any key to return\n.");
+            Console.WriteLine("\nPress any key to return.\n");
             Console.ReadKey();
         }
 
