@@ -14,7 +14,7 @@ namespace PartyDatabase
     {
         static void Main(string[] args)
         {  
-            Console.Clear();
+            /*Console.Clear();
             Console.WriteLine("This program let the user create characters each with its own stats. Delete existing ones, view stats and so on.");
             Console.WriteLine("\nPress any key to begin the test.");
             Console.ReadKey(true);
@@ -44,7 +44,16 @@ namespace PartyDatabase
             Thread.Sleep(1000);
             Console.Write(".");
             Thread.Sleep(1000);
-            Console.Write("GOODBYE!");
+            Console.Write("GOODBYE!");*/
+
+            //testing vocation, remove after
+            Console.Clear();
+            Character character = new Character("Alex", 16, 18, 10, 10, 10, 10);
+            Console.WriteLine($"Name: {character.Name}");
+            character.ChoosenVocation = new Vocation.Fighter();
+            Console.WriteLine($"Vocation: {character.ChoosenVocation}");
+            character.ChoosenVocation.BasicAbility(character);
+            Console.WriteLine();
         }
     }
 }

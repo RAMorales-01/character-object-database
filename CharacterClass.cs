@@ -2,7 +2,7 @@ using System;
 
 namespace PartyDatabase
 {
-    class Character
+    public class Character
     {
         //character stat must have a min value of 10 and a max value of 20
         public const int _minStatValue = 10;
@@ -30,6 +30,7 @@ namespace PartyDatabase
         public int Intelligence {get; private set;}
         public int Wisdom {get; private set;}
         public int Charisma {get; private set;}
+        public Vocation.VocationAbility ChoosenVocation {get; set;}
 
         public Character(string name, int strength, int constitution, int dexterity, int intelligence, int wisdom, int charisma)
         {

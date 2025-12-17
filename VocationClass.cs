@@ -6,21 +6,15 @@ namespace PartyDatabase
     {
         public abstract class VocationAbility { public abstract void BasicAbility(Character character); }
 
-        class Fighter : VocationAbility
+        public class Fighter : VocationAbility
         {
             public override void BasicAbility(Character character)
             {
-                Console.WriteLine("- Default class ability: Second Wind.");
+                Console.WriteLine("Vocation Skill [Second Wind]");
+                Console.WriteLine("Skills Unlocked:");
 
-                if(strength >= 16)
-                {
-                    Console.WriteLine("- Unlocked ability: Shield Bash.");
-                }
-
-                if(constitution >= 18)
-                {
-                    Console.WriteLine("- Unlocked ability: Deflect Attack.");
-                }
+                Console.WriteLine(character.Strength >= 16 ? "- [Shield Bash]" : "- ????");
+                Console.WriteLine(character.Constitution >= 18 ? "- [Deflect Attack]" : "- ????");
             }
         }
 
@@ -28,17 +22,11 @@ namespace PartyDatabase
         {
             public override void BasicAbility(Character character)
             {
-                Console.WriteLine("- Default class ability: Rage.");
+                Console.WriteLine("Vocation Skill [Rage]");
+                Console.WriteLine("Skills Unlocked:");
 
-                if(strength >= 18)
-                {
-                    Console.WriteLine("- Unlocked ability: Frenzy.");
-                }
-
-                if(dexterity >= 16)
-                {
-                    Console.WriteLine("- Unlocked ability: Sprint.");
-                }
+                Console.WriteLine(character.Strength >= 18 ? "- [Frenzy]" : "- ????");
+                Console.WriteLine(character.Dexterity >= 16 ? "- [Sprint]" : "- ????");
             }
         }
     }
