@@ -59,12 +59,19 @@ namespace PartyDatabase
                         Console.WriteLine($"\nERROR: Invalid input expected char. Press any key to try again.");
                         Console.ReadKey();
                 }
+
+                string closeDatabase = UserInputHandler.YesNoConfirmation("\nIs there another operation you wish to do?: ");
+
+                if(closeDatabase == "no")
+                {
+                    break;
+                }
             }
         }
 
         ///<summary>
-        ///Helper method for SelectionScreen, manage the current selectable operations the database can do.
-        ///Display name and id of the entries, Create a new entry, Delete an entry and display the rest of the columns
+        ///Helper method for SelectionScreen, manage 4 current selectable operations the database can do.
+        ///Display list of the current entries or Create a new entry, delete an entry or view the stats of the characters..
         ///of an entry.
         ///</summary>
         ///<param name="selectedOption">int between 1 and 4 for the current available enums</param>
@@ -84,6 +91,11 @@ namespace PartyDatabase
             }
         }
 
+        ///<summary>
+        ///Extension for the method SelectionScreeen, display the options the user can choose when the 
+        ///list of the current entries is already displayed, Delete Character, Stats Character and Return to the 
+        ///main menu.
+        ///</summary>
         private static void HandleListSubMenu()
         {
             while(true)
@@ -186,7 +198,7 @@ namespace PartyDatabase
                 Console.WriteLine($"{stats.Item1} --> {stats.Item2}");
             }
 
-            Console.WriteLine("\nPress any key to return.\n");
+            Console.WriteLine("\nPress any key to return to main menu.\n");
             Console.ReadKey();
         }
 

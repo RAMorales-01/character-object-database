@@ -19,22 +19,32 @@ namespace PartyDatabase
             Console.WriteLine("\nPress any key to begin the test.");
             Console.ReadKey(true);
 
-            while(true)
-            {
-                Console.Clear();
-                Console.WriteLine("----- ACCESSING DATABASE -----");
-                Thread.Sleep(1000);
-                Console.Write(".");
-                Thread.Sleep(1000);
-                Console.Write(".");
-                Thread.Sleep(1000);
-                Console.Write(".");
-                Thread.Sleep(1000);
-                Console.WriteLine("\n----- ACCESS GRANTED -----");
-                Thread.Sleep(1500);
-                Console.Clear();
-                UserInputHandler.SelectionScreen();
-            }
+            //The Thread.Sleep is just for show, to simulate the database is loading.
+            Console.Clear();
+            Console.WriteLine("----- ACCESSING DATABASE -----");
+            Thread.Sleep(1000);
+            Console.Write(".");
+            Thread.Sleep(1000);
+            Console.Write(".");
+            Thread.Sleep(1000);
+            Console.Write(".");
+            Thread.Sleep(1000);
+            Console.WriteLine("\n----- ACCESS GRANTED -----");
+            Thread.Sleep(1500);
+            Console.Clear();
+            
+            UserInputHandler.SelectionScreen();
+        
+            Console.Clear();
+            Console.WriteLine("----- EXITING DATABASE -----");
+            Thread.Sleep(1000);
+            Console.Write(".");
+            Thread.Sleep(1000);
+            Console.Write(".");
+            Thread.Sleep(1000);
+            Console.Write(".");
+            Thread.Sleep(1000);
+            Console.Write("GOODBYE!");
         }
     }
 }
