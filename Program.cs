@@ -51,7 +51,6 @@ namespace PartyDatabase
             Character character = new Character("Alex", 16, 18, 10, 10, 10, 10);
             Console.WriteLine($"Name: {character.Name}");
             character.ChoosenVocation = new Vocation.Fighter();
-            Console.WriteLine($"Vocation: {character.ChoosenVocation}");
             character.ChoosenVocation.BasicAbility(character);
             Console.WriteLine();
         }
