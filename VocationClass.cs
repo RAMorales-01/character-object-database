@@ -4,89 +4,85 @@ namespace PartyDatabase
 {
     public class Vocation
     {
-        public abstract class VocationAbility { public abstract void BasicAbility(Character character); }
-
-        public class Fighter : VocationAbility
+        public abstract class VocationBasics
         {
-            public override void BasicAbility(Character character)
-            {
-                Console.WriteLine("Vocation: Fighter");
-                Console.WriteLine("Vocation Skill [Second Wind]");
-                Console.WriteLine("Skills Unlocked:");
+            public abstract string DefaultSkill {get; set;}
+            public abstract string SkillLowLevel {get; set;}
+            public abstract string SkillMediumLevel {get; set;}
+            public abstract string SkillHighLevel {get; set;}
 
-                Console.WriteLine(character.Strength >= 16 ? "- [Double Slash]" : "- ????");
-                Console.WriteLine(character.Constitution >= 18 ? "- [Master Defence]" : "- ????");
-                Console.WriteLine(character.Dexterity >= 14 ? "- [Deflect Arrow]" : "- ????");
+            public abstract void VocationInfo();
+        }
+
+        public class Fighter : VocationBasics
+        {
+            public override string DefaultSkill {get; set;}
+            public override string SkillLowLevel {get; set;}
+            public override string SkillMediumLevel {get; set;}
+            public override string SkillHighLevel {get; set;}
+
+            public Fighter(Character character)
+            {
+                DefaultSkill = "[Parry]";
+
+                SkillMediumLevel = character.Strength >= 16 ? "[Multi-Slash]" : "[Locked]";
+                SkillHighLevel = character.Constitution >= 20 ? "[Withstand Mortal Blow]" : "[Locked]";
+                SkillLowLevel = character.Dexterity >= 14 ? "[Deflect Missile]" : "[Locked]"; 
+            }
+
+            public override void VocationInfo()
+            {
+                Console.WriteLine("Fighter: A balanced vocation and easy to use.");
+                Console.WriteLine("Recommended stats:");
+                Console.WriteLine("Strength (Priority Medium), Constitution (Priority High), Dexterity (Priority Low)");
             }
         }
 
-        public class Barbarian : VocationAbility
+        public class Rouge : VocationBasics
         {
-            public override void BasicAbility(Character character)
-            {
-                Console.WriteLine("Vocation: Barbarian");
-                Console.WriteLine("Vocation Skill [Rage]");
-                Console.WriteLine("Skills Unlocked:");
+            public override string DefaultSkill {get; set;}
+            public override string SkillLowLevel {get; set;}
+            public override string SkillMediumLevel {get; set;}
+            public override string SkillHighLevel {get; set;}
 
-                Console.WriteLine(character.Strength >= 18 ? "- [Whirlwind Attack]" : "- ????");
-                Console.WriteLine(character.Constitution >= 14 ? "- [Rock Skin]" : "- ????");
-                Console.WriteLine(character.Dexterity >= 16 ? "- [Savage Sprint]" : "- ????");
+            public Rouge(Character character)
+            {
+                DefaultSkill = "[Steal(Battle/Shop)]";
+
+                SkillLowLevel = character.Strength >= 14 ? "[DeathBlow]" : "[Locked]";
+                SkillHighLevel = character.Dexterity >= 20 ? "[Uncanny Dodge]" : "[Locked]";
+                SkillMediumLevel = character.Wisdom >= 16 ? "[Detect Traps]" : "[Locked]";
+            }
+
+            public override void VocationInfo()
+            {
+                Console.WriteLine("Rouge: A vocation focused on skill and utility, medium difficulty.");
+                Console.WriteLine("Recommended stats:");
+                Console.WriteLine("Strength (Priority Low), Dexterity (Priority High), Wisdom (Priority Medium)");
             }
         }
 
-        public class Rouge : VocationAbility
+        public class Sorcerer : VocationBasics
         {
-            public override void BasicAbility(Character character)
+            public override string DefaultSkill {get; set;}
+            public override string SkillLowLevel {get; set;}
+            public override string SkillMediumLevel {get; set;}
+            public override string SkillHighLevel {get; set;}
+                
+            public Sorcerer(Character character)
             {
-                Console.WriteLine("Vocation: Rouge");
-                Console.WriteLine("Vocation Skill [Lockpicking]");
-                Console.WriteLine("Skill Unlocked:");
+                DefaultSkill = "[Fireball]";
 
-                Console.WriteLine(character.Constitution >= 14 ? "- [Parry Attack]" : "- ????");
-                Console.WriteLine(character.Dexterity >= 18 ? "- [Deathblow]" : "- ????");
-                Console.WriteLine(character.Wisdom >= 16 ? "- [Detect Trap]" : "- ????");
+                SkillMediumLevel = character.Constitution >= 18 ? "[Unshakable Caster]" : "[Locked]";
+                SkillLowLevel = character.Dexterity >= 16 ? "[Quick Chanter]" : "[Locked]";
+                SkillHighLevel = character.Intelligence >= 20 ? "[Meteor]" : "[Locked]";
             }
-        }
 
-        public class Spellcaster : VocationAbility
-        {
-            public override void BasicAbility(Character character)
+            public override void VocationInfo()
             {
-                Console.WriteLine("Vocation: Spellcaster");
-                Console.WriteLine("Vocation Skill [Fireball]");
-                Console.WriteLine("Skill Unlocked:");
-
-                Console.WriteLine(character.Constitution >= 16 ? "- [Absolute Concentration]" : "- ????");
-                Console.WriteLine(character.Intelligence >= 18 ? "- [Firestorm]" : "- ????");
-                Console.WriteLine(character.Wisdom >= 14 ? "- [Fire Mastery]" : "- ????");
-            }
-        }
-
-        public class Priest : VocationAbility
-        {
-            public override void BasicAbility(Character character)
-            {
-                Console.WriteLine("Vocation: Priest");
-                Console.WriteLine("Vocation Skill [Heal]");
-                Console.WriteLine("Skill Unlocked:");
-
-                Console.WriteLine(character.Constitution >= 14 ? "- [Disease Immunity]" : "- ????");
-                Console.WriteLine(character.Wisdom >= 18 ? "- [Heal All]" : "- ????");
-                Console.WriteLine(character.Charisma >= 16 ? "- [Store Discount]" : "- ????");
-            }
-        }
-
-        public class Bard : VocationAbility
-        {
-            public override void BasicAbility(Character character)
-            {
-                Console.WriteLine("Vocation: Bard");
-                Console.WriteLine("Vocation Skill [Song of Bravery]");
-                Console.WriteLine("Skill Unlocked:");
-
-                Console.WriteLine(character.Dexterity >= 16 ? "- [Unncany Dodge]" : "- ????");
-                Console.WriteLine(character.Intelligence >= 14 ? "- [Song of Speedster]" : "- ????");
-                Console.WriteLine(character.Charisma >= 16 ? "- [Charm]" : "- ????");
+                Console.WriteLine("Sorcerer: A vocation focused on magic and casting, hard to use.");
+                Console.WriteLine("Recommended stats:");
+                Console.WriteLine("Constitution (Priority High), Dexterity (Priority Medium), Intelligence (Priority High)");
             }
         }
     }

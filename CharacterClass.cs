@@ -30,7 +30,8 @@ namespace PartyDatabase
         public int Intelligence {get; private set;}
         public int Wisdom {get; private set;}
         public int Charisma {get; private set;}
-        public Vocation.VocationAbility ChoosenVocation {get; set;}
+        //public Vocation.VocationAbility ChoosenVocation {get; set;}
+        public Vocation.VocationBasics AssignedVocation {get; set;}
 
         public Character(string name, int strength, int constitution, int dexterity, int intelligence, int wisdom, int charisma)
         {

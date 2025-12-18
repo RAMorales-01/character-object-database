@@ -46,13 +46,23 @@ namespace PartyDatabase
             Thread.Sleep(1000);
             Console.Write("GOODBYE!");*/
 
-            //testing vocation, remove after
-            Console.Clear();
+            
+            /*Console.Clear();
             Character character = new Character("Alex", 16, 18, 10, 10, 10, 10);
             Console.WriteLine($"Name: {character.Name}");
             character.ChoosenVocation = new Vocation.Fighter();
             character.ChoosenVocation.BasicAbility(character);
-            Console.WriteLine();
+            Console.WriteLine();*/
+
+            //test 2, remove after
+            Character character = new Character("Alex", 16, 18, 10, 10, 10, 10);
+            character.AssignedVocation = new Vocation.Fighter(character);
+            Console.WriteLine($"Name: {character.Name}");
+            Console.WriteLine($"Skill: {character.AssignedVocation.DefaultSkill}");
+            Console.WriteLine($"Skill: {character.AssignedVocation.SkillLowLevel}");
+            Console.WriteLine($"Skill: {character.AssignedVocation.SkillMediumLevel}");
+            Console.WriteLine($"Skill: {character.AssignedVocation.SkillHighLevel}");
+            character.AssignedVocation.VocationInfo();
         }
     }
 }
