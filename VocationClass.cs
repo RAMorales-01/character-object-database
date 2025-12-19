@@ -6,6 +6,7 @@ namespace PartyDatabase
     {
         public abstract class VocationBasics
         {
+            public abstract int VocationId {get; set;}
             public abstract string DefaultSkill {get; set;}
             public abstract string SkillLowLevel {get; set;}
             public abstract string SkillMediumLevel {get; set;}
@@ -16,6 +17,7 @@ namespace PartyDatabase
 
         public class Fighter : VocationBasics
         {
+            public override int VocationId {get; set;}
             public override string DefaultSkill {get; set;}
             public override string SkillLowLevel {get; set;}
             public override string SkillMediumLevel {get; set;}
@@ -23,6 +25,7 @@ namespace PartyDatabase
 
             public Fighter(Character character)
             {
+                VocationId = 01;
                 DefaultSkill = "[Parry]";
 
                 SkillLowLevel = character.Dexterity >= 14 ? "[Deflect Missile]" : "[Locked]"; 
@@ -40,6 +43,7 @@ namespace PartyDatabase
 
         public class Rouge : VocationBasics
         {
+            public override int VocationId {get; set;}
             public override string DefaultSkill {get; set;}
             public override string SkillLowLevel {get; set;}
             public override string SkillMediumLevel {get; set;}
@@ -47,6 +51,7 @@ namespace PartyDatabase
 
             public Rouge(Character character)
             {
+                VocationId = 02;
                 DefaultSkill = "[Steal(Battle/Shop)]";
 
                 SkillLowLevel = character.Strength >= 14 ? "[DeathBlow]" : "[Locked]";
@@ -64,6 +69,7 @@ namespace PartyDatabase
 
         public class Sorcerer : VocationBasics
         {
+            public override int VocationId {get; set;}
             public override string DefaultSkill {get; set;}
             public override string SkillLowLevel {get; set;}
             public override string SkillMediumLevel {get; set;}
@@ -71,6 +77,7 @@ namespace PartyDatabase
                 
             public Sorcerer(Character character)
             {
+                VocationId = 03;
                 DefaultSkill = "[Fireball]";
 
                 SkillLowLevel = character.Dexterity >= 16 ? "[Quick Chanter]" : "[Locked]";
@@ -88,6 +95,7 @@ namespace PartyDatabase
 
         public class Healer : VocationBasics
         {
+            public override int VocationId {get; set;}
             public override string DefaultSkill {get; set;}
             public override string SkillLowLevel {get; set;}
             public override string SkillMediumLevel {get; set;}
@@ -95,6 +103,7 @@ namespace PartyDatabase
 
             public Healer(Character character)
             {
+                VocationId = 04;
                 DefaultSkill = "[Heal]";
 
                 SkillLowLevel = character.Intelligence >= 14 ? "[Expand Healing Radius]" : "[Locked]";
@@ -112,6 +121,7 @@ namespace PartyDatabase
 
         public class Bard : VocationBasics
         {
+            public override int VocationId {get; set;}
             public override string DefaultSkill {get; set;}
             public override string SkillLowLevel {get; set;}
             public override string SkillMediumLevel {get; set;}
@@ -119,6 +129,7 @@ namespace PartyDatabase
 
             public Bard(Character character)
             {
+                VocationId = 05;
                 DefaultSkill = "[Inspire]";
 
                 SkillLowLevel = character.Dexterity >= 16 ? "[Evade & Parry]" : "[Locked]";

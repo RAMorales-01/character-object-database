@@ -8,7 +8,7 @@ namespace PartyDatabase
     class CharacterManager
     {  
         private static readonly string _databasePathFile = Path.Combine(Directory.GetCurrentDirectory(), "Data", "characters.db");
-        private static readonly string _connectionString = $"Data Source={_databasePathFile}";
+        private static readonly string _connectionString = $"Data Source={_databasePathFile}; Foreign Keys=True;";
 
         ///<summary>
         ///Ensures the database and folder exist
@@ -21,9 +21,10 @@ namespace PartyDatabase
             {
                 connection.Open();
                 SqliteCommand command = connection.CreateCommand();
-                command.CommandText = @"CREATE TABLE IF NOT EXISTS Characters (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                Name TEXT NOT NULL, Strength INTEGER NOT NULL, Constitution INTEGER NOT NULL, Dexterity INTEGER NOT NULL, 
-                Intelligence INTEGER NOT NULL, Wisdom INTEGER NOT NULL, Charisma INTEGER NOT NULL);";
+                command.CommandText = @"CREATE TABLE IF NOT EXISTS Vocations (id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, DefaultSkill TEXT NOT NULL,
+                Skill1 TEXT NOT NULL, Skill2 TEXT NOT NULL, Skill3 TEXT NOT NULL); CREATE TABLE IF NOT EXISTS Characters (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                VocationId INTEGER, Name TEXT NOT NULL, Strength INTEGER NOT NULL, Constitution INTEGER NOT NULL, Dexterity INTEGER NOT NULL, 
+                Intelligence INTEGER NOT NULL, Wisdom INTEGER NOT NULL, Charisma INTEGER NOT NULL, FOREIGN KEY (VocationId) REFERENCES Vocations(id) ON DELETE SET NULL);";
                 command.ExecuteNonQuery();
             }
         }
@@ -39,8 +40,8 @@ namespace PartyDatabase
                 connection.Open(); 
 
                 SqliteCommand addCharacterCommand = connection.CreateCommand();
-                addCharacterCommand.CommandText = @"INSERT INTO Characters (Name, Strength, Constitution, Dexterity, Intelligence, Wisdom, Charisma) 
-                VALUES (@name, @strength, @constitution, @dexterity, @intelligence, @wisdom, @charisma)";
+                addCharacterCommand.CommandText = @"INSERT INTO Characters (Name, Strength, Constitution, Dexterity, Intelligence, Wisdom, Charisma, VocationId) 
+                VALUES (@name, @strength, @constitution, @dexterity, @intelligence, @wisdom, @charisma, @vocationId)";
                 addCharacterCommand.Parameters.AddWithValue("@name", character.Name);
                 addCharacterCommand.Parameters.AddWithValue("@strength", character.Strength);
                 addCharacterCommand.Parameters.AddWithValue("@constitution", character.Constitution);
@@ -48,6 +49,7 @@ namespace PartyDatabase
                 addCharacterCommand.Parameters.AddWithValue("@intelligence", character.Intelligence);
                 addCharacterCommand.Parameters.AddWithValue("@wisdom", character.Wisdom);
                 addCharacterCommand.Parameters.AddWithValue("@charisma", character.Charisma);
+                addCharacterCommand.Parameters.AddWithValue("@vocationId", character.VocationId);
                 addCharacterCommand.ExecuteNonQuery();
             }
         }
