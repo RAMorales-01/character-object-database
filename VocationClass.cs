@@ -25,9 +25,9 @@ namespace PartyDatabase
             {
                 DefaultSkill = "[Parry]";
 
+                SkillLowLevel = character.Dexterity >= 14 ? "[Deflect Missile]" : "[Locked]"; 
                 SkillMediumLevel = character.Strength >= 16 ? "[Multi-Slash]" : "[Locked]";
                 SkillHighLevel = character.Constitution >= 20 ? "[Withstand Mortal Blow]" : "[Locked]";
-                SkillLowLevel = character.Dexterity >= 14 ? "[Deflect Missile]" : "[Locked]"; 
             }
 
             public override void VocationInfo()
@@ -50,8 +50,8 @@ namespace PartyDatabase
                 DefaultSkill = "[Steal(Battle/Shop)]";
 
                 SkillLowLevel = character.Strength >= 14 ? "[DeathBlow]" : "[Locked]";
-                SkillHighLevel = character.Dexterity >= 20 ? "[Uncanny Dodge]" : "[Locked]";
                 SkillMediumLevel = character.Wisdom >= 16 ? "[Detect Traps]" : "[Locked]";
+                SkillHighLevel = character.Dexterity >= 20 ? "[Uncanny Dodge]" : "[Locked]";
             }
 
             public override void VocationInfo()
@@ -73,8 +73,8 @@ namespace PartyDatabase
             {
                 DefaultSkill = "[Fireball]";
 
-                SkillMediumLevel = character.Constitution >= 18 ? "[Unshakable Caster]" : "[Locked]";
                 SkillLowLevel = character.Dexterity >= 16 ? "[Quick Chanter]" : "[Locked]";
+                SkillMediumLevel = character.Constitution >= 18 ? "[Unshakable Caster]" : "[Locked]";
                 SkillHighLevel = character.Intelligence >= 20 ? "[Meteor]" : "[Locked]";
             }
 
@@ -83,6 +83,54 @@ namespace PartyDatabase
                 Console.WriteLine("Sorcerer: A vocation focused on magic and casting, hard to use.");
                 Console.WriteLine("Recommended stats:");
                 Console.WriteLine("Constitution (Priority High), Dexterity (Priority Medium), Intelligence (Priority High)");
+            }
+        }
+
+        public class Healer : VocationBasics
+        {
+            public override string DefaultSkill {get; set;}
+            public override string SkillLowLevel {get; set;}
+            public override string SkillMediumLevel {get; set;}
+            public override string SkillHighLevel {get; set;}
+
+            public Healer(Character character)
+            {
+                DefaultSkill = "[Heal]";
+
+                SkillLowLevel = character.Intelligence >= 14 ? "[Expand Healing Radius]" : "[Locked]";
+                SkillLowLevel = character.Constitution >= 18 ? "[Deathblow Immunity]" : "[Locked]";
+                SkillLowLevel = character.Wisdom >= 20 ? "[Resurrection]" : "[Locked]";
+            }
+
+            public override void VocationInfo()
+            {
+                Console.WriteLine("Healer: A vocation focused on protecting allies by healing magic, very hard to use.");
+                Console.WriteLine("Recommended stats:");
+                Console.WriteLine("Constitution (Priority High), Intelligence (Priority Low), Wisdom (Priority High)");
+            }
+        }
+
+        public class Bard : VocationBasics
+        {
+            public override string DefaultSkill {get; set;}
+            public override string SkillLowLevel {get; set;}
+            public override string SkillMediumLevel {get; set;}
+            public override string SkillHighLevel {get; set;}
+
+            public Bard(Character character)
+            {
+                DefaultSkill = "[Inspire]";
+
+                SkillLowLevel = character.Dexterity >= 16 ? "[Evade & Parry]" : "[Locked]";
+                SkillLowLevel = character.Intelligence >= 18 ? "[Song of Bravery]" : "[Locked]";
+                SkillLowLevel = character.Charisma >= 20 ? "[Charm]" : "[Locked]";
+            }
+
+            public override void VocationInfo()
+            {
+                Console.WriteLine("Bard: A vocation focused on buffing using music to inspire allies, medium difficulty.");
+                Console.WriteLine("Recommended stats:");
+                Console.WriteLine("Constitution (Priority High), Intelligence (Priority Low), Wisdom (Priority High)");
             }
         }
     }
