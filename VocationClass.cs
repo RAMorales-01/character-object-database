@@ -6,6 +6,7 @@ namespace PartyDatabase
     {
         public abstract class VocationBasics
         {
+            public abstract string VocationName {get; set;}
             public abstract int VocationId {get; set;}
             public abstract string DefaultSkill {get; set;}
             public abstract string SkillLowLevel {get; set;}
@@ -17,6 +18,7 @@ namespace PartyDatabase
 
         public class Fighter : VocationBasics
         {
+            public override string VocationName {get; set;}
             public override int VocationId {get; set;}
             public override string DefaultSkill {get; set;}
             public override string SkillLowLevel {get; set;}
@@ -25,9 +27,11 @@ namespace PartyDatabase
 
             public Fighter(Character character)
             {
+                VocationName = "Fighter";
                 VocationId = 01;
                 DefaultSkill = "[Parry]";
 
+                //TODO: add an extra condition for the skills ---> character != null &&
                 SkillLowLevel = character.Dexterity >= 14 ? "[Deflect Missile]" : "[Locked]"; 
                 SkillMediumLevel = character.Strength >= 16 ? "[Multi-Slash]" : "[Locked]";
                 SkillHighLevel = character.Constitution >= 20 ? "[Withstand Mortal Blow]" : "[Locked]";
@@ -43,6 +47,7 @@ namespace PartyDatabase
 
         public class Rouge : VocationBasics
         {
+            public override string VocationName {get; set;}
             public override int VocationId {get; set;}
             public override string DefaultSkill {get; set;}
             public override string SkillLowLevel {get; set;}
@@ -51,6 +56,7 @@ namespace PartyDatabase
 
             public Rouge(Character character)
             {
+                VocationName = "Rouge";
                 VocationId = 02;
                 DefaultSkill = "[Steal(Battle/Shop)]";
 
@@ -69,6 +75,7 @@ namespace PartyDatabase
 
         public class Sorcerer : VocationBasics
         {
+            public override string VocationName {get; set;}
             public override int VocationId {get; set;}
             public override string DefaultSkill {get; set;}
             public override string SkillLowLevel {get; set;}
@@ -77,6 +84,7 @@ namespace PartyDatabase
                 
             public Sorcerer(Character character)
             {
+                VocationName = "Sorcerer";
                 VocationId = 03;
                 DefaultSkill = "[Fireball]";
 
@@ -95,6 +103,7 @@ namespace PartyDatabase
 
         public class Healer : VocationBasics
         {
+            public override string NameVocation {get; set;}
             public override int VocationId {get; set;}
             public override string DefaultSkill {get; set;}
             public override string SkillLowLevel {get; set;}
@@ -103,6 +112,7 @@ namespace PartyDatabase
 
             public Healer(Character character)
             {
+                VocationName = "Healer";
                 VocationId = 04;
                 DefaultSkill = "[Heal]";
 
@@ -121,6 +131,7 @@ namespace PartyDatabase
 
         public class Bard : VocationBasics
         {
+            public override string VocationName {get; set;}
             public override int VocationId {get; set;}
             public override string DefaultSkill {get; set;}
             public override string SkillLowLevel {get; set;}
@@ -129,6 +140,7 @@ namespace PartyDatabase
 
             public Bard(Character character)
             {
+                VocationName = "Bard";
                 VocationId = 05;
                 DefaultSkill = "[Inspire]";
 
