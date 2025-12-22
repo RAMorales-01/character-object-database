@@ -14,7 +14,7 @@ namespace PartyDatabase
     {
         static void Main(string[] args)
         {  
-            /*Console.Clear();
+            Console.Clear();
             Console.WriteLine("This program let the user create characters each with its own stats. Delete existing ones, view stats and so on.");
             Console.WriteLine("\nPress any key to begin the test.");
             Console.ReadKey(true);
@@ -44,17 +44,14 @@ namespace PartyDatabase
             Thread.Sleep(1000);
             Console.Write(".");
             Thread.Sleep(1000);
-            Console.Write("GOODBYE!");*/
+            Console.Write("GOODBYE!");
 
-            //test 2, remove after
-            Character character = new Character("Alex", 16, 20, 14, 10, 10, 10);
-            character.AssignedVocation = new Vocation.Fighter(character);
-            Console.WriteLine($"Name: {character.Name}");
-            Console.WriteLine($"Skill: {character.AssignedVocation.DefaultSkill}");
-            Console.WriteLine($"Skill: {character.AssignedVocation.SkillLowLevel}");
-            Console.WriteLine($"Skill: {character.AssignedVocation.SkillMediumLevel}");
-            Console.WriteLine($"Skill: {character.AssignedVocation.SkillHighLevel}");
-            character.AssignedVocation.VocationInfo();
+            
+            /*Character character = new Character("Alex", 16, 20, 14, 10, 10, 10);
+            character.SetVocation(new Vocation.Fighter(character));
+            Console.WriteLine(character.VocationId);
+            Console.WriteLine(character.AssignedVocation.DefaultSkill);
+            character.AssignedVocation.VocationInfo();*/
         }
     }
 }

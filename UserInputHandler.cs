@@ -60,7 +60,8 @@ namespace PartyDatabase
                         Console.ReadKey();
                 }
 
-                string closeDatabase = UserInputHandler.YesNoConfirmation("\nIs there another operation you wish to do?: ");
+                Console.WriteLine("\nIs there another operation you wish to do?");
+                string closeDatabase = UserInputHandler.YesNoConfirmation("Y/N: ");
 
                 if(closeDatabase == "no")
                 {

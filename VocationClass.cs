@@ -54,7 +54,7 @@ namespace PartyDatabase
                 VocationId = 02;
                 DefaultSkill = "[Steal(Battle/Shop)]";
 
-                SkillLowLevel = character.Strength >= 14 ? "[DeathBlow]" : "[Locked]";
+                SkillLowLevel = character.Strength >= 14 ? "[Deathblow]" : "[Locked]";
                 SkillMediumLevel = character.Wisdom >= 16 ? "[Detect Traps]" : "[Locked]";
                 SkillHighLevel = character.Dexterity >= 20 ? "[Uncanny Dodge]" : "[Locked]";
             }
