@@ -1,15 +1,13 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Reflection; //for class scanning
-using System.Linq; //for filtering
 using Microsoft.Data.Sqlite;
 
 namespace PartyDatabase
 {
     class CharacterManager
     {  
-        private static readonly string _databasePathFile = Path.Combine(Directory.GetCurrentDirectory(), "Data", "characters.db");
+        private static readonly string _databasePathFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "characters.db");
         private static readonly string _connectionString = $"Data Source={_databasePathFile}; Foreign Keys=True;";
 
         ///<summary>
@@ -17,19 +15,18 @@ namespace PartyDatabase
         ///</summary>
         public static void VerifyDatabaseIsCreated()
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(_databasePathFile));
+            string folder = Path.GetDirectoryName(_databasePathFile);
+            if(!string.IsNullOrEmpty(folder)) Directory.CreateDirectory(folder);
 
             using(SqliteConnection connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
 
-                using(SqliteCommand pragmaCommand = connection.CreateCommand())//Ensure foreign keys are enforced
+                using(SqliteCommand command = connection.CreateCommand())//Ensure foreign keys are enforced
                 {
-                    pragmaCommand.CommandText = @"PRAGMA foreign_keys = ON";
-                    pragmaCommand.ExecuteNonQuery();
-                }
-                using(SqliteCommand command = connection.CreateCommand())
-                {
+                    command.CommandText = @"PRAGMA foreign_keys = ON";
+                    command.ExecuteNonQuery();
+                    
                     command.CommandText = @"CREATE TABLE IF NOT EXISTS Vocations (id INTEGER PRIMARY KEY AUTOINCREMENT, 
                     Name TEXT NOT NULL, DefaultSkill TEXT NOT NULL, Skill1 TEXT NOT NULL, Skill2 TEXT NOT NULL, Skill3 TEXT NOT NULL);";
                     command.ExecuteNonQuery();
@@ -38,48 +35,96 @@ namespace PartyDatabase
                     VocationId INTEGER, Name TEXT NOT NULL, Strength INTEGER NOT NULL, Constitution INTEGER NOT NULL, 
                     Dexterity INTEGER NOT NULL, Intelligence INTEGER NOT NULL, Wisdom INTEGER NOT NULL, Charisma INTEGER NOT NULL, 
                     FOREIGN KEY (VocationId) REFERENCES Vocations(id) ON DELETE SET NULL);";
-                    command.ExecuteNonQuery();"
-                } 
+                    command.ExecuteNonQuery();
+                }
+                
+                SeedVocations(connection);
+            }
+        }
+        
+        ///<summary>
+        ///Inserts every class vocation in to its own table(Vocations)
+        ///</summary>
+        ///<param name="connection">instruction to open connection to the database</param>
+        private static void SeedVocations(SqliteConnection connection)
+        {
+           using(SqliteCommand checkCommand = connection.CreateCommand())//to verify if the vocations are already on table
+            {
+                checkCommand.CommandText = @"SELECT COUNT(*) FROM Vocations";
+                if(Convert.ToInt32(checkCommand.ExecuteScalar()) > 0) return;
+            } 
 
-                SeedVocations();
+            int[] vocationId = {1, 2, 3, 4, 5};
+
+            foreach(int id in vocationId)
+            {
+                using(SqliteCommand command = connection.CreateCommand())
+                {
+                    command.CommandText = @"INSERT INTO Vocations (id, Name, DefaultSkill, Skill1, Skill2, Skill3)
+                    VALUES (@id, @name, @def, @s1, @s2, @s3)";
+
+                    switch(id)
+                    {
+                        case 1: SetVocationParameters(command, 1, "Fighter", "[Parry]", "[Deflect Missile]", "[Multi-Slash]", "[Withstand Deathblow]");
+                        break;
+
+                        case 2: SetVocationParameters(command, 2, "Rouge", "[Steal(Battle/Shop)]", "[Deathblow]", "[Detect Traps]", "[Uncanny Dodge]");
+                        break;
+
+                        case 3: SetVocationParameters(command, 3, "Sorcerer", "[Fireball]", "[Quick Chanter]", "[Unshakable Caster]", "[Meteor]");
+                        break;
+
+                        case 4: SetVocationParameters(command, 4, "Healer", "[Heal]", "[Expand Healing Radius]", "[Deathblow Immunity]", "[Resurrection]");
+                        break;
+
+                        case 5: SetVocationParameters(command, 5, "Bard", "[Inspire]", "[Evade & Parry]", "[Song of Bravery]", "[Charm]");
+                        break;
+                    }
+
+                    command.ExecuteNonQuery();
+                }
             }
         }
 
-        private static void SeedVocations()
+        ///<summary>
+        ///Helper method for SeedVocations, inserts each entry value
+        ///</summary>
+        private static void SetVocationParameters(SqliteCommand command, int id, string name, string def, string s1, string s2, string s3)
+        {
+            command.Parameters.AddWithValue("@id", id);
+            command.Parameters.AddWithValue("@name", name);
+            command.Parameters.AddWithValue("@def", def);
+            command.Parameters.AddWithValue("@s1", s1);
+            command.Parameters.AddWithValue("@s2", s2);
+            command.Parameters.AddWithValue("@s3", s3);
+        }
+
+        ///<summary>
+        ///Displays each row and columns for the inserted vocations in the table Vocations
+        ///</summary>
+        public static void DisplayVocations()
         {
             using(SqliteConnection connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
-                SqliteCommand checkCommand = connection.CreateCommand();
-                checkCommand.CommandText = @"SELECT * FROM Vocations";
 
-                if(Convert.ToInt32(checkCommand.ExecuteScalar()) > 0) return; 
-
-                //we use Reflection to scan all the classes that are not abstract that inherits form VocationBasics                
-                var vocationTypes = typeof(Vocation).GetNestedTypes().Where(t => t.IsSubClassOf(typeof(Vocation.VocationBasics)) && !t.IsAbstract);
-                /*typeof(Vocation).GetNestedTypes() looks inside the Vocation class and makes a list
-                then with the method Where() a lambda expression where 't' is a list of all the classes that inherit from Vocation.VocationBasics
-                and finally !t.IsAbstract ignores VocationBasics which is an abstract class.*/
-
-                foreach(var types in vocationTypes)
+                using(SqliteCommand retrieveVocations = connection.CreateCommand())
                 {
-                    var instance = (Vocation.VocationBasics)Activator.CreateInstance(type, new object[] { null });
-                    /*Activator creates an object by knowing its type, then by using this type takes the arguments in an array 
-                    and pass the argument of the constructor as null. So basically what happens is: Take this type, find its constructor, 
-                    and run it using null as the input. Then, take that new object and treat it as a VocationBasics 
-                    so I can read its Name and Skills."*/
+                    retrieveVocations.CommandText = @"SELECT ALL id, Name, DefaultSkill, Skill1, Skill2, Skill3 FROM Vocations";
 
-                    using(SqliteCommand addVocationCommand = connection.CreateCommand())
+                    using(SqliteDataReader reader = retrieveVocations.ExecuteReader())
                     {
-                        addVocationCommand.CommandText = @"INSERT INTO Vocations (id, Name, DefaultSkill, Skill1, Skill2, Skill3)
-                        VALUES (@id, @name, @def, @s1, @s2, @s3)";
-                        addVocationCommand.Parameters.AddWithValue("@id", instance.VocationId);
-                        addVocationCommand.Parameters.AddWithValue("@name", instance.VocationName);
-                        addVocationCommand.Parameters.AddWithValue("@def", instance.DefaultSkill);
-                        addVocationCommand.Parameters.AddWithValue("@s1", instance.SkillLowLevel);
-                        addVocationCommand.Parameters.AddWithValue("@s2", instance.SkillMediumLevel);
-                        addVocationCommand.Parameters.AddWithValue("@s3", instance.SkillHighLevel);
-                        addVocationCommand.ExecuteNonQuery();
+                        while(reader.Read())
+                        {
+                            int id = reader.GetInt32(0);
+                            string name = reader.GetString(1);
+                            string def = reader.GetString(2);
+                            string s1 = reader.GetString(3);
+                            string s2 = reader.GetString(4);
+                            string s3 = reader.GetString(5);
+
+                            Console.WriteLine($"{id}, {name}, {def}, {s1}, {s2}, {s3}");
+                        }
                     }
                 }
             }
