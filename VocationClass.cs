@@ -38,7 +38,7 @@ namespace PartyDatabase
 
             public override void VocationInfo()
             {
-                Console.WriteLine("Fighter: A balanced vocation and easy to use.");
+                Console.WriteLine("A balanced vocation and easy to use.");
                 Console.WriteLine("Recommended stat distribution:");
                 Console.WriteLine("Strength (Priority Medium), Constitution (Priority High), Dexterity (Priority Low)");
             }
@@ -66,7 +66,7 @@ namespace PartyDatabase
 
             public override void VocationInfo()
             {
-                Console.WriteLine("Rouge: A vocation focused on skill and utility, medium difficulty.");
+                Console.WriteLine("A vocation focused on skill and utility, medium difficulty.");
                 Console.WriteLine("Recommended stat distribution:");
                 Console.WriteLine("Strength (Priority Low), Dexterity (Priority High), Wisdom (Priority Medium)");
             }
@@ -94,7 +94,7 @@ namespace PartyDatabase
 
             public override void VocationInfo()
             {
-                Console.WriteLine("Sorcerer: A vocation focused on magic and casting, hard to use.");
+                Console.WriteLine("A vocation focused on magic and casting, hard to use.");
                 Console.WriteLine("Recommended stat distribution:");
                 Console.WriteLine("Constitution (Priority High), Dexterity (Priority Medium), Intelligence (Priority High)");
             }
@@ -122,7 +122,7 @@ namespace PartyDatabase
 
             public override void VocationInfo()
             {
-                Console.WriteLine("Healer: A vocation focused on protecting allies by healing magic, very hard to use.");
+                Console.WriteLine("A vocation focused on protecting allies by healing magic, very hard to use.");
                 Console.WriteLine("Recommended stat distribution:");
                 Console.WriteLine("Constitution (Priority High), Intelligence (Priority Low), Wisdom (Priority High)");
             }
@@ -150,7 +150,7 @@ namespace PartyDatabase
 
             public override void VocationInfo()
             {
-                Console.WriteLine("Bard: A vocation focused on buffing using music to inspire allies, medium difficulty.");
+                Console.WriteLine("A vocation focused on buffing using music to inspire allies, medium difficulty.");
                 Console.WriteLine("Recommended stat distribution:");
                 Console.WriteLine("Constitution (Priority High), Intelligence (Priority Low), Wisdom (Priority High)");
             }

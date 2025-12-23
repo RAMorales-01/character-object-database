@@ -1,5 +1,7 @@
 using System;
 using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PartyDatabase
 {
@@ -11,6 +13,7 @@ namespace PartyDatabase
             CreateCharacter = 'C',
             DeleteCharacter = 'D',
             ViewStats = 'S',
+            Vocations = 'V',
             GoBack = 'B'
         }
 
@@ -20,8 +23,18 @@ namespace PartyDatabase
             { 'C', DatabaseOptions.CreateCharacter },
             { 'D', DatabaseOptions.DeleteCharacter },
             { 'S', DatabaseOptions.ViewStats },
+            { 'V', DatabaseOptions.Vocations },
             { 'B', DatabaseOptions.GoBack }
         };
+
+        private enum Vocations
+        {
+            Fighter = 1,
+            Rouge, 
+            Sorcerer,
+            Healer,
+            Bard
+        }
 
         ///<summary>
         ///Selection screen for the available options for the user depending of on
@@ -34,7 +47,7 @@ namespace PartyDatabase
                 Console.Clear();
                 Console.WriteLine("\nWhat do you want to do?.\n");
                 Thread.Sleep(1000);
-                Console.WriteLine("L- List Characters\nC- Create Character\nD- Delete Character\nS- Stats Character");
+                Console.WriteLine("L- List Characters\nC- Create Character\nD- Delete Character\nS- Stats Character\nV- Display Vocations");
                 Thread.Sleep(1000);
                 Console.Write("\nSelect: ");
                 string userInput = Console.ReadLine().ToUpper();
@@ -82,13 +95,15 @@ namespace PartyDatabase
             switch(selectedOption)
             {
                 case 'L': HandleListSubMenu();
-                    break;
+                break;
 
                 case 'C': CharacterManager.InsertCharacter(CharacterManager.CreateCharacter());
-                    break;
+                break;
+                
+                case 'V': CharacterManager.DisplayVocations();
+                break;
 
-                default:
-                    throw new ArgumentException($"Invalid operation selected", nameof(selectedOption));
+                default: throw new ArgumentException($"Invalid operation selected", nameof(selectedOption));
             }
         }
 
@@ -127,7 +142,7 @@ namespace PartyDatabase
                                 Console.WriteLine("\nINVALID: Choosen id does not exist inside the database. Press any key to return.");
                                 Console.ReadKey();
                             }
-                            break;
+                        break;
 
                         case 'S':
                             var verificationStats = IsValidId("Show stats: ", CharacterManager.GetIdAndName());
@@ -141,14 +156,14 @@ namespace PartyDatabase
                                 Console.WriteLine("\nINVALID: Choosen id does not exist inside the database. Press any key to return.");
                                 Console.ReadKey();
                             }
-                            break;
+                        break;
 
                         case 'B': return; 
 
                         default:
                                 Console.WriteLine($"\nERROR: Invalid input for this submenu. Expected 'D', 'S', or 'B'. Press any key to try again.");
                                 Console.ReadKey();
-                            break;
+                        break;
                     }
                 }
                 else
@@ -402,6 +417,45 @@ namespace PartyDatabase
                 else
                 {
                     return false;
+                }
+            }
+        }
+
+        ///<summary>
+        ///Display to the user the currently available vocations for the character.
+        ///</summary>
+        ///<param name="prompt">prompts the user to select 1 of the available vocations</param>
+        ///<param name="name">choosen name of the character to be created</param>
+        ///<returns>integer that represents the vocation id</returns>
+        public static int ChooseVocation(string prompt, string name)
+        {
+            List<Vocations> vocationList = Enum.GetValues(typeof(Vocations)).Cast<Vocations>().ToList();
+            Vocations firstIdValue = Vocations.Fighter;
+            int minValue = (int)firstIdValue;
+            int maxValue = vocationList.Count;
+
+            while(true)
+            {
+                Console.Clear();
+                Console.WriteLine($"Now lets choose {name} vocation.");
+
+                foreach(Vocations vocation in vocationList)
+                {
+                    int bulletList = 1;
+                    Console.WriteLine($"{bulletList} - {vocation}");
+                    bulletList++;
+                }
+                
+                Console.Write(prompt);
+
+                if(int.TryParse(Console.ReadLine(), out int selectedId) && selectedId >= minValue || selectedId <= maxValue)
+                {
+                    return selectedId;
+                }
+                else
+                {
+                    Console.WriteLine($"ERROR: Invalid input expected positive integer between {minValue} and {maxValue}. Press any key to try again.");
+                    Console.ReadKey();
                 }
             }
         }

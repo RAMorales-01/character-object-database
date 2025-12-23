@@ -100,10 +100,12 @@ namespace PartyDatabase
         }
 
         ///<summary>
-        ///Displays each row and columns for the inserted vocations in the table Vocations
+        ///Displays each row and columns for the existing vocations
         ///</summary>
         public static void DisplayVocations()
         {
+            Console.Clear();
+
             using(SqliteConnection connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
@@ -123,7 +125,8 @@ namespace PartyDatabase
                             string s2 = reader.GetString(4);
                             string s3 = reader.GetString(5);
 
-                            Console.WriteLine($"{id}, {name}, {def}, {s1}, {s2}, {s3}");
+                        Console.WriteLine($"id: {id} | Vocation: {name} | Default Skill: {def}");
+                        Console.WriteLine($"Unlockable Skills: {s1} - {s2} - {s3}\n");
                         }
                     }
                 }
@@ -162,6 +165,7 @@ namespace PartyDatabase
         public static Character CreateCharacter()
         {
             var name = UserInputHandler.AddName("Name: ");
+            var choosenVocationId = UserInputHandler.ChooseVocation("Select a vocation: ", name);
 
             while(true)
             {
@@ -179,13 +183,43 @@ namespace PartyDatabase
                 if(proceed == true)
                 {
                     Character character = new Character(name, strength, constitution, dexterity, intelligence, wisdom, charisma);
+                    AssignVocation(character, choosenVocationId);
                     return character;
                 }
             } 
         }
         
         ///<summary>
-        ///Retreives all the values from the column name from the database.
+        ///Helper method to assign the choosen vocation to the character instance.
+        ///</summary>
+        ///<param name="character">instance of the character created</param>
+        ///<param name="vocationId">a representation of the selected id to assign the vocation</param>
+        private static void AssignVocation(Character character,  int vocationId)
+        {
+            switch(vocationId)
+            {
+                case 1: character.SetVocation(new Vocation.Fighter(character));
+                break;
+
+                case 2: character.SetVocation(new Vocation.Rouge(character));
+                break;
+
+                case 3: character.SetVocation(new Vocation.Sorcerer(character));
+                break;
+
+                case 4: character.SetVocation(new Vocation.Healer(character));
+                break;
+
+                case 5: character.SetVocation(new Vocation.Bard(character));
+                break;
+
+                default: Console.WriteLine("\nERROR: Invalid input selected option does not exist.\n");
+                break;
+            }
+        }
+
+        ///<summary>
+        ///Retreives all the values from the column.
         ///</summary>
         ///<returns>A dictionary with the id and name of all the current character in the database</returns>
         public static Dictionary<int, string> GetIdAndName()
