@@ -165,7 +165,7 @@ namespace PartyDatabase
         public static Character CreateCharacter()
         {
             var name = UserInputHandler.AddName("Name: ");
-            var choosenVocationId = UserInputHandler.ChooseVocation("Select a vocation: ", name);
+            var choosenVocationId = UserInputHandler.ChooseVocation("\nSelect a vocation: ", name);
 
             while(true)
             {

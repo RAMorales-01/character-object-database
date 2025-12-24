@@ -31,9 +31,9 @@ namespace PartyDatabase
                 VocationId = 1;
                 DefaultSkill = "[Parry]";
 
-                SkillLowLevel = character != null && character.Dexterity >= 14 ? "[Deflect Missile]" : "[Locked]"; 
-                SkillMediumLevel = character != null && character.Strength >= 16 ? "[Multi-Slash]" : "[Locked]";
-                SkillHighLevel = character != null && character.Constitution >= 20 ? "[Withstand Deathblow]" : "[Locked]";
+                SkillLowLevel = character != null && character.Dexterity >= 14 ? "[Deflect Missile]" : "[-----]"; 
+                SkillMediumLevel = character != null && character.Strength >= 16 ? "[Multi-Slash]" : "[-----]";
+                SkillHighLevel = character != null && character.Constitution >= 20 ? "[Withstand Deathblow]" : "[-----]";
             }
 
             public override void VocationInfo()
@@ -59,9 +59,9 @@ namespace PartyDatabase
                 VocationId = 2;
                 DefaultSkill = "[Steal(Battle/Shop)]";
 
-                SkillLowLevel = character != null && character.Strength >= 14 ? "[Deathblow]" : "[Locked]";
-                SkillMediumLevel = character != null && character.Wisdom >= 16 ? "[Detect Traps]" : "[Locked]";
-                SkillHighLevel = character != null && character.Dexterity >= 20 ? "[Uncanny Dodge]" : "[Locked]";
+                SkillLowLevel = character != null && character.Strength >= 14 ? "[Deathblow]" : "[-----]";
+                SkillMediumLevel = character != null && character.Wisdom >= 16 ? "[Detect Traps]" : "[-----]";
+                SkillHighLevel = character != null && character.Dexterity >= 20 ? "[Uncanny Dodge]" : "[-----]";
             }
 
             public override void VocationInfo()
@@ -87,9 +87,9 @@ namespace PartyDatabase
                 VocationId = 3;
                 DefaultSkill = "[Fireball]";
 
-                SkillLowLevel = character != null && character.Dexterity >= 16 ? "[Quick Chanter]" : "[Locked]";
-                SkillMediumLevel = character != null && character.Constitution >= 18 ? "[Unshakable Caster]" : "[Locked]";
-                SkillHighLevel = character != null && character.Intelligence >= 20 ? "[Meteor]" : "[Locked]";
+                SkillLowLevel = character != null && character.Dexterity >= 16 ? "[Quick Chanter]" : "[-----]";
+                SkillMediumLevel = character != null && character.Constitution >= 18 ? "[Unshakable Caster]" : "[-----]";
+                SkillHighLevel = character != null && character.Intelligence >= 20 ? "[Meteor]" : "[-----]";
             }
 
             public override void VocationInfo()
@@ -115,9 +115,9 @@ namespace PartyDatabase
                 VocationId = 4;
                 DefaultSkill = "[Heal]";
 
-                SkillLowLevel = character != null && character.Intelligence >= 14 ? "[Expand Healing Radius]" : "[Locked]";
-                SkillMediumLevel = character != null && character.Constitution >= 18 ? "[Deathblow Immunity]" : "[Locked]";
-                SkillHighLevel = character != null && character.Wisdom >= 20 ? "[Resurrection]" : "[Locked]";
+                SkillLowLevel = character != null && character.Intelligence >= 14 ? "[Expand Healing Radius]" : "[-----]";
+                SkillMediumLevel = character != null && character.Constitution >= 18 ? "[Deathblow Immunity]" : "[-----]";
+                SkillHighLevel = character != null && character.Wisdom >= 20 ? "[Resurrection]" : "[-----]";
             }
 
             public override void VocationInfo()
@@ -143,9 +143,9 @@ namespace PartyDatabase
                 VocationId = 5;
                 DefaultSkill = "[Inspire]";
 
-                SkillLowLevel = character != null && character.Dexterity >= 16 ? "[Evade & Parry]" : "[Locked]";
-                SkillMediumLevel = character != null && character.Intelligence >= 18 ? "[Song of Bravery]" : "[Locked]";
-                SkillHighLevel = character != null && character.Charisma >= 20 ? "[Charm]" : "[Locked]";
+                SkillLowLevel = character != null && character.Dexterity >= 16 ? "[Evade & Parry]" : "[-----]";
+                SkillMediumLevel = character != null && character.Intelligence >= 18 ? "[Song of Bravery]" : "[-----]";
+                SkillHighLevel = character != null && character.Charisma >= 20 ? "[Charm]" : "[-----]";
             }
 
             public override void VocationInfo()

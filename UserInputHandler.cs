@@ -118,9 +118,7 @@ namespace PartyDatabase
             {
                 DisplayCharacterList(CharacterManager.GetIdAndName());
 
-                Console.WriteLine("\nThe Characters are displayed above.");
-                Console.WriteLine("What do you want to do with these characters.\n");
-                Console.WriteLine("D- Delete Character\nS- Stats Character\nB- Go back to main menu");
+                Console.WriteLine("\nD- Delete Character\nS- Stats Character\nB- Go back to main menu");
                 Console.Write("\nSelect: ");
                 string userInput = Console.ReadLine().ToUpper();
 
@@ -192,12 +190,12 @@ namespace PartyDatabase
 
                 foreach(KeyValuePair<int, string> kvp in characterList)
                 {
-                    Console.WriteLine($"{kvp.Key} - {kvp.Value}");
+                    Console.WriteLine($"ID: {kvp.Key} - Name: {kvp.Value}");
                 }
             }
 
-            Console.WriteLine("\nPress any key to display the sub menu.");
-            Console.ReadKey();
+            /*Console.WriteLine("\nPress any key to display the sub menu.");
+            Console.ReadKey();*/
         }
 
         ///<summary>
@@ -399,7 +397,7 @@ namespace PartyDatabase
                     Console.WriteLine($"WARNING: You have {points} points unassiged, these points will be lost if you dont use them.");
                 }
 
-                Console.WriteLine($"Character: {characterName}");
+                Console.WriteLine($"Name: {characterName}");
                 Console.WriteLine("\nProceed with this stats?\n");
                 Console.WriteLine($"Str: {strength}");
                 Console.WriteLine($"Con: {constitution}");
@@ -436,12 +434,13 @@ namespace PartyDatabase
 
             while(true)
             {
+                int bulletList = 1;
+
                 Console.Clear();
-                Console.WriteLine($"Now lets choose {name} vocation.");
+                Console.WriteLine($"Now lets choose {name} vocation.\n");
 
                 foreach(Vocations vocation in vocationList)
                 {
-                    int bulletList = 1;
                     Console.WriteLine($"{bulletList} - {vocation}");
                     bulletList++;
                 }
