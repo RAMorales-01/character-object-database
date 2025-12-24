@@ -42,6 +42,8 @@ namespace PartyDatabase
         ///</summary>
         public static void SelectionScreen()
         {
+            CharacterManager.VerifyDatabaseIsCreated();
+            
             while(true)
             {
                 Console.Clear();
@@ -147,7 +149,7 @@ namespace PartyDatabase
                             
                             if(verificationStats.exist == true)
                             {
-                                DisplayCharacterStats(CharacterManager.GetStatsFromId(verificationStats.characterId));
+                                DisplayCharacterStats(CharacterManager.GetStatsFromId(verificationStats.characterId), CharacterManager.GetSetVocationInfoFromId(verificationStats.characterId));
                             }
                              else
                             {
@@ -203,13 +205,20 @@ namespace PartyDatabase
         ///Displays Strength, Constitution, Dexterity, Intelligence, Wisdom and Charisma
         ///</summary>
         ///<param name="characterStats">List of tuple, string with the name of the column and int with the value of the column</param>
-        private static void DisplayCharacterStats(List<Tuple<string, int>> characterStats)
+        private static void DisplayCharacterStats(List<Tuple<string, int>> characterStats, List<Tuple<string, string>> characterSkills)
         {
             Console.WriteLine("\n----- Stats -----\n");
 
             foreach(var stats in characterStats)
             {
                 Console.WriteLine($"{stats.Item1} --> {stats.Item2}");
+            }
+
+            Console.WriteLine("\n----- Stats -----\n");
+
+            foreach(var skills in characterSkills)
+            {
+                Console.WriteLine($"{skills.Item1} | {skills.Item2}");
             }
 
             Console.WriteLine("\nPress any key to return to main menu.\n");

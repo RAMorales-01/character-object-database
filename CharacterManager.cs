@@ -34,7 +34,8 @@ namespace PartyDatabase
                     command.CommandText = @"CREATE TABLE IF NOT EXISTS Characters (id INTEGER PRIMARY KEY AUTOINCREMENT, 
                     VocationId INTEGER, Name TEXT NOT NULL, Strength INTEGER NOT NULL, Constitution INTEGER NOT NULL, 
                     Dexterity INTEGER NOT NULL, Intelligence INTEGER NOT NULL, Wisdom INTEGER NOT NULL, Charisma INTEGER NOT NULL, 
-                    FOREIGN KEY (VocationId) REFERENCES Vocations(id) ON DELETE SET NULL);";
+                    VocationName TEXT NOT NULL, VocationSkill TEXT NOT NULL, Skill1 TEXT NOT NULL, Skill2 TEXT NOT NULL, 
+                    Skill3 TEXT NOT NULL, FOREIGN KEY (VocationId) REFERENCES Vocations(id) ON DELETE SET NULL);";
                     command.ExecuteNonQuery();
                 }
                 
@@ -144,8 +145,9 @@ namespace PartyDatabase
                 connection.Open(); 
 
                 SqliteCommand addCharacterCommand = connection.CreateCommand();
-                addCharacterCommand.CommandText = @"INSERT INTO Characters (Name, Strength, Constitution, Dexterity, Intelligence, Wisdom, Charisma, VocationId) 
-                VALUES (@name, @strength, @constitution, @dexterity, @intelligence, @wisdom, @charisma, @vocationId)";
+                addCharacterCommand.CommandText = @"INSERT INTO Characters (Name, Strength, Constitution, Dexterity, Intelligence, Wisdom, Charisma, VocationId,
+                VocationName, VocationSkill, Skill1, Skill2, Skill3) 
+                VALUES (@name, @strength, @constitution, @dexterity, @intelligence, @wisdom, @charisma, @vocationId, @VName, @def, @s1, @s2, @s3)";
                 addCharacterCommand.Parameters.AddWithValue("@name", character.Name);
                 addCharacterCommand.Parameters.AddWithValue("@strength", character.Strength);
                 addCharacterCommand.Parameters.AddWithValue("@constitution", character.Constitution);
@@ -154,6 +156,11 @@ namespace PartyDatabase
                 addCharacterCommand.Parameters.AddWithValue("@wisdom", character.Wisdom);
                 addCharacterCommand.Parameters.AddWithValue("@charisma", character.Charisma);
                 addCharacterCommand.Parameters.AddWithValue("@vocationId", character.VocationId > 0 ? character.VocationId : DBNull.Value);
+                addCharacterCommand.Parameters.AddWithValue("@VName", character.AssignedVocation.VocationName);
+                addCharacterCommand.Parameters.AddWithValue("@def", character.AssignedVocation.DefaultSkill);
+                addCharacterCommand.Parameters.AddWithValue("@s1", character.AssignedVocation.SkillLowLevel);
+                addCharacterCommand.Parameters.AddWithValue("@s2", character.AssignedVocation.SkillMediumLevel);
+                addCharacterCommand.Parameters.AddWithValue("@s3", character.AssignedVocation.SkillHighLevel);
                 addCharacterCommand.ExecuteNonQuery();
             }
         }
@@ -298,6 +305,37 @@ namespace PartyDatabase
             }
 
             return characterStats;
+        }
+
+        ///Testing
+        public static List<Tuple<string, string>> GetSetVocationInfoFromId(int characterId)
+        {
+            List<Tuple<string, string>> characterVocationInfo = new List<Tuple<string, string>>();
+
+            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand retrieveSetVInfo = connection.CreateCommand();
+                retrieveSetVInfo.CommandText = @"SELECT VocationName, VocationSkill, Skill1, Skill2, Skill3 FROM Characters WHERE id = @id";
+                retrieveSetVInfo.Parameters.AddWithValue("@id", characterId);
+
+                using(SqliteDataReader reader = retrieveSetVInfo.ExecuteReader())
+                {
+                    while(reader.Read())
+                    {
+                        for(int i = 0; i < reader.FieldCount; i++)
+                        {
+                            string vColumnName = reader.GetName(i);
+                            string vColumnValue = reader.GetString(i);
+
+                            characterVocationInfo.Add(new Tuple<string, string>(vColumnName, vColumnValue));
+                        }
+                    }
+                }
+            }
+
+            return characterVocationInfo;
         }
     }
 }
