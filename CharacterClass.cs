@@ -32,6 +32,8 @@ namespace PartyDatabase
         public int Charisma {get; private set;}
         public Vocation.VocationBasics AssignedVocation {get; set;}//Allows to call VocationInfo and Vocation.DefaultSkill, (SkillLowLevel, SkillMediumLevel, SkillHighLevel) 
         public int VocationId {get; set;}
+        public Race.RaceBasics AssignedRace {get; set;}
+        public int RaceId {get; set;}
 
         public Character(string name, int strength, int constitution, int dexterity, int intelligence, int wisdom, int charisma)
         {
@@ -62,6 +64,12 @@ namespace PartyDatabase
         {
             AssignedVocation = vocation;
             VocationId = vocation.VocationId;
+        }
+
+        public void SetRace(Race.RaceBasics race)
+        {
+            AssignedRace = race;
+            RaceId = race.RaceId;
         }
     }
 }

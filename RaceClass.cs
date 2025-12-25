@@ -34,7 +34,7 @@ namespace PartyDatabase
             public Elven(Character character)
             {
                 RaceName = "Elven";
-                RacaId = 2;
+                RaceId = 2;
                 RaceTrait = "+20 on all Magic";
             }
         }
