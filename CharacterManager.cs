@@ -28,13 +28,13 @@ namespace PartyDatabase
                     command.ExecuteNonQuery();
                     
                     command.CommandText = @"CREATE TABLE IF NOT EXISTS Vocations (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                    Name TEXT NOT NULL, DefaultSkill TEXT NOT NULL, Skill1 TEXT NOT NULL, Skill2 TEXT NOT NULL, Skill3 TEXT NOT NULL);";
+                    Name TEXT NOT NULL, Ability TEXT NOT NULL, Skill1 TEXT NOT NULL, Skill2 TEXT NOT NULL, Skill3 TEXT NOT NULL);";
                     command.ExecuteNonQuery();
 
                     command.CommandText = @"CREATE TABLE IF NOT EXISTS Characters (id INTEGER PRIMARY KEY AUTOINCREMENT, 
                     VocationId INTEGER, Name TEXT NOT NULL, Strength INTEGER NOT NULL, Constitution INTEGER NOT NULL, 
                     Dexterity INTEGER NOT NULL, Intelligence INTEGER NOT NULL, Wisdom INTEGER NOT NULL, Charisma INTEGER NOT NULL, 
-                    VocationName TEXT NOT NULL, VocationSkill TEXT NOT NULL, Skill1 TEXT NOT NULL, Skill2 TEXT NOT NULL, 
+                    Vocation TEXT NOT NULL, Ability TEXT NOT NULL, Skill1 TEXT NOT NULL, Skill2 TEXT NOT NULL, 
                     Skill3 TEXT NOT NULL, FOREIGN KEY (VocationId) REFERENCES Vocations(id) ON DELETE SET NULL);";
                     command.ExecuteNonQuery();
                 }
@@ -61,7 +61,7 @@ namespace PartyDatabase
             {
                 using(SqliteCommand command = connection.CreateCommand())
                 {
-                    command.CommandText = @"INSERT INTO Vocations (id, Name, DefaultSkill, Skill1, Skill2, Skill3)
+                    command.CommandText = @"INSERT INTO Vocations (id, Name, Ability, Skill1, Skill2, Skill3)
                     VALUES (@id, @name, @def, @s1, @s2, @s3)";
 
                     switch(id)
@@ -113,7 +113,7 @@ namespace PartyDatabase
 
                 using(SqliteCommand retrieveVocations = connection.CreateCommand())
                 {
-                    retrieveVocations.CommandText = @"SELECT ALL id, Name, DefaultSkill, Skill1, Skill2, Skill3 FROM Vocations";
+                    retrieveVocations.CommandText = @"SELECT ALL id, Name, Ability, Skill1, Skill2, Skill3 FROM Vocations";
 
                     using(SqliteDataReader reader = retrieveVocations.ExecuteReader())
                     {
@@ -126,7 +126,7 @@ namespace PartyDatabase
                             string s2 = reader.GetString(4);
                             string s3 = reader.GetString(5);
 
-                        Console.WriteLine($"id: {id} | Vocation: {name} | Default Skill: {def}");
+                        Console.WriteLine($"id: {id} | Vocation: {name} | Ability: {def}");
                         Console.WriteLine($"Unlockable Skills: {s1} - {s2} - {s3}\n");
                         }
                     }
@@ -146,7 +146,7 @@ namespace PartyDatabase
 
                 SqliteCommand addCharacterCommand = connection.CreateCommand();
                 addCharacterCommand.CommandText = @"INSERT INTO Characters (Name, Strength, Constitution, Dexterity, Intelligence, Wisdom, Charisma, VocationId,
-                VocationName, VocationSkill, Skill1, Skill2, Skill3) 
+                Vocation, Ability, Skill1, Skill2, Skill3) 
                 VALUES (@name, @strength, @constitution, @dexterity, @intelligence, @wisdom, @charisma, @vocationId, @VName, @def, @s1, @s2, @s3)";
                 addCharacterCommand.Parameters.AddWithValue("@name", character.Name);
                 addCharacterCommand.Parameters.AddWithValue("@strength", character.Strength);
@@ -317,7 +317,7 @@ namespace PartyDatabase
                 connection.Open();
 
                 SqliteCommand retrieveSetVInfo = connection.CreateCommand();
-                retrieveSetVInfo.CommandText = @"SELECT VocationName, VocationSkill, Skill1, Skill2, Skill3 FROM Characters WHERE id = @id";
+                retrieveSetVInfo.CommandText = @"SELECT Vocation, Ability, Skill1, Skill2, Skill3 FROM Characters WHERE id = @id";
                 retrieveSetVInfo.Parameters.AddWithValue("@id", characterId);
 
                 using(SqliteDataReader reader = retrieveSetVInfo.ExecuteReader())
