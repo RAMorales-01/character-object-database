@@ -52,7 +52,7 @@ namespace PartyDatabase
            using(SqliteCommand checkCommand = connection.CreateCommand())//to verify if the vocations are already on table
             {
                 checkCommand.CommandText = @"SELECT COUNT(*) FROM Vocations";
-                if(Convert.ToInt32(checkCommand.ExecuteScalar()) > 0) return;
+                if(Convert.ToInt32(checkCommand.ExecuteScalar()) > 0) return;//if table entries count is higher than 0 it means the table is filled
             } 
 
             int[] vocationId = {1, 2, 3, 4, 5};
@@ -307,7 +307,11 @@ namespace PartyDatabase
             return characterStats;
         }
 
-        ///Testing
+        ///<summary>
+        ///Retrives the vocation info assigned to the created character using primary key
+        ///</summary>
+        ///<param name="characterId">primary key form each row</param>
+        ///<returns>a List of Tuple string for the column name and string for the value on each column</returns>
         public static List<Tuple<string, string>> GetSetVocationInfoFromId(int characterId)
         {
             List<Tuple<string, string>> characterVocationInfo = new List<Tuple<string, string>>();
