@@ -21,7 +21,7 @@ namespace PartyDatabase
             {
                 RaceName = "Human";
                 RaceId = 1;
-                RaceTrait = "+10 on all Physical and Offenive Magic";
+                RaceTrait = "+15 on all Physical and Offenive Magic";
             }
         }
 
@@ -35,7 +35,7 @@ namespace PartyDatabase
             {
                 RaceName = "Elven";
                 RaceId = 2;
-                RaceTrait = "+20 on all Magic";
+                RaceTrait = "+20 on all Magic and +5 on all Healing Magic";
             }
         }
 

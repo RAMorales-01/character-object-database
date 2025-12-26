@@ -26,23 +26,79 @@ namespace PartyDatabase
                 {
                     command.CommandText = @"PRAGMA foreign_keys = ON";
                     command.ExecuteNonQuery();
+
+                    command.CommandText = @"CREATE TABLE IF NOT EXISTS Races (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                    Name TEXT NOT NULL, Trait TEXT NOT NULL);";
+                    command.ExecuteNonQuery();
                     
                     command.CommandText = @"CREATE TABLE IF NOT EXISTS Vocations (id INTEGER PRIMARY KEY AUTOINCREMENT, 
                     Name TEXT NOT NULL, Ability TEXT NOT NULL, Skill1 TEXT NOT NULL, Skill2 TEXT NOT NULL, Skill3 TEXT NOT NULL);";
                     command.ExecuteNonQuery();
 
                     command.CommandText = @"CREATE TABLE IF NOT EXISTS Characters (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                    VocationId INTEGER, Name TEXT NOT NULL, Strength INTEGER NOT NULL, Constitution INTEGER NOT NULL, 
+                    RaceId INTEGER, VocationId INTEGER, Name TEXT NOT NULL, Strength INTEGER NOT NULL, Constitution INTEGER NOT NULL, 
                     Dexterity INTEGER NOT NULL, Intelligence INTEGER NOT NULL, Wisdom INTEGER NOT NULL, Charisma INTEGER NOT NULL, 
-                    Vocation TEXT NOT NULL, Ability TEXT NOT NULL, Skill1 TEXT NOT NULL, Skill2 TEXT NOT NULL, 
-                    Skill3 TEXT NOT NULL, FOREIGN KEY (VocationId) REFERENCES Vocations(id) ON DELETE SET NULL);";
+                    Race TEXT NOT NULL, Trait TEXT NOT NULL, Vocation TEXT NOT NULL, Ability TEXT NOT NULL, Skill1 TEXT NOT NULL, 
+                    Skill2 TEXT NOT NULL, Skill3 TEXT NOT NULL, FOREIGN KEY (RaceId) REFERENCES Races(id) ON DELETE SET NULL, 
+                    FOREIGN KEY (VocationId) REFERENCES Vocations(id) ON DELETE SET NULL);";
                     command.ExecuteNonQuery();
                 }
                 
+                SeedRaces(connection);
                 SeedVocations(connection);
             }
         }
         
+        ///<summary>
+        ///Inserts every class race in to its own table(Races)
+        ///</summary>
+        ///<param name="connection">instruction to open connection to the database</param>
+        private static void SeedRaces(SqliteConnection connection)
+        {
+            using(SqliteCommand checkCommand = connection.CreateCommand())
+            {
+                checkCommand.CommandText = @"SELECT COUNT(*) FORM Races";
+                if(Convert.ToInt32(checkCommand.ExecuteScalar()) > 0) return;
+            }
+
+            int[] racesId = {1, 2, 3, 4};
+
+            foreach(int id in racesId) 
+            {
+                using(SqliteCommand command = connection.CreateCommand())
+                {
+                    command.CommandText = @"INSERT INTO Races (id, Name, Trait) VALUES (@id, @name, @trait)";
+
+                    switch(id)
+                    {
+                        case 1: SetRaceParameters(command, 1, "Human", "+15 on all Physical and Offenive Magic");
+                        break;
+
+                        case 2: SetRaceParameters(command, 2, "Elven", "+20 on all Magic and +5 on all Healing Magic");
+                        break;
+
+                        case 3: SetRaceParameters(command, 3, "Fiendblood", "+30 on Offenive Fire and Dark Magic");
+                        break;
+
+                        case 4: SetRaceParameters(command, 4, "Beastfolk", "+10 on Initiative and +25 in Agility");
+                        break;
+                    }
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        ///<summary>
+        ///Helper method for SeedRaces, inserts each entry value
+        ///</summary>
+        private static void SetRaceParameters(SqliteCommand command, int id, string name, string trait)
+        {
+            command.Parameters.AddWithValue("@id", id);
+            command.Parameters.AddWithValue("@name", name);
+            command.Parameters.AddWithValue("@trait", trait);
+        }
+
         ///<summary>
         ///Inserts every class vocation in to its own table(Vocations)
         ///</summary>
@@ -135,7 +191,7 @@ namespace PartyDatabase
         }
 
         ///<summary>
-        ///Insert the character object to the database
+        ///Insert the character object to the database, along with all stats, race and vocation information
         ///</summary>
         ///<param name="character">current character object to be inserted to the database</param>
         public static void InsertCharacter(Character character)
@@ -145,9 +201,9 @@ namespace PartyDatabase
                 connection.Open(); 
 
                 SqliteCommand addCharacterCommand = connection.CreateCommand();
-                addCharacterCommand.CommandText = @"INSERT INTO Characters (Name, Strength, Constitution, Dexterity, Intelligence, Wisdom, Charisma, VocationId,
-                Vocation, Ability, Skill1, Skill2, Skill3) 
-                VALUES (@name, @strength, @constitution, @dexterity, @intelligence, @wisdom, @charisma, @vocationId, @VName, @def, @s1, @s2, @s3)";
+                addCharacterCommand.CommandText = @"INSERT INTO Characters (Name, Strength, Constitution, Dexterity, Intelligence, Wisdom, Charisma,
+                RaceId, Race, Trait, VocationId, Vocation, Ability, Skill1, Skill2, Skill3) 
+                VALUES (@name, @strength, @constitution, @dexterity, @intelligence, @wisdom, @charisma, @raceId, @RName, @trait, @vocationId, @VName, @def, @s1, @s2, @s3)";
                 addCharacterCommand.Parameters.AddWithValue("@name", character.Name);
                 addCharacterCommand.Parameters.AddWithValue("@strength", character.Strength);
                 addCharacterCommand.Parameters.AddWithValue("@constitution", character.Constitution);
@@ -155,6 +211,9 @@ namespace PartyDatabase
                 addCharacterCommand.Parameters.AddWithValue("@intelligence", character.Intelligence);
                 addCharacterCommand.Parameters.AddWithValue("@wisdom", character.Wisdom);
                 addCharacterCommand.Parameters.AddWithValue("@charisma", character.Charisma);
+                addCharacterCommand.Parameters.AddWithValue("@raceId", character.RaceId > 0 ? character.RaceId : DBNull.Value);
+                addCharacterCommand.Parameters.AddWithValue("RName", character.AssignedRace.RaceName);
+                addCharacterCommand.Parameters.AddWithValue("@trait", character.AssignedRace.RaceTrait);
                 addCharacterCommand.Parameters.AddWithValue("@vocationId", character.VocationId > 0 ? character.VocationId : DBNull.Value);
                 addCharacterCommand.Parameters.AddWithValue("@VName", character.AssignedVocation.VocationName);
                 addCharacterCommand.Parameters.AddWithValue("@def", character.AssignedVocation.DefaultSkill);
