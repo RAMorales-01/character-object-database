@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("characterPartyDatabase")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c37d7e729ae9a27d285e67a76ce9bdc951abb96d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+85b9269d614f554bafab523d333a25f8f25a56f9")]
 [assembly: System.Reflection.AssemblyProductAttribute("characterPartyDatabase")]
 [assembly: System.Reflection.AssemblyTitleAttribute("characterPartyDatabase")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

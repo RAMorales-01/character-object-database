@@ -13,6 +13,7 @@ namespace PartyDatabase
             CreateCharacter = 'C',
             DeleteCharacter = 'D',
             ViewStats = 'S',
+            Races = 'R',
             Vocations = 'V',
             GoBack = 'B'
         }
@@ -23,6 +24,7 @@ namespace PartyDatabase
             { 'C', DatabaseOptions.CreateCharacter },
             { 'D', DatabaseOptions.DeleteCharacter },
             { 'S', DatabaseOptions.ViewStats },
+            { 'R', DatabaseOptions.Races },
             { 'V', DatabaseOptions.Vocations },
             { 'B', DatabaseOptions.GoBack }
         };
@@ -49,7 +51,7 @@ namespace PartyDatabase
                 Console.Clear();
                 Console.WriteLine("\nWhat do you want to do?.\n");
                 Thread.Sleep(1000);
-                Console.WriteLine("L- List Characters\nC- Create Character\nD- Delete Character\nS- Stats Character\nV- Display Vocations");
+                Console.WriteLine("L- List Characters\nC- Create Character\nD- Delete Character\nS- Stats Character\nR- Display Races\nV- Display Vocations");
                 Thread.Sleep(1000);
                 Console.Write("\nSelect: ");
                 string userInput = Console.ReadLine().ToUpper();
@@ -100,6 +102,9 @@ namespace PartyDatabase
                 break;
 
                 case 'C': CharacterManager.InsertCharacter(CharacterManager.CreateCharacter());
+                break;
+
+                case 'R': CharacterManager.DisplayRaces();
                 break;
                 
                 case 'V': CharacterManager.DisplayVocations();

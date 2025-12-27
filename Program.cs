@@ -14,7 +14,7 @@ namespace PartyDatabase
     {
         static void Main(string[] args)
         {  
-            /*Console.Clear();
+            Console.Clear();
             Console.WriteLine("This program let the user create characters each with its own stats. Delete existing ones, view stats and so on.");
             Console.WriteLine("\nPress any key to begin the test.");
             Console.ReadKey(true);
@@ -44,14 +44,14 @@ namespace PartyDatabase
             Thread.Sleep(1000);
             Console.Write(".");
             Thread.Sleep(1000);
-            Console.Write("GOODBYE!");*/
+            Console.Write("GOODBYE!");
 
             
-            Character character = new Character("Alex", 16, 20, 14, 10, 10, 10);
+            /*Character character = new Character("Alex", 16, 20, 14, 10, 10, 10);
             character.SetRace(new Race.Human(character));
             Console.WriteLine($"Race: {character.AssignedRace.RaceName}");
             Console.WriteLine($"Id: {character.AssignedRace.RaceId}");
-            Console.WriteLine($"Trait: {character.AssignedRace.RaceTrait}");
+            Console.WriteLine($"Trait: {character.AssignedRace.RaceTrait}");*/
         }
     }
 }

@@ -35,12 +35,26 @@ namespace PartyDatabase
                     Name TEXT NOT NULL, Ability TEXT NOT NULL, Skill1 TEXT NOT NULL, Skill2 TEXT NOT NULL, Skill3 TEXT NOT NULL);";
                     command.ExecuteNonQuery();
 
-                    command.CommandText = @"CREATE TABLE IF NOT EXISTS Characters (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                    RaceId INTEGER, VocationId INTEGER, Name TEXT NOT NULL, Strength INTEGER NOT NULL, Constitution INTEGER NOT NULL, 
-                    Dexterity INTEGER NOT NULL, Intelligence INTEGER NOT NULL, Wisdom INTEGER NOT NULL, Charisma INTEGER NOT NULL, 
-                    Race TEXT NOT NULL, Trait TEXT NOT NULL, Vocation TEXT NOT NULL, Ability TEXT NOT NULL, Skill1 TEXT NOT NULL, 
-                    Skill2 TEXT NOT NULL, Skill3 TEXT NOT NULL, FOREIGN KEY (RaceId) REFERENCES Races(id) ON DELETE SET NULL, 
-                    FOREIGN KEY (VocationId) REFERENCES Vocations(id) ON DELETE SET NULL);";
+                    command.CommandText = @"CREATE TABLE IF NOT EXISTS Characters (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                    RaceId INTEGER, 
+                    VocationId INTEGER, 
+                    Name TEXT NOT NULL, 
+                    Strength INTEGER NOT NULL, 
+                    Constitution INTEGER NOT NULL, 
+                    Dexterity INTEGER NOT NULL, 
+                    Intelligence INTEGER NOT NULL, 
+                    Wisdom INTEGER NOT NULL, 
+                    Charisma INTEGER NOT NULL, 
+                    Race TEXT NOT NULL, 
+                    Trait TEXT NOT NULL, 
+                    Vocation TEXT NOT NULL, 
+                    Ability TEXT NOT NULL, 
+                    Skill1 TEXT NOT NULL, 
+                    Skill2 TEXT NOT NULL, 
+                    Skill3 TEXT NOT NULL,
+                    FOREIGN KEY (RaceId) REFERENCES Races(id) ON DELETE SET NULL, 
+                    FOREIGN KEY (VocationId) REFERENCES Vocations(id) ON DELETE SET NULL);";              
                     command.ExecuteNonQuery();
                 }
                 
@@ -50,14 +64,14 @@ namespace PartyDatabase
         }
         
         ///<summary>
-        ///Inserts every class race in to its own table(Races)
+        ///Inserts every class races in to its own table(Races)
         ///</summary>
         ///<param name="connection">instruction to open connection to the database</param>
         private static void SeedRaces(SqliteConnection connection)
         {
             using(SqliteCommand checkCommand = connection.CreateCommand())
             {
-                checkCommand.CommandText = @"SELECT COUNT(*) FORM Races";
+                checkCommand.CommandText = @"SELECT COUNT(*) FROM Races";
                 if(Convert.ToInt32(checkCommand.ExecuteScalar()) > 0) return;
             }
 
@@ -90,13 +104,43 @@ namespace PartyDatabase
         }
 
         ///<summary>
-        ///Helper method for SeedRaces, inserts each entry value
+        ///Helper method for SeedHeritage, inserts each entry value
         ///</summary>
         private static void SetRaceParameters(SqliteCommand command, int id, string name, string trait)
         {
             command.Parameters.AddWithValue("@id", id);
             command.Parameters.AddWithValue("@name", name);
             command.Parameters.AddWithValue("@trait", trait);
+        }
+
+        ///<summary>
+        ///Displays each row and columns for the existing Races
+        ///</summary>
+        public static void DisplayRaces()
+        {
+            Console.Clear();
+
+            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                using(SqliteCommand retrieveRaces = connection.CreateCommand())
+                {
+                    retrieveRaces.CommandText = @"SELECT id, Name, Trait FROM Races";
+
+                    using(SqliteDataReader reader = retrieveRaces.ExecuteReader())
+                    {
+                        while(reader.Read())
+                        {
+                            int id = reader.GetInt32(0);
+                            string name = reader.GetString(1);
+                            string trait = reader.GetString(2);
+
+                            Console.WriteLine($"id: {id} | Race: {name} | Trait: {trait}\n");
+                        }
+                    }
+                }
+            }
         }
 
         ///<summary>
