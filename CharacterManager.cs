@@ -54,7 +54,7 @@ namespace PartyDatabase
                     Skill2 TEXT NOT NULL, 
                     Skill3 TEXT NOT NULL,
                     FOREIGN KEY (RaceId) REFERENCES Races(id) ON DELETE SET NULL, 
-                    FOREIGN KEY (VocationId) REFERENCES Vocations(id) ON DELETE SET NULL);";              
+                    FOREIGN KEY (VocationId) REFERENCES Vocations(id) ON DELETE SET NULL);";//FOREIGN KEY directive must be at the end of the query           
                     command.ExecuteNonQuery();
                 }
                 
@@ -275,6 +275,7 @@ namespace PartyDatabase
         public static Character CreateCharacter()
         {
             var name = UserInputHandler.AddName("Name: ");
+            var choosenRaceId = UserInputHandler.ChooseRace("\nSelect a race: ", name);
             var choosenVocationId = UserInputHandler.ChooseVocation("\nSelect a vocation: ", name);
 
             while(true)

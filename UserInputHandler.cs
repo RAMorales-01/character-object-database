@@ -29,6 +29,14 @@ namespace PartyDatabase
             { 'B', DatabaseOptions.GoBack }
         };
 
+        private enum Races
+        {
+            Human = 1,
+            Elven,
+            Fiendblood,
+            Beastfolk
+        }
+
         private enum Vocations
         {
             Fighter = 1,
@@ -429,6 +437,46 @@ namespace PartyDatabase
                 else
                 {
                     return false;
+                }
+            }
+        }
+
+        ///<summary>
+        ///Display to the user the currently available races for the character.
+        ///</summary>
+        ///<param name="prompt">prompts the user to select 1 of the available races</param>
+        ///<param name="name">choosen name of the character to be created</param>
+        ///<returns>integer that represents the race id</returns>
+        public static int ChooseRace(string prompt, string name)
+        {
+            List<Races> raceList = Enum.GetValues(typeof(Races)).Cast<Races>().ToList();
+            Races firstIdValue = Races.Human;
+            int minValue = (int)firstIdValue;
+            int maxValue = raceList.Count;
+
+            while(true)
+            {
+                int bulletList = 1;
+
+                Console.Clear();
+                Console.WriteLine($"Choose {name} race.\n");
+
+                foreach(Races race in raceList)
+                {
+                    Console.WriteLine($"{bulletList} - {race}");
+                    bulletList++;
+                }
+
+                Console.Write(prompt);
+
+                if(int.TryParse(Console.ReadLine(), out int selectedId) && selectedId >= minValue || selectedId <= maxValue)
+                {
+                    return selectedId;
+                }
+                else
+                {
+                    Console.WriteLine($"ERROR: Invalid input expected positive integer between {minValue} and {maxValue}. Press any key to try again.");
+                    Console.ReadKey();
                 }
             }
         }
