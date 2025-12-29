@@ -294,7 +294,7 @@ namespace PartyDatabase
                 if(proceed == true)
                 {
                     Character character = new Character(name, strength, constitution, dexterity, intelligence, wisdom, charisma);
-                    AssignedRace(character, choosenRaceId);
+                    AssignRace(character, choosenRaceId);
                     AssignVocation(character, choosenVocationId);
                     return character;
                 }
@@ -319,7 +319,7 @@ namespace PartyDatabase
                 case 3: character.SetRace(new Race.Fiendblood(character));
                 break;
 
-                case 1: character.SetRace(new Race.Beastfolk(character));
+                case 4: character.SetRace(new Race.Beastfolk(character));
                 break;
 
                 default: Console.WriteLine("\nERROR: Invalid input selected option does not exist.\n");
@@ -464,7 +464,7 @@ namespace PartyDatabase
                             string rColumnName = reader.GetString(i);
                             string rColumnValue = reader.GetString(i);
 
-                            characterRaceInfo.add(new Tuple<string, string>(rColumnName, rColumnValue))
+                            characterRaceInfo.Add(new Tuple<string, string>(rColumnName, rColumnValue));
                         }
                     }
                 }
