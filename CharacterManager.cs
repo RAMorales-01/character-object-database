@@ -294,12 +294,39 @@ namespace PartyDatabase
                 if(proceed == true)
                 {
                     Character character = new Character(name, strength, constitution, dexterity, intelligence, wisdom, charisma);
+                    AssignedRace(character, choosenRaceId);
                     AssignVocation(character, choosenVocationId);
                     return character;
                 }
             } 
         }
-        
+
+        ///<summary>
+        ///Helper method to assign the choosen race to the character instance.
+        ///</summary>
+        ///<param name="character">instance of the character created</param>
+        ///<param name="raceId">a representation of the selected id to assign the race</param>
+        private static void AssignRace(Character character, int raceId)
+        {
+            switch(raceId)
+            {
+                case 1: character.SetRace(new Race.Human(character));
+                break;
+
+                case 2: character.SetRace(new Race.Elven(character));
+                break;
+
+                case 3: character.SetRace(new Race.Fiendblood(character));
+                break;
+
+                case 1: character.SetRace(new Race.Beastfolk(character));
+                break;
+
+                default: Console.WriteLine("\nERROR: Invalid input selected option does not exist.\n");
+                break;
+            }
+        }
+
         ///<summary>
         ///Helper method to assign the choosen vocation to the character instance.
         ///</summary>
