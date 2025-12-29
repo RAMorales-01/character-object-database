@@ -439,6 +439,41 @@ namespace PartyDatabase
         }
 
         ///<summary>
+        ///Retrives the race info assigned to the created character using primary key
+        ///</summary>
+        ///<param name="characterId">primary key form each row</param>
+        ///<returns>a List of Tuple string for the column name and string for the value on each column</returns>
+        public static List<Tuple<string, string>> GetSetRaceInfoFromId(int characterId)
+        {
+            List<Tuple<string, string>> characterRaceInfo = new List<Tuple<string, string>>();
+
+            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand retrieveSetRInfo = connection.CreateCommand();
+                retrieveSetRInfo.CommandText = @"SELECT Race, Trait FROM Characters WHERE id = @id";
+                retrieveSetRInfo.Parameters.AddWithValue("@id", characterId);
+
+                using(SqliteDataReader reader = retrieveSetRInfo.ExecuteReader())
+                {
+                    while(reader.Read())
+                    {
+                        for(int i = 0; i < reader.FieldCount; i++)
+                        {
+                            string rColumnName = reader.GetString(i);
+                            string rColumnValue = reader.GetString(i);
+
+                            characterRaceInfo.add(new Tuple<string, string>(rColumnName, rColumnValue))
+                        }
+                    }
+                }
+            }
+
+            return characterRaceInfo;
+        }
+
+        ///<summary>
         ///Retrives the vocation info assigned to the created character using primary key
         ///</summary>
         ///<param name="characterId">primary key form each row</param>
