@@ -36,13 +36,6 @@ namespace PartyDatabase
             UserInputHandler.SelectionScreen();
         
             Console.Clear();
-            Thread.Sleep(1000);
-            Console.Write(".");
-            Thread.Sleep(1000);
-            Console.Write(".");
-            Thread.Sleep(1000);
-            Console.Write(".");
-            Thread.Sleep(1000);
             Console.Write("\nGOODBYE!\n");
         }
     }

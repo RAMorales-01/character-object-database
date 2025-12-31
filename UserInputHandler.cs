@@ -15,6 +15,7 @@ namespace PartyDatabase
             ViewStats = 'S',
             Races = 'R',
             Vocations = 'V',
+            Exit = 'E',
             GoBack = 'B'
         }
 
@@ -26,6 +27,7 @@ namespace PartyDatabase
             { 'S', DatabaseOptions.ViewStats },
             { 'R', DatabaseOptions.Races },
             { 'V', DatabaseOptions.Vocations },
+            { 'E', DatabaseOptions.Exit},
             { 'B', DatabaseOptions.GoBack }
         };
 
@@ -59,13 +61,18 @@ namespace PartyDatabase
                 Console.Clear();
                 Console.WriteLine("\nWhat do you want to do?.\n");
                 Thread.Sleep(1000);
-                Console.WriteLine("L- List Characters\nC- Create Character\nD- Delete Character\nS- Stats Character\nR- Display Races\nV- Display Vocations");
+                Console.WriteLine("L- List Characters\nC- Create Character\nD- Delete Character\nS- Stats Character\nR- Display Races\nV- Display Vocations\nE- Exit");
                 Thread.Sleep(1000);
                 Console.Write("\nSelect: ");
                 string userInput = Console.ReadLine().ToUpper();
 
                 if(Char.TryParse(userInput, out char selectedOption) && operations.ContainsKey(selectedOption))
                 {
+                    if(selectedOption == 'E')
+                    {
+                        break;
+                    }
+
                     try
                     {
                         DatabaseFunctions(selectedOption);

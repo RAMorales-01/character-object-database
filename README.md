@@ -1,6 +1,6 @@
-Small project to test class and object creation
+Small project to learn and test SQLite 
 
-This project is to test what the use of instance and classes,
-the idea is: to create 6 character or "accout profiles" and later add this
-to a database with Sqlite, then let the user see all the entries in the database, delete
-and create new profiles with a max limit of 6 accounts simulating a party of characters.
+This project is to test a database with SQLite, the idea is to let the user
+create a character, choose name, race and vocation then add stats (DnD style)
+then let the user retrieve the info of these characters and see the created character.
+Basically is a small CRUD to test how to use a very basic database, mostly for self study.
