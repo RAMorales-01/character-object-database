@@ -461,7 +461,7 @@ namespace PartyDatabase
                     {
                         for(int i = 0; i < reader.FieldCount; i++)
                         {
-                            string rColumnName = reader.GetString(i);
+                            string rColumnName = reader.GetName(i);
                             string rColumnValue = reader.GetString(i);
 
                             characterRaceInfo.Add(new Tuple<string, string>(rColumnName, rColumnValue));

@@ -36,7 +36,6 @@ namespace PartyDatabase
             UserInputHandler.SelectionScreen();
         
             Console.Clear();
-            Console.WriteLine("----- EXITING DATABASE -----");
             Thread.Sleep(1000);
             Console.Write(".");
             Thread.Sleep(1000);
@@ -44,14 +43,7 @@ namespace PartyDatabase
             Thread.Sleep(1000);
             Console.Write(".");
             Thread.Sleep(1000);
-            Console.Write("GOODBYE!");
-
-            
-            /*Character character = new Character("Alex", 16, 20, 14, 10, 10, 10);
-            character.SetRace(new Race.Human(character));
-            Console.WriteLine($"Race: {character.AssignedRace.RaceName}");
-            Console.WriteLine($"Id: {character.AssignedRace.RaceId}");
-            Console.WriteLine($"Trait: {character.AssignedRace.RaceTrait}");*/
+            Console.Write("\nGOODBYE!\n");
         }
     }
 }

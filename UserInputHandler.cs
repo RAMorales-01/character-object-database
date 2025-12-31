@@ -220,25 +220,25 @@ namespace PartyDatabase
         ///<param name="characterStats">List of tuple, string with the name of the column and int with the value of the column</param>
         private static void DisplayCharacterStats(List<Tuple<string, int>> characterStats, List<Tuple<string, string>> characterRace, List<Tuple<string, string>> characterSkills)
         {
-            Console.WriteLine("\n----- Character Stats -----");
+            Console.WriteLine("\n");
 
             foreach(var stats in characterStats)
             {
-                Console.WriteLine($"{stats.Item1} --> {stats.Item2}");
+                Console.WriteLine($"{stats.Item1} -----> {stats.Item2}");
             }
 
-            Console.WriteLine("----- Character Race Info -----");
+            Console.WriteLine();
 
             foreach(var traits in characterRace)
             {
-                Console.WriteLine($"- {traits.Item1} --- {traits.Item2}");
+                Console.WriteLine($"- {traits.Item1} ----- {traits.Item2}");
             }
 
-            Console.WriteLine("----- Character Skills -----");
+            Console.WriteLine();
 
             foreach(var skills in characterSkills)
             {
-                Console.WriteLine($"- {skills.Item1} --- {skills.Item2}");
+                Console.WriteLine($"- {skills.Item1} ----- {skills.Item2}");
             }
 
             Console.WriteLine("\nPress any key to return to main menu.\n");
