@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using UserHandler;
 
 namespace PartyDatabase
 {
@@ -33,7 +34,7 @@ namespace PartyDatabase
             Thread.Sleep(1500);
             Console.Clear();
             
-            UserInputHandler.SelectionScreen();
+            Input.MainMenu();
         
             Console.Clear();
             Console.Write("\nGOODBYE!\n");
