@@ -1,4 +1,5 @@
 using System;
+using DatabaseLogic;
 
 namespace UserHandler
 {
@@ -43,7 +44,7 @@ namespace UserHandler
                     {
                         try
                         {
-                            DatabaseMainMenuOptions();
+                            DatabaseFunctions.MainMenuOptions(selectedOption);
                         }
                         catch(ArgumentException ex)
                         {
@@ -72,7 +73,7 @@ namespace UserHandler
         }
 
         ///<summary>
-        ///Prompts user to confirm a selected action
+        ///Prompts user to confirm the selection of an action
         ///</summary>
         ///<param name="prompt">prompts user for input of 'y' or 'n'</param>
         ///<returns>string with value of "yes" or "no"</returns>
