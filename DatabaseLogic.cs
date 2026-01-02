@@ -31,5 +31,22 @@ namespace DatabaseLogic
                 default: throw new ArgumentException($"Invalid operation selected", nameof(selectedOption));
             }
         }
+
+        ///<summary>
+        ///Handles the options for the database functions for the  submenu
+        ///</summary>
+        ///<param name="selectedOption">int between 1 and 2 for the current available options in the submenu</param>
+        public static void SubmenuOptions(int selectedOption)
+        {
+            switch(selectedOption)
+            {
+                case 1: //TODO: EntryManger --- Display entry info
+                break;
+
+                case 2: //TODO: Go back to main menu
+
+                default: throw new ArgumentException($"Invalid operation selected", nameof(selectedOption));
+            }
+        }
     }
 }
