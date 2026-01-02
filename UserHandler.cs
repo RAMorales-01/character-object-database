@@ -1,5 +1,6 @@
 using System;
 using DatabaseLogic;
+using DatabaseUtility;
 
 namespace UserHandler
 {
@@ -8,7 +9,7 @@ namespace UserHandler
     ///</summary>
     class Input
     {
-        //Representation of the Initial menu options 
+        //Representation for the main menu current options 
         private enum MainMenu
         {
             DisplayEntry = 1,
@@ -18,12 +19,19 @@ namespace UserHandler
             ExitDatabase
         }
 
+        //Representation for the submenu current options
+        private enum Submenu
+        {
+            DisplayEntryInfo = 1,
+            GoBackToMain
+        }
+
         ///<summary>
         ///Selection screen for initial menu
         ///</summary>
         public static void MainMenu()
         {
-            CharacterManager.VerifyDatabaseIsCreated();//Verifies the database exist, if not is created along with all the tables.
+            EntryManager.VerifyDatabaseIsCreated();//Verifies the database exist, if not is created along with all the tables.
 
             //Takes the int values of the first element and last element of the enum, to limit the user options.
             int minPermited = (int)MainMenu.DisplayEntry;
@@ -35,16 +43,19 @@ namespace UserHandler
                 Console.WriteLine("Welcome to the main menu, please select an option\n");
                 Console.WriteLine("1- Display list of entries\n2- Display submenu\n3- Create entry\n4- Delete entry\n5- Exit");
                 Console.Write("\n: ");
+                string userInput = Console.ReadLine();
 
-                if(int.TryParse(Console.ReadLine(), out int selectedOption) && selectedOption >= minPermited || selectedOption <= maxPermited)
+                var isInputValid = ValidateSelectedOption(userInput, minPermited, maxPermited);
+
+                if(isInputValid.Item1 == true)
                 {
-                    if(selectedOption == maxPermited){ break; }
+                    if(isInputValid.Item2 == maxPermited){ break; }
 
                     else
                     {
                         try
                         {
-                            DatabaseFunctions.MainMenuOptions(selectedOption);
+                            DatabaseFunctions.MainMenuOptions(isInputValid.Item2);
                         }
                         catch(ArgumentException ex)
                         {
@@ -68,6 +79,41 @@ namespace UserHandler
                 if(keepDatabaseOpen == "no")
                 {
                     break;
+                }
+            }
+        }
+
+        ///<summary>
+        ///Display the submenu options to the user
+        ///</summary>
+        private static void Submenu()
+        {
+            int minPermited = (int)Submenu.DisplayEntryInfo;
+            int maxPermited = (int)Submenu.GoBackToMain;
+
+            while(true)
+            {
+                DisplayEntriesList(EntryManager.GetIdAndName());
+
+                Console.WriteLine("\n1- Display character info\n2- Go back to main menu");
+                Console.Write("\n: ");
+                string userInput = Console.ReadLine();
+                
+                var isInputValid = ValidateSelectedOption(userInput, minPermited, maxPermited);
+
+                if(isInputValid.Item1 == true)
+                {
+                    if(isInputValid.Item2 == maxPermited){ break; }
+
+                    else
+                    {
+                        DatabaseFunctions.SubmenuOptions(isInputValid.Item2);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"\nINVALID INPUT: expected positive integer between {minPermited} and {maxPermited}. Press any key to go back and try again.");
+                    Console.ReadKey();
                 }
             }
         }
@@ -99,6 +145,25 @@ namespace UserHandler
                 }
             }
         }
-    }
+
+        ///<summary>
+        ///Validate user input, if its a positive integer within the limits(minPermited, maxPermited) returns true and the int value
+        ///else returns false and the int value
+        ///</summary>
+        ///<param name="userInput">user selected option</param>
+        ///<param name="minPermited">min selected option permited</param>
+        ///<param name="maxPermited">max selected option permited</param>
+        ///<returns>Tuple with bool and integer values</returns>
+        private static (bool, int) ValidateSelectedOption(string userInput, int minPermited, int maxPermited)
+        {
+            if(int.TryParse(userInput, out int selectedOption) && selectedOption >= minPermited || selectedOption <= maxPermited)
+            {
+                return (true, selectedOption);
+            }
+            else
+            {
+                return (false, selectedOption);
+            }
+        }
     }
 }
