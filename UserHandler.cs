@@ -1,5 +1,6 @@
 using System;
 using DatabaseLogic;
+using DatabaseUtility;
 
 namespace UserHandler
 {
@@ -8,7 +9,7 @@ namespace UserHandler
     ///</summary>
     class Input
     {
-        //Representation of the Initial menu options 
+        //Representation for the main menu current options 
         private enum MainMenu
         {
             DisplayEntry = 1,
@@ -18,7 +19,7 @@ namespace UserHandler
             ExitDatabase
         }
 
-        //Representation of the submenu options
+        //Representation for the submenu current options
         private enum Submenu
         {
             DisplayEntryInfo = 1,
@@ -30,7 +31,7 @@ namespace UserHandler
         ///</summary>
         public static void MainMenu()
         {
-            CharacterManager.VerifyDatabaseIsCreated();//Verifies the database exist, if not is created along with all the tables.
+            EntryManager.VerifyDatabaseIsCreated();//Verifies the database exist, if not is created along with all the tables.
 
             //Takes the int values of the first element and last element of the enum, to limit the user options.
             int minPermited = (int)MainMenu.DisplayEntry;

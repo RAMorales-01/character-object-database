@@ -44,6 +44,7 @@ namespace DatabaseLogic
                 break;
 
                 case 2: //TODO: Go back to main menu
+                break;
 
                 default: throw new ArgumentException($"Invalid operation selected", nameof(selectedOption));
             }
