@@ -83,16 +83,16 @@ namespace DatabaseUtility
 
                     switch(id)
                     {
-                        case 1: SetRaceParameters(command, id, "Human", "+5 on initiative");
+                        case 1: SetRaceParameters(insertCommand, id, "Human", "+5 on initiative");
                         break;
 
-                        case 2: SetRaceParameters(command, id, "Eleven", "+15 healing power");
+                        case 2: SetRaceParameters(insertCommand, id, "Eleven", "+15 healing power");
                         break;
 
-                        case 3: SetRaceParameters(command, id, "Fiendblood", "+10 fire resistance");
+                        case 3: SetRaceParameters(insertCommand, id, "Fiendblood", "+10 fire resistance");
                         break;
 
-                        case 4: SetRaceParameters(command, id, "Beastfolk", "+15 on evasion");
+                        case 4: SetRaceParameters(insertCommand, id, "Beastfolk", "+15 on evasion");
                         break;
                     }
 
@@ -105,11 +105,70 @@ namespace DatabaseUtility
         ///<summary>
         ///Inserts each value in the Races table
         ///</summary>
-        private static void SetRaceParameters(SqliteCommand command, int id, string race, string trait)
+        private static void SetRaceParameters(SqliteCommand insertCommand, int id, string race, string trait)
         {
-            command.Parameters.AddWithValue("@id", id);
-            command.Parameters.AddWithValue("@race", race);
-            command.Parameters.AddWithValue("@trait", trait);
+            insertCommand.Parameters.AddWithValue("@id", id);
+            insertCommand.Parameters.AddWithValue("@race", race);
+            insertCommand.Parameters.AddWithValue("@trait", trait);
+        }
+
+        ///<summary>
+        ///First checks if the table for jobs is already filled, if not proceeds to insert each row in table 
+        ///the values for each column.
+        ///</summary>
+        ///<param name="connection">open connection from method VerifyDatabaseIsCreated</param>
+        private static void AddJobsToTable(SqliteConnection connection)
+        {
+            using(SqliteCommand checkCommand = connection.CreateCommand())
+            {
+                checkCommand.CommandText = @"SELECT COUNT(*) FROM Jobs";
+
+                if(Convert.ToInt32(checkCommand.ExecuteScalar()) > 0){ return; }
+            }
+
+            int[] jobsId = { 1, 2, 3, 4, 5 };
+
+            foreach(int id in jobsId)
+            {
+                using(SqliteCommand insertCommand = connection.CreateCommand())
+                {
+                    insertCommand.CommandText = @"INSERT INTO Jobs (Id, Job, Ability, Skill1, Skill2, Skill3) 
+                    VALUES (@id, @job, @ability, s1, s2, s3)";
+
+                    switch(id)
+                    {
+                        case 1: SetJobParameters(insertCommand, id, "Fighter", "Parry", "Multi-Slice", "Withstand Deathblow", "Deflect Missile");
+                        break;
+
+                        case 2: SetJobParameters(insertCommand, id, "Rouge", "Pilfer", "Deathblow", "Disarm", "Evasion");
+                        break;
+
+                        case 3: SetJobParameters(insertCommand, id, "Spellcaster", "Fireball", "Quick-Chanter", "Unshakable Caster", "Meteor-Strike");
+                        break;
+
+                        case 4: SetJobParameters(insertCommand, id, "Priest", "Heal", "Protect", "Holy-Smite", "Resurrection");
+                        break;
+
+                        case 5: SetJobParameters(insertCommand, id, "Bard", "Inspire", "Thunder-Strike", "Song of Bravery", "Charm");
+                        break;
+                    }
+
+                    insertCommand.ExecuteNonQuery();
+                }
+            }
+        }
+
+        ///<summary>
+        ///Inserts each value in the Jobs table
+        ///</summary>
+        private static void SetJobParameters(SqliteCommand insertCommand, int id, string job, string ability, string s1, string s2, string s3)
+        {
+            insertCommand.Parameters.AddWithValue("@id", id);
+            insertCommand.Parameters.AddWithValue("@job", job);
+            insertCommand.Parameters.AddWithValue("@ability", ability);
+            insertCommand.Parameters.AddWithValue("@s1", s1);
+            insertCommand.Parameters.AddWithValue("@s2", s2);
+            insertCommand.Parameters.AddWithValue("@s3", s3);
         }
     }
 }
