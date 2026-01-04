@@ -174,6 +174,41 @@ namespace DatabaseUtility
         }
 
         ///<summary>
+        ///To create an instance of the Character class after all the parameters have been confirmed by user.
+        ///</summary>
+        ///<returns>an instance of the Character class</returns>
+        public static Character CreateCharacter()
+        {
+            while(true)
+            {
+                int points = 30;//each new character have a total of 30 points to distribute between the 6 main stats.
+                
+                string name = UserHandler.AddName("Name: ");
+                int choosenRaceId = UserHandler.ChooseRace("\nSelect a race: ", name);
+                int choosenJobId = UserHandler.ChooseJob("\nSelect a Job: ", name);
+
+                int strength = UserHandler.AddStatValue("Add points: ", "Strength", Character._minStatValue, Character._maxStatValue, ref points);
+                int constitution = UserHandler.AddStatValue("Add points: ", "Constitution", Character._minStatValue, Character._maxStatValue, ref points);
+                int dexterity = UserHandler.AddStatValue("Add points: ", "Dexterity", Character._minStatValue, Character._maxStatValue, ref points);
+                int intelligence = UserHandler.AddStatValue("Add points: ", "Intelligence", Character._minStatValue, Character._maxStatValue, ref points);
+                int wisdom = UserHandler.AddStatValue("Add points: ", "Wisdom", Character._minStatValue, Character._maxStatValue, ref points);
+                int charisma = UserHandler.AddStatValue("Add points: ", "Charisma", Character._minStatValue, Character._maxStatValue, ref points);
+
+                //before creating the instance of the character class the user will confirm the created character is correct.
+                bool proceed = UserHandler.CharacterConfirmation(name, choosenRaceId, choosenJobId, strength, constitution, dexterity, intelligence, wisdom, charisma);
+
+                if(proceed == true)
+                {
+                    Character character = new Character(name, strength, constitution, dexterity, intelligence, wisdom, charisma);
+                    AssignRace(character, choosenRaceId);
+                    AssignJob(character, choosenJobId);
+                    
+                    return character;
+                }
+            }
+        }
+
+        ///<summary>
         ///Insert the character object to the database, along with all stats, race and job information
         ///</summary>
         ///<param name="character">current character object to be inserted to the database</param>
