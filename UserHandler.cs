@@ -165,5 +165,67 @@ namespace UserHandler
                 return (false, selectedOption);
             }
         }
+
+        ///<summary>
+        ///The user can add points to each stat value(min stat value of 10 to a maximum of 20 in total)
+        ///</summary>
+        ///<param name="prompt">prompts user to add the desire points to the current stat</param>
+        ///<param name="statName">name of the current stat</param>
+        ///<param name="minValue">limits the minimum value each stat can have</param>
+        ///<param name="maxValue">limits the maximum value each stat can have</param>
+        ///<param name="points">quantity of points the user can add to each character</param>
+        ///<returns>int which is the final stat value after the allocation of the available points</returns>
+        public static int AddStatValue(string prompt, string statName, int minValue, int maxValue, ref int points)
+        {
+            if(points <= 0)//if no points left, return the minimum value(10) for the remaining stats
+            {
+                return minValue;
+            }
+
+            while(true)
+            {
+                int statTotal = 0;//shows total stat at the end(min value of 10 plus the choosen points to add to the current stat).
+
+                Console.Clear();
+                Console.WriteLine($"NOTE: Each stat value cannot be less than {minValue} and greater than {maxValue}.");
+                Console.WriteLine($"HINT: If you don't want to add points to the current stat just add 0.\n");
+                Console.WriteLine($"You have {points} points remaining\n");
+                Console.WriteLine($"Current {statName} --> {minValue}");
+                Console.Write(prompt);
+                string userInput = Console.ReadLine();
+
+                var isInputValid = ValidateSelectedOption(userInput, minValue, maxValue);
+
+                if(isInputValid.Item1 == true)
+                {
+                    bool userConfirmation = PointsConfirmation("Y/N: ", statName, isInputValid.Item2, ref points);
+
+                    if(userConfirmation == true)
+                    {
+                        statTotal = minValue + isInputValid.Item2;
+
+                        if(statTotal <= maxValue)
+                        {
+                            points -= statInput;
+                            return statTotal;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"\nERROR: Invalid input, {statName} cannot pass the limit of 20. Press any key to try again.\n");
+                            Console.ReadKey();
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"\nINVALID INPUT: expected positive integer. Press any key to go back and try again.");
+                    Console.ReadKey();
+                }
+            }
+        }
     }
 }
