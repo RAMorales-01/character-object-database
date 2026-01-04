@@ -7,7 +7,7 @@ namespace DatabaseUtility
 {
     class DatabaseHandler
     {
-        private static readonly string _databasePathFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "characters.db");
+        private static readonly string _databasePathFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "characterPool.db");
         private static readonly string _connection = $"Data Source={_databasePathFile}; Foreign Keys=True;";
 
         ///<summary>
@@ -55,7 +55,9 @@ namespace DatabaseUtility
                     createCommand.ExecuteNonQuery();
                 }
 
-                //TODO: Method to "seed" Race table and Job table
+                //The next methods seed the values for each table(if they aren't filled already).
+                AddRacesToTable(connection);
+                AddJobsToTable(connection);
             }
         }
 
@@ -73,7 +75,7 @@ namespace DatabaseUtility
                 if(Convert.ToInt32(checkCommand.ExecuteScalar()) > 0){ return; }
             }
 
-            int[] raceId = { 1, 2, 3, 4 };//This array contains the id for the current available races 
+            int[] raceId = { 1, 2, 3, 4 };//This array contains the id for the current available races. 
 
             foreach(int id in raceId)
             {
@@ -119,14 +121,14 @@ namespace DatabaseUtility
         ///<param name="connection">open connection from method VerifyDatabaseIsCreated</param>
         private static void AddJobsToTable(SqliteConnection connection)
         {
-            using(SqliteCommand checkCommand = connection.CreateCommand())
+            using(SqliteCommand checkCommand = connection.CreateCommand())//checks if the table is already filled, if it is then returns.
             {
                 checkCommand.CommandText = @"SELECT COUNT(*) FROM Jobs";
 
                 if(Convert.ToInt32(checkCommand.ExecuteScalar()) > 0){ return; }
             }
 
-            int[] jobsId = { 1, 2, 3, 4, 5 };
+            int[] jobsId = { 1, 2, 3, 4, 5 };//This array contains the id for the current available jobs. 
 
             foreach(int id in jobsId)
             {
@@ -169,6 +171,80 @@ namespace DatabaseUtility
             insertCommand.Parameters.AddWithValue("@s1", s1);
             insertCommand.Parameters.AddWithValue("@s2", s2);
             insertCommand.Parameters.AddWithValue("@s3", s3);
+        }
+
+        ///<summary>
+        ///To create an instance of the Character class after all the parameters have been confirmed by user.
+        ///</summary>
+        ///<returns>an instance of the Character class</returns>
+        public static Character CreateCharacter()
+        {
+            while(true)
+            {
+                int points = 30;//each new character have a total of 30 points to distribute between the 6 main stats.
+                
+                string name = UserHandler.AddName("Name: ");
+                int choosenRaceId = UserHandler.ChooseRace("\nSelect a race: ", name);
+                int choosenJobId = UserHandler.ChooseJob("\nSelect a Job: ", name);
+
+                int strength = UserHandler.AddStatValue("Add points: ", "Strength", Character._minStatValue, Character._maxStatValue, ref points);
+                int constitution = UserHandler.AddStatValue("Add points: ", "Constitution", Character._minStatValue, Character._maxStatValue, ref points);
+                int dexterity = UserHandler.AddStatValue("Add points: ", "Dexterity", Character._minStatValue, Character._maxStatValue, ref points);
+                int intelligence = UserHandler.AddStatValue("Add points: ", "Intelligence", Character._minStatValue, Character._maxStatValue, ref points);
+                int wisdom = UserHandler.AddStatValue("Add points: ", "Wisdom", Character._minStatValue, Character._maxStatValue, ref points);
+                int charisma = UserHandler.AddStatValue("Add points: ", "Charisma", Character._minStatValue, Character._maxStatValue, ref points);
+
+                //before creating the instance of the character class the user will confirm the created character is correct.
+                bool proceed = UserHandler.CharacterConfirmation(name, choosenRaceId, choosenJobId, strength, constitution, dexterity, intelligence, wisdom, charisma);
+
+                if(proceed == true)
+                {
+                    Character character = new Character(name, strength, constitution, dexterity, intelligence, wisdom, charisma);
+                    AssignRace(character, choosenRaceId);
+                    AssignJob(character, choosenJobId);
+                    
+                    return character;
+                }
+            }
+        }
+
+        ///<summary>
+        ///Insert the character object to the database, along with all stats, race and job information
+        ///</summary>
+        ///<param name="character">current character object to be inserted to the database</param>
+        public static void InsertCharacterToDatabase(Character character)
+        {
+            using(SqliteConnection connection = new SqliteConnection(_connection))
+            {
+                connection.Open();
+
+                using(SqliteCommand addCharacterCommand = connection.CreateCommand())
+                {
+                    addCharacterCommand.CommandText = @"INSERT INTO Characters (Name, Strength, Constitution, Dexterity, Intelligence, Wisdom, Charisma,
+                    RaceId, Race, Trait, 
+                    JobId, Job, Ability, Skill1, Skill2, Skill3)
+                    VALUES (@name, @strength, @constitution, @dexterity, @intelligence, @wisdom, @charaisma
+                    @raceId, @race, @trait,
+                    @jobId, @job, @ability, @s1, @s2, @s3)";
+                    addCharacterCommand.Parameters.AddWithValue("@name", character.Name);
+                    addCharacterCommand.Parameters.AddWithValue("@strength", character.Strength);
+                    addCharacterCommand.Parameters.AddWithValue("@constitution", character.Constitution);
+                    addCharacterCommand.Parameters.AddWithValue("@dexterity", character.Dexterity);
+                    addCharacterCommand.Parameters.AddWithValue("@intelligence", character.Intelligence);
+                    addCharacterCommand.Parameters.AddWithValue("@wisdom", character.Wisdom);
+                    addCharacterCommand.Parameters.AddWithValue("@charisma", character.Charisma);
+                    addCharacterCommand.Parameters.AddWithValue("@raceId", character.RaceId);
+                    addCharacterCommand.Parameters.AddWithValue("@race", character.AssignedRace.RaceName);
+                    addCharacterCommand.Parameters.AddWithValue("@trait", character.AssignedRace.RaceTrait);
+                    addCharacterCommand.Parameters.AddWithValue("@jobId", character.JobId);
+                    addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.JobName);
+                    addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.JobAbility);
+                    addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.Skill1);
+                    addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.Skill2);
+                    addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.Skill3);
+                    addCharacterCommand.ExecuteNonQuery();
+                }
+            }
         }
     }
 }
