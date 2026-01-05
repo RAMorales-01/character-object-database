@@ -315,5 +315,42 @@ namespace UserHandler
                 }
             }
         }
+
+        ///<summary>
+        ///Helper method to validate the id of the job or race selected
+        ///</summary>
+        ///<param name="typeInfo">a string arguement to return the type of race or job</param>
+        ///<param name="id">an integer that represents an id that is tied to its equivalent value.</param>
+        ///<returns>string with a value of race or job</returns>
+        private static string RaceAndJobConfirmation(string typeInfo, int id)
+        {
+            string toConfirm = typeInfo.ToLower();
+
+            if(toConfirm == "race")
+            {
+                return id switch
+                {
+                    1 => "Human",
+                    2 => "Elven",
+                    3 => "Fiendblood",
+                    4 => "Beastfolk",
+                    _ => throw new ArgumentException("Invalid race id selected", nameof(id))
+                };
+            }
+            if(toConfirm == "job")
+            {
+                return id switch
+                {
+                    1 => "Fighter",
+                    2 => "Rogue", 
+                    3 => "Spellcaster",
+                    4 => "Priest",
+                    5 => "Bard",
+                    _ => throw new ArgumentException("Invalid job id selected", nameof(id))
+                };
+            }
+
+            throw new ArgumentException("Type must be 'race' or 'job'", nameof(typeInfo));
+        }
     }
 }
