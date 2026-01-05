@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
+using UserHandler;
 
 namespace DatabaseUtility
 {
