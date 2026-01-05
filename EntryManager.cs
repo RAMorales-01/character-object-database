@@ -143,7 +143,7 @@ namespace DatabaseUtility
                         case 1: SetJobParameters(insertCommand, id, "Fighter", "Parry", "Multi-Slice", "Withstand Deathblow", "Deflect Missile");
                         break;
 
-                        case 2: SetJobParameters(insertCommand, id, "Rouge", "Pilfer", "Deathblow", "Disarm", "Evasion");
+                        case 2: SetJobParameters(insertCommand, id, "Rogue", "Pilfer", "Deathblow", "Disarm", "Evasion");
                         break;
 
                         case 3: SetJobParameters(insertCommand, id, "Spellcaster", "Fireball", "Quick-Chanter", "Unshakable Caster", "Meteor-Strike");
