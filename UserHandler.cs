@@ -227,5 +227,93 @@ namespace UserHandler
                 }
             }
         }
+
+        ///<summary>
+        ///Helper method for AddStatValue to confirm the added points are correct.
+        ///</summary>
+        ///<param name="prompt">ask user to confirm is the points allocated to the current stat is correct</param>
+        ///<param name="statName">name of the current stat at work</param>
+        ///<param name="statInput">int input for how many points the user choose to add to the current stat</param>
+        ///<param name="points">currently available points to distribute across all stats</param>
+        ///<returns>boolean, if true user confirm stat allocation as correct else user can change the points allocated</returns>
+        private static bool PointsConfirmation(string prompt, string statName, int statInput, ref int points)
+        {
+            if(statInput <= points)
+            {
+                while(true)
+                {
+                    Console.WriteLine($"\nYou added +{statInput} points to the stat of {statName}, is this correct?");
+                    string confirm = YesNoConfirmation("Y/N: ");
+
+                    if(String.Equals(confirm, "yes"))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"\nERROR: Invalid input, you cannot add more points than you currently have available --> {points}");
+                Console.WriteLine("Press any key to try again.");
+                Console.ReadKey();
+                
+                return false;
+            }
+        }
+
+        ///<summary>
+        ///Displays to the user the current stats for the characters and to confirm the distribution of points
+        ///is correct before creating the instance of the character class.
+        ///</summary>
+        ///<param name="characterName">name of the entry choosen by the user</param>
+        ///<param name="raceId">integer that represent one of the current available races to choose</param>
+        ///<param name="jobId">integer that represent one of the current available jobs to choose</param>
+        ///<param name="strength">current strength stat of the character</param>
+        ///<param name="constitution">current constitution stat of the character</param>
+        ///<param name="dexterity">current dexterity stat of the character</param>
+        ///<param name="intelligence">current intelligence stat of the character</param>
+        ///<param name="wisdom">current wisdom stat of the character</param>
+        ///<param name="charisma">current charisma stat of the character</param>
+        ///<returns>boolean to confirm the current stats before creating the character instance</returns>
+        public static bool CharacterConfirmation(string characterName, int raceId, int jobId, int strength, int constitution, int dexterity, int intelligence, int wisdom, int charisma, ref int points)
+        {
+            //TODO: Here method to return race name and job
+
+            while(true)
+            {
+                Console.Clear();
+
+                if(points > 0)
+                {
+                    Console.WriteLine($"WARNING: You have {points} points unassiged, these points will be lost if you dont use them.");
+                }
+
+                Console.WriteLine($"Name: {characterName}");
+                Console.WriteLine($"Race: {choosenRace}");
+                Console.WriteLine($"Job: {choosenJob}");
+                Console.WriteLine("\nProceed with this stats?\n");
+                Console.WriteLine($"Str: {strength}");
+                Console.WriteLine($"Con: {constitution}");
+                Console.WriteLine($"Dex: {dexterity}");
+                Console.WriteLine($"Int: {intelligence}");
+                Console.WriteLine($"Wis: {wisdom}");
+                Console.WriteLine($"Cha: {charisma}\n");
+                
+                string confirm = YesNoConfirmation("Y/N: ");
+
+                if(String.Equals(confirm, "yes"))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
     }
 }
