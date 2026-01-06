@@ -11,6 +11,7 @@ namespace DatabaseUtility
         private static readonly string _databasePathFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "characterPool.db");
         private static readonly string _connection = $"Data Source={_databasePathFile}; Foreign Keys=True;";
 
+        #region Database Initial Verification
         ///<summary>
         ///Ensures the database and folder exist
         ///</summary>
@@ -61,7 +62,9 @@ namespace DatabaseUtility
                 AddJobsToTable(connection);
             }
         }
+        #endregion
 
+        #region Populate Race and Job Tables
         ///<summary>
         ///First checks if the table for races is already filled, if not proceeds to insert each row in table 
         ///the values for each column.
@@ -173,7 +176,9 @@ namespace DatabaseUtility
             insertCommand.Parameters.AddWithValue("@s2", s2);
             insertCommand.Parameters.AddWithValue("@s3", s3);
         }
+        #endregion 
 
+        #region Create, Insert or Delete Entries in Database
         ///<summary>
         ///To create an instance of the Character class after all the parameters have been confirmed by user.
         ///</summary>
@@ -201,8 +206,8 @@ namespace DatabaseUtility
                 if(proceed == true)
                 {
                     Character character = new Character(name, strength, constitution, dexterity, intelligence, wisdom, charisma);
-                    AssignRace(character, choosenRaceId);
-                    AssignJob(character, choosenJobId);
+                    AssignRaceToCharacter(character, choosenRaceId);
+                    AssignJobToCharacter(character, choosenJobId);
                     
                     return character;
                 }
@@ -247,5 +252,80 @@ namespace DatabaseUtility
                 }
             }
         }
+
+        ///<summary>
+        ///To delete an entry inside the database using the id(primary key)
+        ///</summary>
+        ///<param name="characterId">the primary key of each entry inside the database</param>
+        public static void DeleteCharacter(int characterId)
+        {
+            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand deleteCharacterCommand = connection.CreateCommand();
+                deleteCharacterCommand.CommandText = @"DELETE FROM Characters WHERE id = @id";
+                deleteCharacterCommand.Parameters.AddWithValue("@id", characterId);
+                deleteCharacterCommand.ExecuteNonQuery();
+            }
+        }
+        #endregion
+
+        #region Race and Job Setter Helper Methods
+        ///<summary>
+        ///Helper method to assign the choosen race to the character instance.
+        ///</summary>
+        ///<param name="character">instance of the character created</param>
+        ///<param name="raceId">a representation of the selected id to assign the race</param>
+        private static void AssignRaceToCharacter(Character character, int raceId)
+        {
+            switch(raceId)
+            {
+                case 1: character.SetRace(new Race.Human(character));
+                break;
+
+                case 2: character.SetRace(new Race.Elven(character));
+                break;
+
+                case 3: character.SetRace(new Race.Fiendblood(character));
+                break;
+
+                case 4: character.SetRace(new Race.Beastfolk(character));
+                break;
+
+                default: Console.WriteLine("\nERROR: Invalid input selected option does not exist.\n");
+                break;
+            }
+        }
+
+        ///<summary>
+        ///Helper method to assign the choosen job to the character instance.
+        ///</summary>
+        ///<param name="character">instance of the character created</param>
+        ///<param name="jobId">a representation of the selected id to assign the job</param>
+        private static void AssignJobToCharacter(Character character, int jobId)
+        {
+            switch(jobId)
+            {
+                case 1: character.SetJob(new Vocation.Fighter(character));
+                break;
+
+                case 2: character.SetJob(new Vocation.Rouge(character));
+                break;
+
+                case 3: character.SetJob(new Vocation.Sorcerer(character));
+                break;
+
+                case 4: character.SetJob(new Vocation.Healer(character));
+                break;
+
+                case 5: character.SetJob(new Vocation.Bard(character));
+                break;
+
+                default: Console.WriteLine("\nERROR: Invalid input selected option does not exist.\n");
+                break;
+            }
+        }
+        #endregion
     }
 }

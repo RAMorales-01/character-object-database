@@ -9,6 +9,7 @@ namespace UserHandler
     ///</summary>
     class Input
     {
+        #region Enums
         //Representation for the main menu current options 
         private enum MainMenu
         {
@@ -25,7 +26,9 @@ namespace UserHandler
             DisplayEntryInfo = 1,
             GoBackToMain
         }
+        #endregion
 
+        #region Main Menu and Submenu
         ///<summary>
         ///Selection screen for initial menu
         ///</summary>
@@ -74,7 +77,7 @@ namespace UserHandler
                 }
 
                 Console.WriteLine("\nKeep working with the database?");
-                string keepDatabaseOpen = UserConfirmation("Y/N: ");
+                string keepDatabaseOpen = ChoiceConfirmation("Y/N: ");
 
                 if(keepDatabaseOpen == "no")
                 {
@@ -117,54 +120,7 @@ namespace UserHandler
                 }
             }
         }
-
-        ///<summary>
-        ///Prompts user to confirm the selection of an action
-        ///</summary>
-        ///<param name="prompt">prompts user for input of 'y' or 'n'</param>
-        ///<returns>string with value of "yes" or "no"</returns>
-        private static string UserConfirmation(string prompt)
-        {
-            while(true)
-            {
-                Console.Write(prompt);
-                string userInput = Console.ReadLine().ToLower();
-
-                if(string.Equals(userInput, "y", StringComparison.OrdinalIgnoreCase) || string.Equals(userInput, "yes", StringComparison.OrdinalIgnoreCase))
-                {
-                    return "yes";
-                }
-                else if(string.Equals(userInput, "n", StringComparison.OrdinalIgnoreCase) || string.Equals(userInput, "no", StringComparison.OrdinalIgnoreCase))
-                {
-                    return "no";
-                }
-                else
-                {
-                    Console.WriteLine("\nINVALID INPUT: expected 'y' for yes or 'n' for no. Press any key to go back and try again.");
-                    Console.ReadKey();
-                }
-            }
-        }
-
-        ///<summary>
-        ///Validate user input, if its a positive integer within the limits(minPermited, maxPermited) returns true and the int value
-        ///else returns false and the int value
-        ///</summary>
-        ///<param name="userInput">user selected option</param>
-        ///<param name="minPermited">min selected option permited</param>
-        ///<param name="maxPermited">max selected option permited</param>
-        ///<returns>Tuple with bool and integer values</returns>
-        private static (bool, int) ValidateSelectedOption(string userInput, int minPermited, int maxPermited)
-        {
-            if(int.TryParse(userInput, out int selectedOption) && selectedOption >= minPermited || selectedOption <= maxPermited)
-            {
-                return (true, selectedOption);
-            }
-            else
-            {
-                return (false, selectedOption);
-            }
-        }
+        #endregion
 
         ///<summary>
         ///The user can add points to each stat value(min stat value of 10 to a maximum of 20 in total)
@@ -228,6 +184,27 @@ namespace UserHandler
             }
         }
 
+        #region User Input Utility Methods 
+        ///<summary>
+        ///Validate user input, if its a positive integer within the limits(minPermited, maxPermited) returns true and the int value
+        ///else returns false and the int value
+        ///</summary>
+        ///<param name="userInput">user selected option</param>
+        ///<param name="minPermited">min selected option permited</param>
+        ///<param name="maxPermited">max selected option permited</param>
+        ///<returns>Tuple with bool and integer values</returns>
+        private static (bool, int) ValidateSelectedOption(string userInput, int minPermited, int maxPermited)
+        {
+            if(int.TryParse(userInput, out int selectedOption) && selectedOption >= minPermited || selectedOption <= maxPermited)
+            {
+                return (true, selectedOption);
+            }
+            else
+            {
+                return (false, selectedOption);
+            }
+        }
+
         ///<summary>
         ///Helper method for AddStatValue to confirm the added points are correct.
         ///</summary>
@@ -243,7 +220,7 @@ namespace UserHandler
                 while(true)
                 {
                     Console.WriteLine($"\nYou added +{statInput} points to the stat of {statName}, is this correct?");
-                    string confirm = YesNoConfirmation("Y/N: ");
+                    string confirm = ChoiceConfirmation("Y/N: ");
 
                     if(String.Equals(confirm, "yes"))
                     {
@@ -266,6 +243,34 @@ namespace UserHandler
         }
 
         ///<summary>
+        ///Prompts user to confirm the selection of an action
+        ///</summary>
+        ///<param name="prompt">prompts user for input of 'y' or 'n'</param>
+        ///<returns>string with value of "yes" or "no"</returns>
+        private static string ChoiceConfirmation(string prompt)
+        {
+            while(true)
+            {
+                Console.Write(prompt);
+                string userInput = Console.ReadLine().ToLower();
+
+                if(string.Equals(userInput, "y", StringComparison.OrdinalIgnoreCase) || string.Equals(userInput, "yes", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "yes";
+                }
+                else if(string.Equals(userInput, "n", StringComparison.OrdinalIgnoreCase) || string.Equals(userInput, "no", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "no";
+                }
+                else
+                {
+                    Console.WriteLine("\nINVALID INPUT: expected 'y' for yes or 'n' for no. Press any key to go back and try again.");
+                    Console.ReadKey();
+                }
+            }
+        }
+
+        ///<summary>
         ///Displays to the user the current stats for the characters and to confirm the distribution of points
         ///is correct before creating the instance of the character class.
         ///</summary>
@@ -281,7 +286,9 @@ namespace UserHandler
         ///<returns>boolean to confirm the current stats before creating the character instance</returns>
         public static bool CharacterConfirmation(string characterName, int raceId, int jobId, int strength, int constitution, int dexterity, int intelligence, int wisdom, int charisma, ref int points)
         {
-            //TODO: Here method to return race name and job
+            //Confirms the choosen race and job by id and returns the string value(name) of selected race and job.
+            string choosenRace = RaceAndJobConfirmation("Race", raceId);
+            string choosenJob = RaceAndJobConfirmation("Job", jobId);
 
             while(true)
             {
@@ -303,7 +310,7 @@ namespace UserHandler
                 Console.WriteLine($"Wis: {wisdom}");
                 Console.WriteLine($"Cha: {charisma}\n");
                 
-                string confirm = YesNoConfirmation("Y/N: ");
+                string confirm = ChoiceConfirmation("Y/N: ");
 
                 if(String.Equals(confirm, "yes"))
                 {
@@ -352,5 +359,6 @@ namespace UserHandler
 
             throw new ArgumentException("Type must be 'race' or 'job'", nameof(typeInfo));
         }
+        #endregion
     }
 }
