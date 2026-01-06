@@ -59,17 +59,17 @@ namespace PartyDatabase
 
             return statValue;
         }
-
-        public void SetVocation(Vocation.VocationBasics vocation)
-        {
-            AssignedVocation = vocation;
-            VocationId = vocation.VocationId;
-        }
-
+        
         public void SetRace(Race.RaceBasics race)
         {
             AssignedRace = race;
             RaceId = race.RaceId;
+        }
+        
+        public void SetVocation(Vocation.VocationBasics vocation)
+        {
+            AssignedVocation = vocation;
+            VocationId = vocation.VocationId;
         }
     }
 }
