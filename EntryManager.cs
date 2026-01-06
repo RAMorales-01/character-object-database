@@ -178,7 +178,7 @@ namespace DatabaseUtility
         }
         #endregion 
 
-        #region Create and Insert Entries to Database
+        #region Create, Insert or Delete Entries in Database
         ///<summary>
         ///To create an instance of the Character class after all the parameters have been confirmed by user.
         ///</summary>
@@ -250,6 +250,23 @@ namespace DatabaseUtility
                     addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.Skill3);
                     addCharacterCommand.ExecuteNonQuery();
                 }
+            }
+        }
+
+        ///<summary>
+        ///To delete an entry inside the database using the id(primary key)
+        ///</summary>
+        ///<param name="characterId">the primary key of each entry inside the database</param>
+        public static void DeleteCharacter(int characterId)
+        {
+            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand deleteCharacterCommand = connection.CreateCommand();
+                deleteCharacterCommand.CommandText = @"DELETE FROM Characters WHERE id = @id";
+                deleteCharacterCommand.Parameters.AddWithValue("@id", characterId);
+                deleteCharacterCommand.ExecuteNonQuery();
             }
         }
         #endregion
