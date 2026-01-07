@@ -363,9 +363,9 @@ namespace DatabaseUtility
         ///</summary>
         ///<param name="characterId">primary key of each existing entry on the table Characters</param>
         ///<returns>a List of Tuple, string for the column name(stat name) and int for the value of each column</returns> 
-        public static List<Tuple<string, int>> GetStatsFromId(int characterId)
+        public static List<Tuple<string, string>> GetStatsFromId(int characterId)
         {
-            List<Tuple<string, int>> characterStats = new List<Tuple<string, int>>();
+            List<Tuple<string, string>> characterStats = new List<Tuple<string, string>>();
 
             using(SqliteConnection connection = new SqliteConnection(_connectionString))
             {
@@ -382,10 +382,10 @@ namespace DatabaseUtility
                    {
                         for(int i = 0; i < reader.FieldCount; i++)//FieldCount gets the number of columns in the current row.
                         {
-                            string statName = reader.GetName(i);
-                            int statValue = Convert.ToInt32(reader.GetValue(i));
+                            string columnName = reader.GetName(i);
+                            string columnValue = Convert.ToString(reader.GetValue(i));
 
-                            characterStats.Add(new Tuple<string, int>(statName, statValue));
+                            characterStats.Add(new Tuple<string, string>(columnName, columnValue));
                         }
                    }
                 }
@@ -465,6 +465,28 @@ namespace DatabaseUtility
         }
 
         ///<summary>
+        ///Display all the current existing entries in Characters table.
+        ///</summary>
+        ///<param name="characterList">dictionary with id(primary key) and name of character(value)</param>
+        public static void DisplayCharacterTable(Dictionary<int, string> characterList)
+        {
+            if(characterList.Count == 0)
+            {
+                Console.WriteLine("\nThere are currently no characters\n");
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("\n ----- Characters -----\n");
+
+                foreach(KeyValuePair<int, string> kvp in characterList)
+                {
+                    Console.WriteLine($"ID: {kvp.Key} - Name: {kvp.Value}");
+                }
+            }
+        }
+
+        ///<summary>
         ///Display all the info of the Races table.
         ///</summary>
         public static void DisplayRaceTable()
@@ -526,6 +548,22 @@ namespace DatabaseUtility
                     }
                 }
             }
+        }
+
+        ///<summary>
+        ///Display existing entry information(character name, race, job and 6 main stats).
+        ///</summary>
+        ///<param name="characterSheet">List of tuple, string(column name) and string(column value)</param>
+        public static void DisplayCharacterSheet(List<Tuple<string, string>> characterSheet)
+        {
+            Console.Clear();
+
+            foreach(var sheet in characterSheet)
+            {
+                Console.WriteLine($"{sheet.Item1} -- {sheet.Item2}");
+            }
+
+            Console.WriteLine("\n");
         }
         #endregion
     }
