@@ -121,6 +121,38 @@ namespace UserHandler
             }
         }
         #endregion
+        
+        ///<summary>
+        ///Method for the validation of the character name to insert in the Characters table.
+        ///</summary>
+        ///<param name="prompt">prompts user to enter a name</param>
+        ///<returns>string value for the name of the character</returns>
+        public static string AddName(string prompt)
+        {
+            const int nameMaxLength = 10;
+
+            string nameInput = string.Empty;
+
+            while(true)
+            {
+                Console.Clear();
+                Console.WriteLine($"NOTE: Character name cannot have more than {nameMaxLength} character in length.\n");
+                Console.WriteLine("Enter the name of this new character.");
+                Console.Write(prompt);
+                nameInput = Console.ReadLine();
+
+                if(!String.IsNullOrWhiteSpace(nameInput) && nameInput.Length <= nameMaxLength)
+                {
+                    return nameInput;
+                }
+                else
+                {
+                    Console.WriteLine($"\nERROR: Invalid input, name cannot be Null or Empty and must have less than {nameMaxLength} characters.\n");
+                    Console.WriteLine("Press any key to try again.");
+                    Console.ReadKey();
+                }
+            }
+        }
 
         ///<summary>
         ///The user can add points to each stat value(min stat value of 10 to a maximum of 20 in total)
@@ -358,6 +390,37 @@ namespace UserHandler
             }
 
             throw new ArgumentException("Type must be 'race' or 'job'", nameof(typeInfo));
+        }
+
+        ///<summary>
+        ///Validates that the selected character entry exist in the Characters table.
+        ///</summary>
+        ///<param name="prompt">prompts user to enter the id for the selected operation</param>
+        ///<param name="characterList">Dictionary with character id(key) and name of the character(value)</param>
+        ///<returns>Tupel, boolean if true id exist inside the table else returns false, integer of selected the id</returns>
+        public static (bool exist, int characterId) IsSelectedIdValid(string prompt, Dictionary<int, string> characterList)
+        {
+            while(true)
+            {
+                Console.WriteLine("\nEnter the id of the character to...");
+                Console.Write(prompt);
+
+                if(int.TryParse(Console.ReadLine(), out int userInput))
+                {
+                    if(characterList.ContainsKey(userInput))
+                    {
+                        return (true, userInput);
+                    }
+                    else
+                    {
+                        return (false, userInput);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("\nERROR:invalid input expected positive integer(Character Id). Press any key to try again.");
+                }
+            }
         }
         #endregion
     }
