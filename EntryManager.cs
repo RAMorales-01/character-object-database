@@ -257,7 +257,7 @@ namespace DatabaseUtility
         ///To delete an entry inside the database using the id(primary key)
         ///</summary>
         ///<param name="characterId">the primary key of each entry inside the database</param>
-        public static void DeleteCharacter(int characterId)
+        public static void DeleteCharacterFromDatabase(int characterId)
         {
             using(SqliteConnection connection = new SqliteConnection(_connectionString))
             {
@@ -328,7 +328,7 @@ namespace DatabaseUtility
         }
         #endregion
 
-        #region Search and Display entries
+        #region Search, Retrieve and Display 
         ///<summary>
         ///Retreives id and name of an existing entry in the database.
         ///</summary>
@@ -356,6 +356,112 @@ namespace DatabaseUtility
             }
 
             return characters;
+        }
+
+        ///<summary>
+        ///Using the primary key, retrieves the 6 main stat values to display on the character sheet.
+        ///</summary>
+        ///<param name="characterId">primary key of each existing entry on the table Characters</param>
+        ///<returns>a List of Tuple, string for the column name(stat name) and int for the value of each column</returns> 
+        public static List<Tuple<string, int>> GetStatsFromId(int characterId)
+        {
+            List<Tuple<string, int>> characterStats = new List<Tuple<string, int>>();
+
+            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand retrieveStatsCommand = connection.CreateCommand();
+                retrieveStatsCommand.CommandText = @"SELECT Strength, Constitution, Dexterity, Intelligence, Wisdom,
+                Charisma FROM Characters WHERE id = @id";
+                retrieveStatsCommand.Parameters.AddWithValue("@id", characterId);
+                
+                using(SqliteDataReader reader = retrieveStatsCommand.ExecuteReader())
+                {
+                   while(reader.Read())
+                   {
+                        for(int i = 0; i < reader.FieldCount; i++)//FieldCount gets the number of columns in the current row.
+                        {
+                            string statName = reader.GetName(i);
+                            int statValue = Convert.ToInt32(reader.GetValue(i));
+
+                            characterStats.Add(new Tuple<string, int>(statName, statValue));
+                        }
+                   }
+                }
+            }
+
+            return characterStats;
+        }
+
+        ///<summary>
+        ///Using primary key retrives the race information assigned to an existing entry on the Characters table.  
+        ///</summary>
+        ///<param name="characterId">primary key of each existing entry on the table Characters</param>
+        ///<returns>a List of Tuple string for the column name(in this case is "Race") and string for the value inside the column</returns>
+        public static List<Tuple<string, string>> GetRaceFromId(int characterId)
+        {
+            List<Tuple<string, string>> characterRaceInfo = new List<Tuple<string, string>>();
+
+            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand retrieveRace = connection.CreateCommand();
+                retrieveRace.CommandText = @"SELECT Race, Trait FROM Characters WHERE id = @id";
+                retrieveRace.Parameters.AddWithValue("@id", characterId);
+
+                using(SqliteDataReader reader = retrieveRace.ExecuteReader())
+                {
+                    while(reader.Read())
+                    {
+                        for(int i = 0; i < reader.FieldCount; i++)
+                        {
+                            string columnName = reader.GetName(i);//gets name of column --> Race
+                            string columnValue = reader.GetString(i);//gets value inside the column Race(for example "Human")
+
+                            characterRaceInfo.Add(new Tuple<string, string>(columnName, columnValue));
+                        }
+                    }
+                }
+            }
+
+            return characterRaceInfo;
+        }
+
+        ///<summary>
+        ///Using primary key retrives the job information assigned to an existing entry on the Characters table.
+        ///</summary>
+        ///<param name="characterId">primary key of each existing entry on the table Characters</param>
+        ///<returns>a List of Tuple string for the column name("Job name", "Ability", "Skill1" and so on) and string for the value inside the column</returns>
+        public static List<Tuple<string, string>> GetJobFromId(int characterId)
+        {
+            List<Tuple<string, string>> characterJobInfo = new List<Tuple<string, string>>();
+
+            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand retrieveJob = connection.CreateCommand();
+                retrieveJob.CommandText = @"SELECT Job, Ability, Skill1, Skill2, Skill3 FROM Characters WHERE id = @id";
+                retrieveJob.Parameters.AddWithValue("@id", characterId);
+
+                using(SqliteDataReader reader = retrieveJob.ExecuteReader())
+                {
+                    while(reader.Read())
+                    {
+                        for(int i = 0; i < reader.FieldCount; i++)
+                        {
+                            string columnName = reader.GetName(i);
+                            string columnValue = reader.GetString(i);
+
+                            characterJobInfo.Add(new Tuple<string, string>(ColumnName, columnValue));
+                        }
+                    }
+                }
+            }
+
+            return characterJobInfo;
         }
         #endregion
     }
