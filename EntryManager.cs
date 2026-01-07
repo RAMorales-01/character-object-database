@@ -463,6 +463,70 @@ namespace DatabaseUtility
 
             return characterJobInfo;
         }
+
+        ///<summary>
+        ///Display all the info of the Races table.
+        ///</summary>
+        public static void DisplayRaceTable()
+        {
+            Console.Clear();
+
+            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                using(SqliteCommand retrieveRaces = connection.CreateCommand())
+                {
+                    retrieveRaces.CommandText = @"SELECT id, Name, Trait FROM Races";
+
+                    using(SqliteDataReader reader = retrieveRaces.ExecuteReader())
+                    {
+                        while(reader.Read())
+                        {
+                            int id = reader.GetInt32(0);
+                            string name = reader.GetString(1);
+                            string trait = reader.GetString(2);
+
+                            Console.WriteLine($"id: {id} | Race: {name} | Trait: {trait}\n");
+                        }
+                    }
+                }
+            }
+        }
+
+        ///<summary>
+        ///Display all info of the Jobs table.
+        ///</summary>
+        public static void DisplayJobTable()
+        {
+            Console.Clear();
+
+            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                using(SqliteCommand retrieveJobs = connection.CreateCommand())
+                {
+                    retrieveJobs.CommandText = @"SELECT ALL id, Name, Ability, Skill1, Skill2, Skill3 FROM Jobs";
+
+                    using(SqliteDataReader reader = retrieveJobs.ExecuteReader())
+                    {
+                        while(reader.Read())
+                        {
+                            int id = reader.GetInt32(0);
+                            string name = reader.GetString(1);
+                            string ability = reader.GetString(2);
+                            string s1 = reader.GetString(3);
+                            string s2 = reader.GetString(4);
+                            string s3 = reader.GetString(5);
+
+                        Console.WriteLine($"id: {id} | Job: {name} | Ability: {ability}");
+                        Console.WriteLine($"Skills: {s1} - {s2} - {s3}\n");
+                        }
+                    }
+                }
+            }
+        }
         #endregion
     }
 }
