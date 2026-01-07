@@ -327,5 +327,36 @@ namespace DatabaseUtility
             }
         }
         #endregion
+
+        #region Search and Display entries
+        ///<summary>
+        ///Retreives id and name of an existing entry in the database.
+        ///</summary>
+        ///<returns>A dictionary with the id and name of all the current character in the database</returns>
+        public static Dictionary<int, string> GetIdAndName()
+        {
+            Dictionary<int, string> characters = new Dictionary<int, string>();//To stores all the names from the database
+
+            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand retrieveCharacters = connection.CreateCommand();
+                retrieveCharacters.CommandText = @"SELECT ALL id, Name FROM Characters;";
+
+                using(SqliteDataReader reader = retrieveCharacters.ExecuteReader())
+                {
+                    while(reader.Read())
+                    {
+                        int id = reader.GetInt32(0);//reads column index 0(character id)
+                        string name = reader.GetString(1);//reads column index 1(character name)
+                        characters.Add(id, name);//add character id as key and character name as value
+                    }
+                }
+            }
+
+            return characters;
+        }
+        #endregion
     }
 }

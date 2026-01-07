@@ -1,6 +1,6 @@
 using System;
 
-namespace PartyDatabase
+namespace Character
 {
     public class Character
     {
@@ -30,10 +30,10 @@ namespace PartyDatabase
         public int Intelligence {get; private set;}
         public int Wisdom {get; private set;}
         public int Charisma {get; private set;}
-        public Vocation.VocationBasics AssignedVocation {get; set;}//Allows to call VocationInfo and Vocation.DefaultSkill, (SkillLowLevel, SkillMediumLevel, SkillHighLevel) 
-        public int VocationId {get; set;}
         public Race.RaceBasics AssignedRace {get; set;}
         public int RaceId {get; set;}
+        public Job.JobBasics AssignedJob {get; set;}
+        public int JobId {get; set;}
 
         public Character(string name, int strength, int constitution, int dexterity, int intelligence, int wisdom, int charisma)
         {
@@ -66,10 +66,10 @@ namespace PartyDatabase
             RaceId = race.RaceId;
         }
         
-        public void SetVocation(Vocation.VocationBasics vocation)
+        public void SetJob(Job.JobBasics Job)
         {
-            AssignedVocation = vocation;
-            VocationId = vocation.VocationId;
+            AssignedJob = job;
+            JobId = job.JobId;
         }
     }
 }
