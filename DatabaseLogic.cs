@@ -2,7 +2,7 @@ using System;
 
 namespace DatabaseLogic
 {
-    class DatabaseFuntions
+    class DatabaseOptions
     {
         ///<summary>
         ///Handles the options for the database functions for the main menu
