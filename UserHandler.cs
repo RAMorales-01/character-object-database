@@ -26,6 +26,25 @@ namespace UserHandler
             DisplayEntryInfo = 1,
             GoBackToMain
         }
+
+        //Representation for the current available races for the character
+        private enum Races
+        {
+            Human = 1,
+            Elven,
+            Fiendblood,
+            Beastfolk
+        }
+        
+        //Representation for the current available jobs for the character
+        private enum Jobs
+        {
+            Fighter = 1,
+            Rogue,
+            Spellcaster,
+            Priest,
+            Bard
+        }
         #endregion
 
         #region Main Menu and Submenu
@@ -122,6 +141,7 @@ namespace UserHandler
         }
         #endregion
         
+        #region Add Name and Stats 
         ///<summary>
         ///Method for the validation of the character name to insert in the Characters table.
         ///</summary>
@@ -215,6 +235,49 @@ namespace UserHandler
                 }
             }
         }
+        #endregion
+
+        #region Select Race and Job
+        ///<summary>
+        ///Display to the user the currently available races and job options for the character.
+        ///</summary>
+        ///<param name="prompt">prompts the user to select 1 of the available options(race or job)</param>
+        ///<param name="name">choosen name for the created character</param>
+        ///<returns>integer that represents the id of the selected optiion for race or job</returns>
+        public static int SelectRaceAndJob(string prompt, string name)
+        {
+            List<Races> raceList = Enum.GetValues(typeof(Races)).Cast<Races>().ToList();
+            Races firstIdValue = Races.Human;
+            int minValue = (int)firstIdValue;
+            int maxValue = raceList.Count;
+
+            while(true)
+            {
+                int bulletList = 1;
+
+                Console.Clear();
+                Console.WriteLine($"Choose {name} race.\n");
+
+                foreach(Races race in raceList)
+                {
+                    Console.WriteLine($"{bulletList} - {race}");
+                    bulletList++;
+                }
+
+                Console.Write(prompt);
+
+                if(int.TryParse(Console.ReadLine(), out int selectedId) && selectedId >= minValue || selectedId <= maxValue)
+                {
+                    return selectedId;
+                }
+                else
+                {
+                    Console.WriteLine($"ERROR: Invalid input expected positive integer between {minValue} and {maxValue}. Press any key to try again.");
+                    Console.ReadKey();
+                }
+            }
+        }
+        #endregion
 
         #region User Input Utility Methods 
         ///<summary>
