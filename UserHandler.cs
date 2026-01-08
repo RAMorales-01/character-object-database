@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using DatabaseLogic;
 using DatabaseUtility;
 
@@ -77,7 +79,7 @@ namespace UserHandler
                     {
                         try
                         {
-                            DatabaseFunctions.MainMenuOptions(isInputValid.Item2);
+                            DatabaseOptions.MainMenuOptions(isInputValid.Item2);
                         }
                         catch(ArgumentException ex)
                         {
@@ -244,37 +246,42 @@ namespace UserHandler
         ///<param name="prompt">prompts the user to select 1 of the available options(race or job)</param>
         ///<param name="name">choosen name for the created character</param>
         ///<returns>integer that represents the id of the selected optiion for race or job</returns>
-        public static int SelectRaceAndJob(string prompt, string name)
+        public static int SelectRaceAndJob(string typeInfo, string name)
         {
-            List<Races> raceList = Enum.GetValues(typeof(Races)).Cast<Races>().ToList();
-            Races firstIdValue = Races.Human;
-            int minValue = (int)firstIdValue;
-            int maxValue = raceList.Count;
+            string toConfirm = typeInfo.ToLower();
 
-            while(true)
+            if(toConfirm == "race")
             {
-                int bulletList = 1;
+                var raceList = RequestedList(toConfirm);
+            }
+            if(toConfirm == "job")
+            {
+                var jobList = RequestedList(toConfirm);
+            }
+           
+        }
 
-                Console.Clear();
-                Console.WriteLine($"Choose {name} race.\n");
+        ///<summary>
+        ///Converts all elements of an enum type into a List of strings.
+        ///</summary>
+        ///<returns>a list of strings with the names of all the elements inside the selected Enum</returns>
+        private static List<string> RequestedList<TEnum>() where TEnum : Enum
+        {
+            return Enum.GetNames(typeof(TEnum)).ToList();
+        }
 
-                foreach(Races race in raceList)
-                {
-                    Console.WriteLine($"{bulletList} - {race}");
-                    bulletList++;
-                }
+        ///<summary>
+        ///Displays the available options for races or jobs.
+        ///</summary>
+        ///<param name="list">selected list to be displayed</param>
+        private static void DisplayListOptions(List<string> list)
+        {
+            int listNum = 1;
 
-                Console.Write(prompt);
-
-                if(int.TryParse(Console.ReadLine(), out int selectedId) && selectedId >= minValue || selectedId <= maxValue)
-                {
-                    return selectedId;
-                }
-                else
-                {
-                    Console.WriteLine($"ERROR: Invalid input expected positive integer between {minValue} and {maxValue}. Press any key to try again.");
-                    Console.ReadKey();
-                }
+            foreach(string option in list)
+            {
+                Console.WriteLine($"{listNum} - {option}");
+                listNum++;
             }
         }
         #endregion
