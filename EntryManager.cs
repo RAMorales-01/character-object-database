@@ -31,11 +31,11 @@ namespace DatabaseUtility
                     createCommand.ExecuteNonQuery();
 
                     createCommand.CommandText = @"CREATE TABLE IF NOT EXIST Races (Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Race TEXT NOT NULL, Trait TEXT NOT NULL)";
+                    Name TEXT NOT NULL, Trait TEXT NOT NULL)";
                     createCommand.ExecuteNonQuery();
 
                     createCommand.CommandText = @"CREATE TABLE IF NOT EXIST Jobs (Id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                    Job TEXT NOT NULL, Ability TEXT NOT NULL, Skill1 TEXT NOT NULL, Skill2 TEXT NOT NULL, Skill3 TEXT NOT NULL)";
+                    Name TEXT NOT NULL, Ability TEXT NOT NULL, Skill1 TEXT NOT NULL, Skill2 TEXT NOT NULL, Skill3 TEXT NOT NULL)";
                     createCommand.ExecuteNonQuery();
 
                     createCommand.CommandText = @"CREATE TABLE IF NOT EXIST Characters (Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -85,7 +85,7 @@ namespace DatabaseUtility
             {
                 using(SqliteCommand insertCommand = connection.CreateCommand())
                 {
-                    insertCommand.CommandText = @"INSERT INTO Races (Id, Race, Trait) VALUES (@id, @race, @trait)";
+                    insertCommand.CommandText = @"INSERT INTO Races (Id, Name, Trait) VALUES (@id, @name, @trait)";
 
                     switch(id)
                     {
@@ -114,7 +114,7 @@ namespace DatabaseUtility
         private static void SetRaceParameters(SqliteCommand insertCommand, int id, string race, string trait)
         {
             insertCommand.Parameters.AddWithValue("@id", id);
-            insertCommand.Parameters.AddWithValue("@race", race);
+            insertCommand.Parameters.AddWithValue("@name", race);
             insertCommand.Parameters.AddWithValue("@trait", trait);
         }
 
@@ -138,8 +138,8 @@ namespace DatabaseUtility
             {
                 using(SqliteCommand insertCommand = connection.CreateCommand())
                 {
-                    insertCommand.CommandText = @"INSERT INTO Jobs (Id, Job, Ability, Skill1, Skill2, Skill3) 
-                    VALUES (@id, @job, @ability, s1, s2, s3)";
+                    insertCommand.CommandText = @"INSERT INTO Jobs (Id, Name, Ability, Skill1, Skill2, Skill3) 
+                    VALUES (@id, @name, @ability, s1, s2, s3)";
 
                     switch(id)
                     {
@@ -170,7 +170,7 @@ namespace DatabaseUtility
         private static void SetJobParameters(SqliteCommand insertCommand, int id, string job, string ability, string s1, string s2, string s3)
         {
             insertCommand.Parameters.AddWithValue("@id", id);
-            insertCommand.Parameters.AddWithValue("@job", job);
+            insertCommand.Parameters.AddWithValue("@name", job);
             insertCommand.Parameters.AddWithValue("@ability", ability);
             insertCommand.Parameters.AddWithValue("@s1", s1);
             insertCommand.Parameters.AddWithValue("@s2", s2);
@@ -330,32 +330,41 @@ namespace DatabaseUtility
 
         #region Search, Retrieve and Display 
         ///<summary>
-        ///Retreives id and name of an existing entry in the database.
+        ///Retreives id and name of selected table.
         ///</summary>
         ///<returns>A dictionary with the id and name of all the current character in the database</returns>
-        public static Dictionary<int, string> GetIdAndName()
+        public static Dictionary<int, string> GetIdAndName(string selectedTable)
         {
-            Dictionary<int, string> characters = new Dictionary<int, string>();//To stores all the names from the database
+            Dictionary<int, string> dictionary = new Dictionary<int, string>();
+
+            string tableName = selectedTable.ToLower() switch
+            {
+                "characters" => "Characters",
+                "races" => "Races",
+                "jobs" => "Jobs",
+                _ => throw new ArgumentException("Invalid table selection.")
+            };
 
             using(SqliteConnection connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
 
-                SqliteCommand retrieveCharacters = connection.CreateCommand();
-                retrieveCharacters.CommandText = @"SELECT ALL id, Name FROM Characters;";
+                SqliteCommand retrieveCommand = connection.CreateCommand();
+                retrieveCommand.CommandText = $"SELECT Id, Name FROM {tableName};";
 
-                using(SqliteDataReader reader = retrieveCharacters.ExecuteReader())
+                using(SqliteDataReader reader = retrieveCommand.ExecuteReader())
                 {
                     while(reader.Read())
                     {
-                        int id = reader.GetInt32(0);//reads column index 0(character id)
-                        string name = reader.GetString(1);//reads column index 1(character name)
-                        characters.Add(id, name);//add character id as key and character name as value
+                        int id = reader.GetInt32(0);
+                        string name = reader.GetString(1);
+                        
+                        dictionary.Add(id, name);
                     }
                 }
             }
 
-            return characters;
+            return dictionary;
         }
 
         ///<summary>
