@@ -43,10 +43,16 @@ namespace DatabaseMainEntry
 
             switch(selectedOption)
             {
-                case 1: //TODO: EntryManger --- Display entry info
+                case 1: EntryManager.ViewAnEntryVerification();
                 break;
 
-                case 2: //TODO: Go back to main menu
+                case 2: //TODO: EntryManager --- Display Race table 
+                break;
+
+                case 3: //TODO: EntryManager --- Display Job table 
+                break;
+
+                case 4: MainMenuOptions();
                 break;
 
                 default: throw new ArgumentException($"Invalid operation selected", nameof(selectedOption));
