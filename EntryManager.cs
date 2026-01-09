@@ -31,11 +31,11 @@ namespace DatabaseUtility
                     createCommand.ExecuteNonQuery();
 
                     createCommand.CommandText = @"CREATE TABLE IF NOT EXIST Races (Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Race TEXT NOT NULL, Trait TEXT NOT NULL)";
+                    Name TEXT NOT NULL, Trait TEXT NOT NULL)";
                     createCommand.ExecuteNonQuery();
 
                     createCommand.CommandText = @"CREATE TABLE IF NOT EXIST Jobs (Id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                    Job TEXT NOT NULL, Ability TEXT NOT NULL, Skill1 TEXT NOT NULL, Skill2 TEXT NOT NULL, Skill3 TEXT NOT NULL)";
+                    Name TEXT NOT NULL, Ability TEXT NOT NULL, Skill1 TEXT NOT NULL, Skill2 TEXT NOT NULL, Skill3 TEXT NOT NULL)";
                     createCommand.ExecuteNonQuery();
 
                     createCommand.CommandText = @"CREATE TABLE IF NOT EXIST Characters (Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -85,7 +85,7 @@ namespace DatabaseUtility
             {
                 using(SqliteCommand insertCommand = connection.CreateCommand())
                 {
-                    insertCommand.CommandText = @"INSERT INTO Races (Id, Race, Trait) VALUES (@id, @race, @trait)";
+                    insertCommand.CommandText = @"INSERT INTO Races (Id, Name, Trait) VALUES (@id, @name, @trait)";
 
                     switch(id)
                     {
@@ -114,7 +114,7 @@ namespace DatabaseUtility
         private static void SetRaceParameters(SqliteCommand insertCommand, int id, string race, string trait)
         {
             insertCommand.Parameters.AddWithValue("@id", id);
-            insertCommand.Parameters.AddWithValue("@race", race);
+            insertCommand.Parameters.AddWithValue("@name", race);
             insertCommand.Parameters.AddWithValue("@trait", trait);
         }
 
@@ -138,8 +138,8 @@ namespace DatabaseUtility
             {
                 using(SqliteCommand insertCommand = connection.CreateCommand())
                 {
-                    insertCommand.CommandText = @"INSERT INTO Jobs (Id, Job, Ability, Skill1, Skill2, Skill3) 
-                    VALUES (@id, @job, @ability, s1, s2, s3)";
+                    insertCommand.CommandText = @"INSERT INTO Jobs (Id, Name, Ability, Skill1, Skill2, Skill3) 
+                    VALUES (@id, @name, @ability, s1, s2, s3)";
 
                     switch(id)
                     {
@@ -170,7 +170,7 @@ namespace DatabaseUtility
         private static void SetJobParameters(SqliteCommand insertCommand, int id, string job, string ability, string s1, string s2, string s3)
         {
             insertCommand.Parameters.AddWithValue("@id", id);
-            insertCommand.Parameters.AddWithValue("@job", job);
+            insertCommand.Parameters.AddWithValue("@name", job);
             insertCommand.Parameters.AddWithValue("@ability", ability);
             insertCommand.Parameters.AddWithValue("@s1", s1);
             insertCommand.Parameters.AddWithValue("@s2", s2);
@@ -190,8 +190,8 @@ namespace DatabaseUtility
                 int points = 30;//each new character have a total of 30 points to distribute between the 6 main stats.
                 
                 string name = UserHandler.AddName("Name: ");
-                int choosenRaceId = UserHandler.ChooseRace("\nSelect a race: ", name);
-                int choosenJobId = UserHandler.ChooseJob("\nSelect a Job: ", name);
+                int choosenRaceId = UserHandler.SelectRaceAndJob("race", name);
+                int choosenJobId = UserHandler.SelectRaceAndJob("job", name);
 
                 int strength = UserHandler.AddStatValue("Add points: ", "Strength", Character._minStatValue, Character._maxStatValue, ref points);
                 int constitution = UserHandler.AddStatValue("Add points: ", "Constitution", Character._minStatValue, Character._maxStatValue, ref points);
@@ -257,9 +257,9 @@ namespace DatabaseUtility
         ///To delete an entry inside the database using the id(primary key)
         ///</summary>
         ///<param name="characterId">the primary key of each entry inside the database</param>
-        public static void DeleteCharacterFromDatabase(int characterId)
+        private static void DeleteCharacterFromDatabase(int characterId)
         {
-            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            using(SqliteConnection connection = new SqliteConnection(_connection))
             {
                 connection.Open();
 
@@ -267,6 +267,62 @@ namespace DatabaseUtility
                 deleteCharacterCommand.CommandText = @"DELETE FROM Characters WHERE id = @id";
                 deleteCharacterCommand.Parameters.AddWithValue("@id", characterId);
                 deleteCharacterCommand.ExecuteNonQuery();
+            }
+        }
+
+        ///<summary>
+        ///Check Characters table contains entries, if entries equals 0 returns false.
+        ///</summary>
+        ///<returns>bool, false if table has 0 entries else returns true</returns> 
+        private static bool VerifyTableBeforeDelete()
+        {
+            using(SqliteConnection connection = new SqliteConnection(_connection))
+            {
+                connection.Open();
+
+                using(SqliteCommand checkCommand = connection.CreateCommand())
+                {
+                    checkCommand.CommandText = @"SELECT COUNT(*) FROM Characters";
+
+                    long count = (long)checkCommand.ExecuteScalar();
+
+                    if(count == 0)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+            } 
+        }
+
+        ///<summary>
+        ///Main entry point for the deletion process of an existing entry on the Characters table.
+        ///</summary>
+        public static void DeleteAnEntryVerification()
+        {
+            var isValid = VerifyTableBeforeDelete();
+
+            if(isValid == false)
+            {
+                Console.WriteLine("\nThere are currently no character.\n");
+            }
+            else
+            {
+                DisplayCharacterTable(GetIdAndName("characters"));
+                var (isValid, selectedId) = UserHandler.IsSelectedIdValid("Delete: ");
+
+                if(isValid == true)
+                {
+                    DeleteCharacterFromDatabase(selectedId);
+                }
+                else
+                {
+                    Console.WriteLine($"ERROR: selected id {selectedId} does not belong to any existing character. Press any key to try again.");
+                    Console.ReadKey();
+                }    
             }
         }
         #endregion
@@ -330,32 +386,41 @@ namespace DatabaseUtility
 
         #region Search, Retrieve and Display 
         ///<summary>
-        ///Retreives id and name of an existing entry in the database.
+        ///Retreives id and name of selected table.
         ///</summary>
         ///<returns>A dictionary with the id and name of all the current character in the database</returns>
-        public static Dictionary<int, string> GetIdAndName()
+        public static Dictionary<int, string> GetIdAndName(string selectedTable)
         {
-            Dictionary<int, string> characters = new Dictionary<int, string>();//To stores all the names from the database
+            Dictionary<int, string> dictionary = new Dictionary<int, string>();
+
+            string tableName = selectedTable.ToLower() switch
+            {
+                "characters" => "Characters",
+                "races" => "Races",
+                "jobs" => "Jobs",
+                _ => throw new ArgumentException("Invalid table selection.")
+            };
 
             using(SqliteConnection connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
 
-                SqliteCommand retrieveCharacters = connection.CreateCommand();
-                retrieveCharacters.CommandText = @"SELECT ALL id, Name FROM Characters;";
+                SqliteCommand retrieveCommand = connection.CreateCommand();
+                retrieveCommand.CommandText = $"SELECT Id, Name FROM {tableName};";
 
-                using(SqliteDataReader reader = retrieveCharacters.ExecuteReader())
+                using(SqliteDataReader reader = retrieveCommand.ExecuteReader())
                 {
                     while(reader.Read())
                     {
-                        int id = reader.GetInt32(0);//reads column index 0(character id)
-                        string name = reader.GetString(1);//reads column index 1(character name)
-                        characters.Add(id, name);//add character id as key and character name as value
+                        int id = reader.GetInt32(0);
+                        string name = reader.GetString(1);
+                        
+                        dictionary.Add(id, name);
                     }
                 }
             }
 
-            return characters;
+            return dictionary;
         }
 
         ///<summary>
@@ -472,7 +537,7 @@ namespace DatabaseUtility
         {
             if(characterList.Count == 0)
             {
-                Console.WriteLine("\nThere are currently no characters\n");
+                Console.WriteLine("\nThere are currently no characters.\n");
             }
             else
             {

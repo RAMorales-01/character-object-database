@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DatabaseLogic;
+using DatabaseMainEntry;
 using DatabaseUtility;
 
 namespace UserHandler
@@ -248,17 +248,24 @@ namespace UserHandler
         ///<returns>integer that represents the id of the selected optiion for race or job</returns>
         public static int SelectRaceAndJob(string typeInfo, string name)
         {
-            string toConfirm = typeInfo.ToLower();
+            List<string> options = typeInfo.ToLower() switch
+            {
+                "race" => RequestedList<Races>(),
+                "job" => RequestedList<Jobs>(),
+                _ => throw new ArgumentException("Invalid selection")
+            };
 
-            if(toConfirm == "race")
+            while(true)
             {
-                var raceList = RequestedList(toConfirm);
+                DisplayListOptions(options); 
+                Console.WriteLine($"\nChoose {name} {typeInfo}");
+                var (isValid, selectedId) = IsSelectedIdValid("Select: ", EntryManager.GetIdAndName(typeInfo));
+
+                if(isValid)
+                {
+                    return selectedId;
+                }
             }
-            if(toConfirm == "job")
-            {
-                var jobList = RequestedList(toConfirm);
-            }
-           
         }
 
         ///<summary>
@@ -472,7 +479,7 @@ namespace UserHandler
         {
             while(true)
             {
-                Console.WriteLine("\nEnter the id of the character to...");
+                Console.WriteLine("\n");
                 Console.Write(prompt);
 
                 if(int.TryParse(Console.ReadLine(), out int userInput))
