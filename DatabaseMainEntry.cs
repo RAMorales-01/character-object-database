@@ -46,10 +46,10 @@ namespace DatabaseMainEntry
                 case 1: EntryManager.ViewAnEntryVerification();
                 break;
 
-                case 2: //TODO: EntryManager --- Display Race table 
+                case 2: EntryManager.DisplayRaceTable();
                 break;
 
-                case 3: //TODO: EntryManager --- Display Job table 
+                case 3: EntryManager.DisplayJobTable(); 
                 break;
 
                 case 4: MainMenuOptions();
