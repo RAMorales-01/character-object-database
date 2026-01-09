@@ -190,8 +190,8 @@ namespace DatabaseUtility
                 int points = 30;//each new character have a total of 30 points to distribute between the 6 main stats.
                 
                 string name = UserHandler.AddName("Name: ");
-                int choosenRaceId = UserHandler.ChooseRace("\nSelect a race: ", name);
-                int choosenJobId = UserHandler.ChooseJob("\nSelect a Job: ", name);
+                int choosenRaceId = UserHandler.SelectRaceAndJob("race", name);
+                int choosenJobId = UserHandler.SelectRaceAndJob("job", name);
 
                 int strength = UserHandler.AddStatValue("Add points: ", "Strength", Character._minStatValue, Character._maxStatValue, ref points);
                 int constitution = UserHandler.AddStatValue("Add points: ", "Constitution", Character._minStatValue, Character._maxStatValue, ref points);
@@ -257,9 +257,9 @@ namespace DatabaseUtility
         ///To delete an entry inside the database using the id(primary key)
         ///</summary>
         ///<param name="characterId">the primary key of each entry inside the database</param>
-        public static void DeleteCharacterFromDatabase(int characterId)
+        private static void DeleteCharacterFromDatabase(int characterId)
         {
-            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            using(SqliteConnection connection = new SqliteConnection(_connection))
             {
                 connection.Open();
 
@@ -267,6 +267,62 @@ namespace DatabaseUtility
                 deleteCharacterCommand.CommandText = @"DELETE FROM Characters WHERE id = @id";
                 deleteCharacterCommand.Parameters.AddWithValue("@id", characterId);
                 deleteCharacterCommand.ExecuteNonQuery();
+            }
+        }
+
+        ///<summary>
+        ///Check Characters table contains entries, if entries equals 0 returns false.
+        ///</summary>
+        ///<returns>bool, false if table has 0 entries else returns true</returns> 
+        private static bool VerifyTableBeforeDelete()
+        {
+            using(SqliteConnection connection = new SqliteConnection(_connection))
+            {
+                connection.Open();
+
+                using(SqliteCommand checkCommand = connection.CreateCommand())
+                {
+                    checkCommand.CommandText = @"SELECT COUNT(*) FROM Characters";
+
+                    long count = (long)checkCommand.ExecuteScalar();
+
+                    if(count == 0)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+            } 
+        }
+
+        ///<summary>
+        ///Main entry point for the deletion process of an existing entry on the Characters table.
+        ///</summary>
+        public static void DeleteAnEntryVerification()
+        {
+            var isValid = VerifyTableBeforeDelete();
+
+            if(isValid == false)
+            {
+                Console.WriteLine("\nThere are currently no character.\n");
+            }
+            else
+            {
+                DisplayCharacterTable(GetIdAndName("characters"));
+                var (isValid, selectedId) = UserHandler.IsSelectedIdValid("Delete: ");
+
+                if(isValid == true)
+                {
+                    DeleteCharacterFromDatabase(selectedId);
+                }
+                else
+                {
+                    Console.WriteLine($"ERROR: selected id {selectedId} does not belong to any existing character. Press any key to try again.");
+                    Console.ReadKey();
+                }    
             }
         }
         #endregion
@@ -481,7 +537,7 @@ namespace DatabaseUtility
         {
             if(characterList.Count == 0)
             {
-                Console.WriteLine("\nThere are currently no characters\n");
+                Console.WriteLine("\nThere are currently no characters.\n");
             }
             else
             {

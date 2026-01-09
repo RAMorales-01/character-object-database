@@ -1,6 +1,7 @@
 using System;
+using UserHandler;
 
-namespace DatabaseLogic
+namespace DatabaseMainEntry
 {
     class DatabaseOptions
     {
@@ -13,16 +14,16 @@ namespace DatabaseLogic
 
             switch(selectedOption)
             {
-                case 1: //TODO: EntryManager --- Display list of available entries
+                case 1: EntryManager.DisplayCharacterTable(GetIdAndName("characters"))
                 break;
 
-                case 2: //TODO: EntryManager --- Display Submenu
+                case 2: UserHandler.Submenu();
                 break;
 
-                case 3: //TODO: EntryManager --- Create entry
+                case 3: EntryManager.InsertCharacterToDatabase(CreateCharacter());
                 break;
                 
-                case 4: //TODO: EntryManager --- Delete entry
+                case 4: EntryManager.DeleteAnEntryVerification();
                 break;
 
                 case 5: //TODO: Exit database
@@ -38,6 +39,8 @@ namespace DatabaseLogic
         ///<param name="selectedOption">int between 1 and 2 for the current available options in the submenu</param>
         public static void SubmenuOptions(int selectedOption)
         {
+            Console.Clear();
+
             switch(selectedOption)
             {
                 case 1: //TODO: EntryManger --- Display entry info
