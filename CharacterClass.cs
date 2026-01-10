@@ -2,12 +2,16 @@ using System;
 
 namespace Character
 {
+    ///<summary>
+    ///This is the main class that will be used as the entry for the Database.
+    ///</summary>
     public class Character
     {
         //character stat must have a min value of 10 and a max value of 20
         public const int _minStatValue = 10;
         public const int _maxStatValue = 20;
         
+        #region Fields and Properties
         private string _name = string.Empty;
         public string Name
         {
@@ -34,7 +38,9 @@ namespace Character
         public int RaceId {get; set;}
         public Job.JobBasics AssignedJob {get; set;}
         public int JobId {get; set;}
-
+        #endregion
+        
+        #region Constructor
         public Character(string name, int strength, int constitution, int dexterity, int intelligence, int wisdom, int charisma)
         {
             Name = name;
@@ -59,7 +65,9 @@ namespace Character
 
             return statValue;
         }
-        
+        #endregion
+
+        #region Methods to assign Race and Job
         public void SetRace(Race.RaceBasics race)
         {
             AssignedRace = race;
@@ -71,5 +79,6 @@ namespace Character
             AssignedJob = job;
             JobId = job.JobId;
         }
+        #endregion
     }
 }

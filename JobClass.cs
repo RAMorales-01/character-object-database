@@ -2,8 +2,12 @@ using System;
 
 namespace CharacterJob
 {
+    ///<summary>
+    ///To assign one of the current available jobs.
+    ///</summary>
     public class Job
     {
+        #region Abstract Class
         public abstract class JobBasics
         {
             public abstract string JobName {get; set;}
@@ -13,7 +17,9 @@ namespace CharacterJob
             public abstract string Skill2 {get; set;}
             public abstract string Skill3 {get; set;}
         }
+        #endregion
 
+        #region Current Available Job Classes
         public class Fighter : JobBasics
         {
             public override string JobName {get; set;}
@@ -25,13 +31,13 @@ namespace CharacterJob
 
             public Fighter(Character character)
             {
-                VocationName = "Fighter";
-                VocationId = 1;
-                DefaultSkill = "[Parry]";
+                JobName = "Fighter";
+                JobId = 1;
+                Ability = "[Parry]";
 
-                SkillLowLevel = character != null && character.Dexterity >= 14 ? "[Deflect Missile]" : "[-----]"; 
-                SkillMediumLevel = character != null && character.Strength >= 16 ? "[Multi-Slash]" : "[-----]";
-                SkillHighLevel = character != null && character.Constitution >= 20 ? "[Withstand Deathblow]" : "[-----]";
+                Skill1 = character != null && character.Dexterity >= 14 ? "[Deflect Missile]" : "[-----]"; 
+                Skill2 = character != null && character.Strength >= 16 ? "[Multi-Slash]" : "[-----]";
+                Skill3 = character != null && character.Constitution >= 20 ? "[Withstand Deathblow]" : "[-----]";
             }
         }
 
@@ -46,13 +52,13 @@ namespace CharacterJob
 
             public Rogue(Character character)
             {
-                VocationName = "Rogue";
-                VocationId = 2;
-                DefaultSkill = "[Steal(Battle/Shop)]";
+                JobName = "Rogue";
+                JobId = 2;
+                Ability = "[Steal(Battle/Shop)]";
 
-                SkillLowLevel = character != null && character.Strength >= 14 ? "[Deathblow]" : "[-----]";
-                SkillMediumLevel = character != null && character.Wisdom >= 16 ? "[Detect Traps]" : "[-----]";
-                SkillHighLevel = character != null && character.Dexterity >= 20 ? "[Uncanny Dodge]" : "[-----]";
+                Skill1 = character != null && character.Strength >= 14 ? "[Deathblow]" : "[-----]";
+                Skill2 = character != null && character.Wisdom >= 16 ? "[Detect Traps]" : "[-----]";
+                Skill3 = character != null && character.Dexterity >= 20 ? "[Uncanny Dodge]" : "[-----]";
             }
         }
 
@@ -67,13 +73,13 @@ namespace CharacterJob
                 
             public Spellcaster(Character character)
             {
-                VocationName = "Spellcaster";
-                VocationId = 3;
-                DefaultSkill = "[Fireball]";
+                JobName = "Spellcaster";
+                JobId = 3;
+                Ability = "[Fireball]";
 
-                SkillLowLevel = character != null && character.Dexterity >= 16 ? "[Quick Chanter]" : "[-----]";
-                SkillMediumLevel = character != null && character.Constitution >= 18 ? "[Unshakable Caster]" : "[-----]";
-                SkillHighLevel = character != null && character.Intelligence >= 20 ? "[Meteor]" : "[-----]";
+                Skill1 = character != null && character.Dexterity >= 16 ? "[Quick Chanter]" : "[-----]";
+                Skill2 = character != null && character.Constitution >= 18 ? "[Unshakable Caster]" : "[-----]";
+                Skill3 = character != null && character.Intelligence >= 20 ? "[Meteor]" : "[-----]";
             }
         }
 
@@ -88,13 +94,13 @@ namespace CharacterJob
 
             public Priest(Character character)
             {
-                VocationName = "Priest";
-                VocationId = 4;
-                DefaultSkill = "[Heal]";
+                JobName = "Priest";
+                JobId = 4;
+                Ability = "[Heal]";
 
-                SkillLowLevel = character != null && character.Intelligence >= 14 ? "[Expand Healing Radius]" : "[-----]";
-                SkillMediumLevel = character != null && character.Constitution >= 18 ? "[Deathblow Immunity]" : "[-----]";
-                SkillHighLevel = character != null && character.Wisdom >= 20 ? "[Resurrection]" : "[-----]";
+                Skill1 = character != null && character.Intelligence >= 14 ? "[Expand Healing Radius]" : "[-----]";
+                Skill2 = character != null && character.Constitution >= 18 ? "[Deathblow Immunity]" : "[-----]";
+                Skill3 = character != null && character.Wisdom >= 20 ? "[Resurrection]" : "[-----]";
             }
         }
 
@@ -109,14 +115,15 @@ namespace CharacterJob
 
             public Bard(Character character)
             {
-                VocationName = "Bard";
-                VocationId = 5;
-                DefaultSkill = "[Inspire]";
+                JobName = "Bard";
+                JobId = 5;
+                Ability = "[Inspire]";
 
-                SkillLowLevel = character != null && character.Dexterity >= 16 ? "[Evade & Parry]" : "[-----]";
-                SkillMediumLevel = character != null && character.Intelligence >= 18 ? "[Song of Bravery]" : "[-----]";
-                SkillHighLevel = character != null && character.Charisma >= 20 ? "[Charm]" : "[-----]";
+                Skill1 = character != null && character.Dexterity >= 16 ? "[Evade & Parry]" : "[-----]";
+                Skill2 = character != null && character.Intelligence >= 18 ? "[Song of Bravery]" : "[-----]";
+                Skill3 = character != null && character.Charisma >= 20 ? "[Charm]" : "[-----]";
             }
         }
+        #endregion
     }
 }

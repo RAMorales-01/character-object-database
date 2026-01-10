@@ -62,6 +62,34 @@ namespace DatabaseUtility
                 AddJobsToTable(connection);
             }
         }
+
+        ///<summary>
+        ///Check Characters table contains entries, if entries equals 0 returns false.
+        ///</summary>
+        ///<returns>bool, false if table has 0 entries else returns true</returns> 
+        private static bool VerifyTableBeforeOperation()
+        {
+            using(SqliteConnection connection = new SqliteConnection(_connection))
+            {
+                connection.Open();
+
+                using(SqliteCommand checkCommand = connection.CreateCommand())
+                {
+                    checkCommand.CommandText = @"SELECT COUNT(*) FROM Characters";
+
+                    long count = (long)checkCommand.ExecuteScalar();
+
+                    if(count == 0)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+            } 
+        }
         #endregion
 
         #region Populate Race and Job Tables
@@ -271,39 +299,11 @@ namespace DatabaseUtility
         }
 
         ///<summary>
-        ///Check Characters table contains entries, if entries equals 0 returns false.
-        ///</summary>
-        ///<returns>bool, false if table has 0 entries else returns true</returns> 
-        private static bool VerifyTableBeforeDelete()
-        {
-            using(SqliteConnection connection = new SqliteConnection(_connection))
-            {
-                connection.Open();
-
-                using(SqliteCommand checkCommand = connection.CreateCommand())
-                {
-                    checkCommand.CommandText = @"SELECT COUNT(*) FROM Characters";
-
-                    long count = (long)checkCommand.ExecuteScalar();
-
-                    if(count == 0)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-            } 
-        }
-
-        ///<summary>
         ///Main entry point for the deletion process of an existing entry on the Characters table.
         ///</summary>
         public static void DeleteAnEntryVerification()
         {
-            var isValid = VerifyTableBeforeDelete();
+            var isValid = VerifyTableBeforeOperation();
 
             if(isValid == false)
             {
@@ -312,9 +312,9 @@ namespace DatabaseUtility
             else
             {
                 DisplayCharacterTable(GetIdAndName("characters"));
-                var (isValid, selectedId) = UserHandler.IsSelectedIdValid("Delete: ");
+                var (idExist, selectedId) = UserHandler.IsSelectedIdValid("Delete: ");
 
-                if(isValid == true)
+                if(idExist == true)
                 {
                     DeleteCharacterFromDatabase(selectedId);
                 }
@@ -428,7 +428,7 @@ namespace DatabaseUtility
         ///</summary>
         ///<param name="characterId">primary key of each existing entry on the table Characters</param>
         ///<returns>a List of Tuple, string for the column name(stat name) and int for the value of each column</returns> 
-        public static List<Tuple<string, string>> GetStatsFromId(int characterId)
+        private static List<Tuple<string, string>> GetStatsFromId(int characterId)
         {
             List<Tuple<string, string>> characterStats = new List<Tuple<string, string>>();
 
@@ -464,7 +464,7 @@ namespace DatabaseUtility
         ///</summary>
         ///<param name="characterId">primary key of each existing entry on the table Characters</param>
         ///<returns>a List of Tuple string for the column name(in this case is "Race") and string for the value inside the column</returns>
-        public static List<Tuple<string, string>> GetRaceFromId(int characterId)
+        private static List<Tuple<string, string>> GetRaceFromId(int characterId)
         {
             List<Tuple<string, string>> characterRaceInfo = new List<Tuple<string, string>>();
 
@@ -499,7 +499,7 @@ namespace DatabaseUtility
         ///</summary>
         ///<param name="characterId">primary key of each existing entry on the table Characters</param>
         ///<returns>a List of Tuple string for the column name("Job name", "Ability", "Skill1" and so on) and string for the value inside the column</returns>
-        public static List<Tuple<string, string>> GetJobFromId(int characterId)
+        private static List<Tuple<string, string>> GetJobFromId(int characterId)
         {
             List<Tuple<string, string>> characterJobInfo = new List<Tuple<string, string>>();
 
@@ -619,7 +619,7 @@ namespace DatabaseUtility
         ///Display existing entry information(character name, race, job and 6 main stats).
         ///</summary>
         ///<param name="characterSheet">List of tuple, string(column name) and string(column value)</param>
-        public static void DisplayCharacterSheet(List<Tuple<string, string>> characterSheet)
+        private static void DisplayCharacterSheet(List<Tuple<string, string>> characterSheet)
         {
             Console.Clear();
 
@@ -629,6 +629,36 @@ namespace DatabaseUtility
             }
 
             Console.WriteLine("\n");
+        }
+
+        ///<summary>
+        ///Main entry point for the process of viewing stats, race and job info of an existing Character entry.
+        ///</summary>
+        public static void ViewAnEntryVerification()
+        {
+            var isValid = VerifyTableBeforeOperation();
+
+            if(isValid == false)
+            {
+                Console.WriteLine("\nThere are currently no character.\n");
+            }
+            else
+            {
+                DisplayCharacterTable(GetIdAndName("characters")); 
+                var (idExist, selectedId) = UserHandler.IsSelectedIdValid("Select: ");  
+
+                 if(idExist == true)
+                {
+                    DisplayCharacterSheet(GetStatsFromId(selectedId));
+                    DisplayCharacterSheet(GetRaceFromId(selectedId));
+                    DisplayCharacterSheet(GetJobFromId(selectedId));
+                }
+                else
+                {
+                    Console.WriteLine($"ERROR: selected id {selectedId} does not belong to any existing character. Press any key to try again.");
+                    Console.ReadKey();
+                } 
+            }
         }
         #endregion
     }

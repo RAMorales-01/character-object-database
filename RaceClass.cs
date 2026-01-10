@@ -2,15 +2,21 @@ using System;
 
 namespace PartyDatabase
 {
+    ///<summary>
+    ///To assign one of the current available races.
+    ///</summary>
     public class Race
     {
+        #region Abstract Class
         public abstract class RaceBasics
         {
             public abstract string RaceName {get; set;}
             public abstract int RaceId {get; set;}
             public abstract string RaceTrait {get; set;}
         }
+        #endregion
 
+        #region Current Available Race Classes
         public class Human : RaceBasics
         {
             public override string RaceName {get; set;}
@@ -66,5 +72,6 @@ namespace PartyDatabase
                 RaceTrait = "+10 on Initiative and +25 in Agility";
             }
         }
+        #endregion
     }
 }
