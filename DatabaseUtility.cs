@@ -166,33 +166,43 @@ namespace DatabaseUtility
             {
                 checkCommand.CommandText = @"SELECT COUNT(*) FROM Jobs";
 
-                if(Convert.ToInt32(checkCommand.ExecuteScalar()) > 0){ return; }
+                if(Convert.ToInt32(checkCommand.ExecuteScalar()) > 0)
+                { 
+                    return; 
+                }
             }
+            
+            List<Job.JobBasics> availableJobs = new List<Job.JobBasics>
+            {
+                new Job.Fighter(),
+                new Job.Rogue(),
+                new Job.Spellcaster(),
+                new Job.Priest(),
+                new Job.Bard(),
+            };
 
-            int[] jobsId = { 1, 2, 3, 4, 5 };//This array contains the id for the current available jobs. 
-
-            foreach(int id in jobsId)
+            foreach(var job in availableJobs)
             {
                 using(SqliteCommand insertCommand = connection.CreateCommand())
                 {
                     insertCommand.CommandText = @"INSERT INTO Jobs (Id, Name, Ability, Skill1, Skill2, Skill3) 
                     VALUES (@id, @name, @ability, @s1, @s2, @s3)";
 
-                    switch(id)
+                    switch(job.JobId)
                     {
-                        case 1: SetJobParameters(insertCommand, id, "Fighter", "Parry", "Multi-Slice", "Withstand Deathblow", "Deflect Missile");
+                        case 1: SetJobParameters(insertCommand, job.JobId, job.JobName, job.Ability, job.Skill1, job.Skill2, job.Skill3);
                         break;
 
-                        case 2: SetJobParameters(insertCommand, id, "Rogue", "Pilfer", "Deathblow", "Disarm", "Evasion");
+                        case 2: SetJobParameters(insertCommand, job.JobId, job.JobName, job.Ability, job.Skill1, job.Skill2, job.Skill3);
                         break;
 
-                        case 3: SetJobParameters(insertCommand, id, "Spellcaster", "Fireball", "Quick-Chanter", "Unshakable Caster", "Meteor-Strike");
+                        case 3: SetJobParameters(insertCommand, job.JobId, job.JobName, job.Ability, job.Skill1, job.Skill2, job.Skill3);
                         break;
 
-                        case 4: SetJobParameters(insertCommand, id, "Priest", "Heal", "Protect", "Holy-Smite", "Resurrection");
+                        case 4: SetJobParameters(insertCommand, job.JobId, job.JobName, job.Ability, job.Skill1, job.Skill2, job.Skill3);
                         break;
 
-                        case 5: SetJobParameters(insertCommand, id, "Bard", "Inspire", "Thunder-Strike", "Song of Bravery", "Charm");
+                        case 5: SetJobParameters(insertCommand, job.JobId, job.JobName, job.Ability, job.Skill1, job.Skill2, job.Skill3);
                         break;
                     }
 

@@ -1,5 +1,5 @@
 using System;
-using DataEntry;
+using CharacterCreation;
 
 namespace JobSelection
 {
@@ -34,11 +34,20 @@ namespace JobSelection
             {
                 JobName = "Fighter";
                 JobId = 1;
-                Ability = "[Parry]";
+                Ability = "Parry";
 
-                Skill1 = character != null && character.Dexterity >= 14 ? "[Deflect Missile]" : "[-----]"; 
-                Skill2 = character != null && character.Strength >= 16 ? "[Multi-Slash]" : "[-----]";
-                Skill3 = character != null && character.Constitution >= 20 ? "[Withstand Deathblow]" : "[-----]";
+                Skill1 = character != null && character.Strength >= 16 ? "Multi-Slice" : "-----";
+                Skill2 = character != null && character.Dexterity >= 14 ? "Deflect Missile" : "-----"; 
+                Skill3 = character != null && character.Constitution >= 20 ? "Withstand Deathblow" : "-----";
+            }
+            public Fighter()//This constructor without parameters is to populate the Jobs Table.
+            {
+                JobName = "Fighter";
+                JobId = 1;
+                Ability = "Parry";
+                Skill1 = "Multi-Slice";
+                Skill2 = "Deflect Missile";
+                Skill3 = "Withstand Deathblow";
             }
         }
 
@@ -55,11 +64,20 @@ namespace JobSelection
             {
                 JobName = "Rogue";
                 JobId = 2;
-                Ability = "[Steal(Battle/Shop)]";
+                Ability = "Pilfer";
 
-                Skill1 = character != null && character.Strength >= 14 ? "[Deathblow]" : "[-----]";
-                Skill2 = character != null && character.Wisdom >= 16 ? "[Detect Traps]" : "[-----]";
-                Skill3 = character != null && character.Dexterity >= 20 ? "[Uncanny Dodge]" : "[-----]";
+                Skill1 = character != null && character.Strength >= 14 ? "Deathblow" : "-----";
+                Skill2 = character != null && character.Dexterity >= 20 ? "Evasion" : "-----";
+                Skill3 = character != null && character.Wisdom >= 16 ? "Disarm" : "-----";
+            }
+            public Rogue()//This constructor without parameters is to populate the Jobs Table.
+            {
+                JobName = "Rogue";
+                JobId = 2;
+                Ability = "Pilfer";
+                Skill1 = "Deathblow";
+                Skill2 = "Evasion";
+                Skill3 = "Disarm";
             }
         }
 
@@ -76,11 +94,20 @@ namespace JobSelection
             {
                 JobName = "Spellcaster";
                 JobId = 3;
-                Ability = "[Fireball]";
+                Ability = "Fireball";
 
-                Skill1 = character != null && character.Dexterity >= 16 ? "[Quick Chanter]" : "[-----]";
-                Skill2 = character != null && character.Constitution >= 18 ? "[Unshakable Caster]" : "[-----]";
-                Skill3 = character != null && character.Intelligence >= 20 ? "[Meteor]" : "[-----]";
+                Skill1 = character != null && character.Constitution >= 18 ? "Unshakable Caster" : "-----";
+                Skill2 = character != null && character.Dexterity >= 16 ? "Quick-Chanter" : "-----";
+                Skill3 = character != null && character.Intelligence >= 20 ? "Meteor-Strike" : "-----";
+            }
+            public Spellcaster()//This constructor without parameters is to populate the Jobs Table.
+            {
+                JobName = "Spellcaster";
+                JobId = 3;
+                Ability = "Fireball";
+                Skill1 = "Unshakable Caster";
+                Skill2 = "Quick-Chanter";
+                Skill3 = "Meteor-Strike";
             }
         }
 
@@ -97,11 +124,20 @@ namespace JobSelection
             {
                 JobName = "Priest";
                 JobId = 4;
-                Ability = "[Heal]";
+                Ability = "Heal";
 
-                Skill1 = character != null && character.Intelligence >= 14 ? "[Expand Healing Radius]" : "[-----]";
-                Skill2 = character != null && character.Constitution >= 18 ? "[Deathblow Immunity]" : "[-----]";
-                Skill3 = character != null && character.Wisdom >= 20 ? "[Resurrection]" : "[-----]";
+                Skill1 = character != null && character.Constitution >= 18 ? "Protect" : "-----";
+                Skill2 = character != null && character.Intelligence >= 14 ? "Holy-Smite" : "-----";
+                Skill3 = character != null && character.Wisdom >= 20 ? "Resurrection" : "-----";
+            }
+            public Priest()//This constructor without parameters is to populate the Jobs Table.
+            {
+                JobName = "Priest";
+                JobId = 4;
+                Ability = "Heal";
+                Skill1 = "Protect";
+                Skill2 = "Holy-Smite";
+                Skill3 = "Resurrection";
             }
         }
 
@@ -118,11 +154,20 @@ namespace JobSelection
             {
                 JobName = "Bard";
                 JobId = 5;
-                Ability = "[Inspire]";
+                Ability = "Inspire";
 
-                Skill1 = character != null && character.Dexterity >= 16 ? "[Evade & Parry]" : "[-----]";
-                Skill2 = character != null && character.Intelligence >= 18 ? "[Song of Bravery]" : "[-----]";
-                Skill3 = character != null && character.Charisma >= 20 ? "[Charm]" : "[-----]";
+                Skill1 = character != null && character.Dexterity >= 16 ? "Song of Bravery" : "-----";
+                Skill2 = character != null && character.Intelligence >= 18 ? "Thunder-Strike" : "-----";
+                Skill3 = character != null && character.Charisma >= 20 ? "Charm" : "-----";
+            }
+            public Bard()//This constructor without parameters is to populate the Jobs Table.
+            {
+                JobName = "Bard";
+                JobId = 5;
+                Ability = "Inspire";
+                Skill1 = "Song of Bravery";
+                Skill2 = "Thunder-Strike";
+                Skill3 = "Charm";
             }
         }
         #endregion

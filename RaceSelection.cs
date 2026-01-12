@@ -28,7 +28,7 @@ namespace RaceSelection
             {
                 RaceName = "Human";
                 RaceId = 1;
-                RaceTrait = "+15 on all Physical and Offenive Magic";
+                RaceTrait = "+5 on initiative";
             }
         }
 
@@ -42,7 +42,7 @@ namespace RaceSelection
             {
                 RaceName = "Elven";
                 RaceId = 2;
-                RaceTrait = "+20 on all Magic and +5 on all Healing Magic";
+                RaceTrait = "+15 healing power";
             }
         }
 
@@ -56,7 +56,7 @@ namespace RaceSelection
             {
                 RaceName = "Fiendblood";
                 RaceId = 3;
-                RaceTrait = "+30 on Offenive Fire and Dark Magic";
+                RaceTrait = "+10 fire resistance";
             }
         }
 
@@ -70,7 +70,7 @@ namespace RaceSelection
             {
                 RaceName = "Beastfolk";
                 RaceId = 4;
-                RaceTrait = "+10 on Initiative and +25 in Agility";
+                RaceTrait = "+15 on evasion";
             }
         }
         #endregion

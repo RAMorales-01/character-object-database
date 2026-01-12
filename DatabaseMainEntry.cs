@@ -1,6 +1,7 @@
 using System;
 using UserHandler;
 using DatabaseUtility;
+using JobSelection;
 
 namespace DatabaseMainEntry
 {
@@ -29,7 +30,7 @@ namespace DatabaseMainEntry
             Thread.Sleep(1500);
             Console.Clear();
             
-            Input.ShowMainMenu();
+            //Input.ShowMainMenu();
              
             Console.Clear();
             Console.Write("\nGOODBYE!\n");

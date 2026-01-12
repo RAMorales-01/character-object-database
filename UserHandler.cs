@@ -11,6 +11,7 @@ namespace UserHandler
     ///</summary>
     class Input
     {
+        //TODO: implement the enum elements in the code
         #region Enums
         //Representation for the main menu current options 
         private enum MainMenu
@@ -26,6 +27,8 @@ namespace UserHandler
         private enum Submenu
         {
             DisplayEntryInfo = 1,
+            DisplayRaces,
+            DisplayJobs,
             GoBackToMain
         }
 
