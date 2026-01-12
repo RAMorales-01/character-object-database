@@ -1,16 +1,38 @@
 using System;
 using UserHandler;
 using DatabaseUtility;
-using DataEntry;
 
 namespace DatabaseMainEntry
 {
+    ///<summary>
+    ///This class handles the main entry and the options the user
+    ///can select in the Main menu and submenu.
+    ///</summary>
     class DatabaseOptions
     {
+        ///<summary>
+        ///Main entry for the progaram
+        ///</summary>
         public static void OpenDatabase()
         {
-            Console.WriteLine("Test Succesful. Press any key to continue.");
-            Console.ReadKey();
+            //The Thread.Sleep is just for show, to simulate the database is loading.
+            Console.Clear();
+            Console.WriteLine("----- ACCESSING DATABASE -----");
+            Thread.Sleep(1000);
+            Console.Write(".");
+            Thread.Sleep(1000);
+            Console.Write(".");
+            Thread.Sleep(1000);
+            Console.Write(".");
+            Thread.Sleep(1000);
+            Console.WriteLine("\n----- ACCESS GRANTED -----");
+            Thread.Sleep(1500);
+            Console.Clear();
+            
+            Input.ShowMainMenu();
+             
+            Console.Clear();
+            Console.Write("\nGOODBYE!\n");
         }
 
         ///<summary>
@@ -34,15 +56,12 @@ namespace DatabaseMainEntry
                 case 4: DatabaseHandler.DeleteAnEntryVerification();
                 break;
 
-                case 5: //TODO: Exit database
-                break;
-
                 default: throw new ArgumentException($"Invalid operation selected", nameof(selectedOption));
             }
         }
 
         ///<summary>
-        ///Handles the options for the database functions for the  submenu
+        ///Handles the options for the database functions for the submenu
         ///</summary>
         ///<param name="selectedOption">int between 1 and 2 for the current available options in the submenu</param>
         public static void SubmenuOptions(int selectedOption)

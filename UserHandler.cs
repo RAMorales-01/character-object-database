@@ -69,17 +69,24 @@ namespace UserHandler
                 Console.Write("\n: ");
                 string userInput = Console.ReadLine();
 
-                var isInputValid = ValidateSelectedOption(userInput, minPermited, maxPermited);
+                var (isValid, selectedOption) = ValidateSelectedOption(userInput, minPermited, maxPermited);
 
-                if(isInputValid.Item1 == true)
+                if(isValid == true)
                 {
-                    if(isInputValid.Item2 == maxPermited){ break; }
-
+                    if(selectedOption == maxPermited)
+                    {
+                        string exitDatabase = ChoiceConfirmation("Exit database? [Y/N]: ");
+                        
+                        if(exitDatabase == "yes")
+                        {
+                            break;
+                        }
+                    }
                     else
                     {
                         try
                         {
-                            DatabaseOptions.MainMenuOptions(isInputValid.Item2);
+                            DatabaseOptions.MainMenuOptions(selectedOption);
                         }
                         catch(ArgumentException ex)
                         {
@@ -96,14 +103,6 @@ namespace UserHandler
                     Console.WriteLine($"\nINVALID INPUT: expected positive integer between {minPermited} and {maxPermited}. Press any key to go back and try again.");
                     Console.ReadKey();
                 }
-
-                Console.WriteLine("\nKeep working with the database?");
-                string keepDatabaseOpen = ChoiceConfirmation("Y/N: ");
-
-                if(keepDatabaseOpen == "no")
-                {
-                    break;
-                }
             }
         }
 
@@ -119,19 +118,32 @@ namespace UserHandler
             {
                 DatabaseHandler.DisplayCharacterTable(DatabaseHandler.GetIdAndName("characters"));
 
-                Console.WriteLine("\n1- Display character info\n2- Go back to main menu");
+                Console.WriteLine("\n1- Display character info\n2- Display all Races\n3- Display all Jobs\n4- Go back to main menu");
                 Console.Write("\n: ");
                 string userInput = Console.ReadLine();
                 
-                var isInputValid = ValidateSelectedOption(userInput, minPermited, maxPermited);
+                var (isValid, selectedOption) = ValidateSelectedOption(userInput, minPermited, maxPermited);
 
-                if(isInputValid.Item1 == true)
+                if(isValid == true)
                 {
-                    if(isInputValid.Item2 == maxPermited){ break; }
-
+                    if(selectedOption == maxPermited)
+                    { 
+                        break; 
+                    }
                     else
                     {
-                        DatabaseOptions.SubmenuOptions(isInputValid.Item2);
+                        try
+                        {
+                            DatabaseOptions.SubmenuOptions(selectedOption);
+                        }
+                        catch(ArgumentException ex)
+                        {
+                            Console.WriteLine($"\nAn error occurred: {ex.Message}");
+                        }
+                        catch(Exception ex)
+                        {
+                            Console.WriteLine($"\nA general error occurred: {ex.Message}");
+                        }
                     }
                 }
                 else

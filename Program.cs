@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Threading;
 using DatabaseMainEntry;
 
-namespace PartyDatabase
+namespace CRUDTest
 {
     ///<summary>
     ///The objective of this program is to test the interaction of the user with a database
@@ -20,24 +19,7 @@ namespace PartyDatabase
             Console.WriteLine("\nPress any key to begin the test.");
             Console.ReadKey(true);
 
-            //The Thread.Sleep is just for show, to simulate the database is loading.
-            Console.Clear();
-            Console.WriteLine("----- ACCESSING DATABASE -----");
-            Thread.Sleep(1000);
-            Console.Write(".");
-            Thread.Sleep(1000);
-            Console.Write(".");
-            Thread.Sleep(1000);
-            Console.Write(".");
-            Thread.Sleep(1000);
-            Console.WriteLine("\n----- ACCESS GRANTED -----");
-            Thread.Sleep(1500);
-            Console.Clear();
-            
             DatabaseOptions.OpenDatabase();
-        
-            Console.Clear();
-            Console.Write("\nGOODBYE!\n");
         }
     }
 }

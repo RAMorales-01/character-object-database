@@ -2,7 +2,7 @@ using System;
 using RaceSelection;
 using JobSelection;
 
-namespace DataEntry
+namespace CharacterCreation
 {
     ///<summary>
     ///This is the main class that will be used as the entry for the Database.
