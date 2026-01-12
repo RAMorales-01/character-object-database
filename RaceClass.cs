@@ -1,6 +1,7 @@
 using System;
+using DataEntry;
 
-namespace PartyDatabase
+namespace RaceSelection
 {
     ///<summary>
     ///To assign one of the current available races.

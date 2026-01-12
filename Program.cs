@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using UserHandler;
+using DatabaseMainEntry;
 
 namespace PartyDatabase
 {
@@ -34,7 +34,7 @@ namespace PartyDatabase
             Thread.Sleep(1500);
             Console.Clear();
             
-            Input.MainMenu();
+            DatabaseOptions.OpenDatabase();
         
             Console.Clear();
             Console.Write("\nGOODBYE!\n");

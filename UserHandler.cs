@@ -53,9 +53,9 @@ namespace UserHandler
         ///<summary>
         ///Selection screen for initial menu
         ///</summary>
-        public static void MainMenu()
+        public static void ShowMainMenu()
         {
-            EntryManager.VerifyDatabaseIsCreated();//Verifies the database exist, if not is created along with all the tables.
+            DatabaseHandler.VerifyDatabaseIsCreated();//Verifies the database exist, if not is created along with all the tables.
 
             //Takes the int values of the first element and last element of the enum, to limit the user options.
             int minPermited = (int)MainMenu.DisplayEntry;
@@ -110,14 +110,14 @@ namespace UserHandler
         ///<summary>
         ///Display the submenu options to the user
         ///</summary>
-        private static void Submenu()
+        public static void ShowSubmenu()
         {
             int minPermited = (int)Submenu.DisplayEntryInfo;
             int maxPermited = (int)Submenu.GoBackToMain;
 
             while(true)
             {
-                DisplayEntriesList(EntryManager.GetIdAndName());
+                DatabaseHandler.DisplayCharacterTable(DatabaseHandler.GetIdAndName("characters"));
 
                 Console.WriteLine("\n1- Display character info\n2- Go back to main menu");
                 Console.Write("\n: ");
@@ -131,7 +131,7 @@ namespace UserHandler
 
                     else
                     {
-                        DatabaseFunctions.SubmenuOptions(isInputValid.Item2);
+                        DatabaseOptions.SubmenuOptions(isInputValid.Item2);
                     }
                 }
                 else
@@ -216,7 +216,7 @@ namespace UserHandler
 
                         if(statTotal <= maxValue)
                         {
-                            points -= statInput;
+                            points -= isInputValid.Item2;
                             return statTotal;
                         }
                         else
@@ -259,7 +259,7 @@ namespace UserHandler
             {
                 DisplayListOptions(options); 
                 Console.WriteLine($"\nChoose {name} {typeInfo}");
-                var (isValid, selectedId) = IsSelectedIdValid("Select: ", EntryManager.GetIdAndName(typeInfo));
+                var (isValid, selectedId) = Input.IsSelectedIdValid("Select: ", DatabaseHandler.GetIdAndName(typeInfo));
 
                 if(isValid)
                 {

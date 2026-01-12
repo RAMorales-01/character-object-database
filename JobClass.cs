@@ -1,6 +1,7 @@
 using System;
+using DataEntry;
 
-namespace CharacterJob
+namespace JobSelection
 {
     ///<summary>
     ///To assign one of the current available jobs.

@@ -1,6 +1,8 @@
 using System;
+using RaceSelection;
+using JobSelection;
 
-namespace Character
+namespace DataEntry
 {
     ///<summary>
     ///This is the main class that will be used as the entry for the Database.
@@ -74,7 +76,7 @@ namespace Character
             RaceId = race.RaceId;
         }
         
-        public void SetJob(Job.JobBasics Job)
+        public void SetJob(Job.JobBasics job)
         {
             AssignedJob = job;
             JobId = job.JobId;

@@ -3,6 +3,9 @@ using System.IO;
 using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
 using UserHandler;
+using DataEntry;
+using RaceSelection;
+using JobSelection;
 
 namespace DatabaseUtility
 {
@@ -19,7 +22,10 @@ namespace DatabaseUtility
         {
             string folder = Path.GetDirectoryName(_databasePathFile);
 
-            if(!string.IsNullOrEmpty(folder)){ Directory.CreateDirectory(folder) }
+            if(!string.IsNullOrEmpty(folder))
+            { 
+                Directory.CreateDirectory(folder); 
+            }
 
             using(SqliteConnection connection = new SqliteConnection(_connection))
             {
@@ -30,15 +36,15 @@ namespace DatabaseUtility
                     createCommand.CommandText = @"PRAGMA foreign_keys = ON";
                     createCommand.ExecuteNonQuery();
 
-                    createCommand.CommandText = @"CREATE TABLE IF NOT EXIST Races (Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    createCommand.CommandText = @"CREATE TABLE IF NOT EXISTS Races (Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     Name TEXT NOT NULL, Trait TEXT NOT NULL)";
                     createCommand.ExecuteNonQuery();
 
-                    createCommand.CommandText = @"CREATE TABLE IF NOT EXIST Jobs (Id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                    createCommand.CommandText = @"CREATE TABLE IF NOT EXISTS Jobs (Id INTEGER PRIMARY KEY AUTOINCREMENT, 
                     Name TEXT NOT NULL, Ability TEXT NOT NULL, Skill1 TEXT NOT NULL, Skill2 TEXT NOT NULL, Skill3 TEXT NOT NULL)";
                     createCommand.ExecuteNonQuery();
 
-                    createCommand.CommandText = @"CREATE TABLE IF NOT EXIST Characters (Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    createCommand.CommandText = @"CREATE TABLE IF NOT EXISTS Characters (Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     RaceId INTEGER, JobId INTEGER,
                     Name TEXT NOT NULL,
                     Strength INTEGER NOT NULL,
@@ -104,7 +110,10 @@ namespace DatabaseUtility
             {
                 checkCommand.CommandText = @"SELECT COUNT(*) FROM Races";
 
-                if(Convert.ToInt32(checkCommand.ExecuteScalar()) > 0){ return; }
+                if(Convert.ToInt32(checkCommand.ExecuteScalar()) > 0)
+                { 
+                    return; 
+                }
             }
 
             int[] raceId = { 1, 2, 3, 4 };//This array contains the id for the current available races. 
@@ -167,7 +176,7 @@ namespace DatabaseUtility
                 using(SqliteCommand insertCommand = connection.CreateCommand())
                 {
                     insertCommand.CommandText = @"INSERT INTO Jobs (Id, Name, Ability, Skill1, Skill2, Skill3) 
-                    VALUES (@id, @name, @ability, s1, s2, s3)";
+                    VALUES (@id, @name, @ability, @s1, @s2, @s3)";
 
                     switch(id)
                     {
@@ -217,19 +226,19 @@ namespace DatabaseUtility
             {
                 int points = 30;//each new character have a total of 30 points to distribute between the 6 main stats.
                 
-                string name = UserHandler.AddName("Name: ");
-                int choosenRaceId = UserHandler.SelectRaceAndJob("race", name);
-                int choosenJobId = UserHandler.SelectRaceAndJob("job", name);
+                string name = Input.AddName("Name: ");
+                int choosenRaceId = Input.SelectRaceAndJob("race", name);
+                int choosenJobId = Input.SelectRaceAndJob("job", name);
 
-                int strength = UserHandler.AddStatValue("Add points: ", "Strength", Character._minStatValue, Character._maxStatValue, ref points);
-                int constitution = UserHandler.AddStatValue("Add points: ", "Constitution", Character._minStatValue, Character._maxStatValue, ref points);
-                int dexterity = UserHandler.AddStatValue("Add points: ", "Dexterity", Character._minStatValue, Character._maxStatValue, ref points);
-                int intelligence = UserHandler.AddStatValue("Add points: ", "Intelligence", Character._minStatValue, Character._maxStatValue, ref points);
-                int wisdom = UserHandler.AddStatValue("Add points: ", "Wisdom", Character._minStatValue, Character._maxStatValue, ref points);
-                int charisma = UserHandler.AddStatValue("Add points: ", "Charisma", Character._minStatValue, Character._maxStatValue, ref points);
+                int strength = Input.AddStatValue("Add points: ", "Strength", Character._minStatValue, Character._maxStatValue, ref points);
+                int constitution = Input.AddStatValue("Add points: ", "Constitution", Character._minStatValue, Character._maxStatValue, ref points);
+                int dexterity = Input.AddStatValue("Add points: ", "Dexterity", Character._minStatValue, Character._maxStatValue, ref points);
+                int intelligence = Input.AddStatValue("Add points: ", "Intelligence", Character._minStatValue, Character._maxStatValue, ref points);
+                int wisdom = Input.AddStatValue("Add points: ", "Wisdom", Character._minStatValue, Character._maxStatValue, ref points);
+                int charisma = Input.AddStatValue("Add points: ", "Charisma", Character._minStatValue, Character._maxStatValue, ref points);
 
                 //before creating the instance of the character class the user will confirm the created character is correct.
-                bool proceed = UserHandler.CharacterConfirmation(name, choosenRaceId, choosenJobId, strength, constitution, dexterity, intelligence, wisdom, charisma);
+                bool proceed = Input.CharacterConfirmation(name, choosenRaceId, choosenJobId, strength, constitution, dexterity, intelligence, wisdom, charisma, ref points);
 
                 if(proceed == true)
                 {
@@ -272,7 +281,7 @@ namespace DatabaseUtility
                     addCharacterCommand.Parameters.AddWithValue("@trait", character.AssignedRace.RaceTrait);
                     addCharacterCommand.Parameters.AddWithValue("@jobId", character.JobId);
                     addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.JobName);
-                    addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.JobAbility);
+                    addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.Ability);
                     addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.Skill1);
                     addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.Skill2);
                     addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.Skill3);
@@ -311,8 +320,9 @@ namespace DatabaseUtility
             }
             else
             {
-                DisplayCharacterTable(GetIdAndName("characters"));
-                var (idExist, selectedId) = UserHandler.IsSelectedIdValid("Delete: ");
+                var characterList = GetIdAndName("characters");
+                DisplayCharacterTable(characterList);
+                var (idExist, selectedId) = Input.IsSelectedIdValid("Delete: ", characterList);
 
                 if(idExist == true)
                 {
@@ -363,19 +373,19 @@ namespace DatabaseUtility
         {
             switch(jobId)
             {
-                case 1: character.SetJob(new Vocation.Fighter(character));
+                case 1: character.SetJob(new Job.Fighter(character));
                 break;
 
-                case 2: character.SetJob(new Vocation.Rouge(character));
+                case 2: character.SetJob(new Job.Rogue(character));
                 break;
 
-                case 3: character.SetJob(new Vocation.Sorcerer(character));
+                case 3: character.SetJob(new Job.Spellcaster(character));
                 break;
 
-                case 4: character.SetJob(new Vocation.Healer(character));
+                case 4: character.SetJob(new Job.Priest(character));
                 break;
 
-                case 5: character.SetJob(new Vocation.Bard(character));
+                case 5: character.SetJob(new Job.Bard(character));
                 break;
 
                 default: Console.WriteLine("\nERROR: Invalid input selected option does not exist.\n");
@@ -401,7 +411,7 @@ namespace DatabaseUtility
                 _ => throw new ArgumentException("Invalid table selection.")
             };
 
-            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            using(SqliteConnection connection = new SqliteConnection(_connection))
             {
                 connection.Open();
 
@@ -432,7 +442,7 @@ namespace DatabaseUtility
         {
             List<Tuple<string, string>> characterStats = new List<Tuple<string, string>>();
 
-            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            using(SqliteConnection connection = new SqliteConnection(_connection))
             {
                 connection.Open();
 
@@ -468,7 +478,7 @@ namespace DatabaseUtility
         {
             List<Tuple<string, string>> characterRaceInfo = new List<Tuple<string, string>>();
 
-            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            using(SqliteConnection connection = new SqliteConnection(_connection))
             {
                 connection.Open();
 
@@ -503,7 +513,7 @@ namespace DatabaseUtility
         {
             List<Tuple<string, string>> characterJobInfo = new List<Tuple<string, string>>();
 
-            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            using(SqliteConnection connection = new SqliteConnection(_connection))
             {
                 connection.Open();
 
@@ -520,7 +530,7 @@ namespace DatabaseUtility
                             string columnName = reader.GetName(i);
                             string columnValue = reader.GetString(i);
 
-                            characterJobInfo.Add(new Tuple<string, string>(ColumnName, columnValue));
+                            characterJobInfo.Add(new Tuple<string, string>(columnName, columnValue));
                         }
                     }
                 }
@@ -558,7 +568,7 @@ namespace DatabaseUtility
         {
             Console.Clear();
 
-            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            using(SqliteConnection connection = new SqliteConnection(_connection))
             {
                 connection.Open();
 
@@ -588,7 +598,7 @@ namespace DatabaseUtility
         {
             Console.Clear();
 
-            using(SqliteConnection connection = new SqliteConnection(_connectionString))
+            using(SqliteConnection connection = new SqliteConnection(_connection))
             {
                 connection.Open();
 
@@ -644,8 +654,9 @@ namespace DatabaseUtility
             }
             else
             {
-                DisplayCharacterTable(GetIdAndName("characters")); 
-                var (idExist, selectedId) = UserHandler.IsSelectedIdValid("Select: ");  
+                var characterList = GetIdAndName("characters");
+                DisplayCharacterTable(characterList); 
+                var (idExist, selectedId) = Input.IsSelectedIdValid("Select: ", characterList);  
 
                  if(idExist == true)
                 {

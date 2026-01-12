@@ -1,10 +1,18 @@
 using System;
 using UserHandler;
+using DatabaseUtility;
+using DataEntry;
 
 namespace DatabaseMainEntry
 {
     class DatabaseOptions
     {
+        public static void OpenDatabase()
+        {
+            Console.WriteLine("Test Succesful. Press any key to continue.");
+            Console.ReadKey();
+        }
+
         ///<summary>
         ///Handles the options for the database functions for the main menu
         ///</summary>
@@ -14,16 +22,16 @@ namespace DatabaseMainEntry
 
             switch(selectedOption)
             {
-                case 1: EntryManager.DisplayCharacterTable(GetIdAndName("characters"))
+                case 1: DatabaseHandler.DisplayCharacterTable(DatabaseHandler.GetIdAndName("characters"));
                 break;
 
-                case 2: UserHandler.Submenu();
+                case 2: Input.ShowSubmenu();
                 break;
 
-                case 3: EntryManager.InsertCharacterToDatabase(CreateCharacter());
+                case 3: DatabaseHandler.InsertCharacterToDatabase(DatabaseHandler.CreateCharacter());
                 break;
                 
-                case 4: EntryManager.DeleteAnEntryVerification();
+                case 4: DatabaseHandler.DeleteAnEntryVerification();
                 break;
 
                 case 5: //TODO: Exit database
@@ -43,16 +51,16 @@ namespace DatabaseMainEntry
 
             switch(selectedOption)
             {
-                case 1: EntryManager.ViewAnEntryVerification();
+                case 1: DatabaseHandler.ViewAnEntryVerification();
                 break;
 
-                case 2: EntryManager.DisplayRaceTable();
+                case 2: DatabaseHandler.DisplayRaceTable();
                 break;
 
-                case 3: EntryManager.DisplayJobTable(); 
+                case 3: DatabaseHandler.DisplayJobTable(); 
                 break;
 
-                case 4: MainMenuOptions();
+                case 4: Input.ShowMainMenu();
                 break;
 
                 default: throw new ArgumentException($"Invalid operation selected", nameof(selectedOption));
