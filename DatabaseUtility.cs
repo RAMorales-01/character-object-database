@@ -188,40 +188,16 @@ namespace DatabaseUtility
                     insertCommand.CommandText = @"INSERT INTO Jobs (Id, Name, Ability, Skill1, Skill2, Skill3) 
                     VALUES (@id, @name, @ability, @s1, @s2, @s3)";
 
-                    switch(job.JobId)
-                    {
-                        case 1: SetJobParameters(insertCommand, job.JobId, job.JobName, job.Ability, job.Skill1, job.Skill2, job.Skill3);
-                        break;
-
-                        case 2: SetJobParameters(insertCommand, job.JobId, job.JobName, job.Ability, job.Skill1, job.Skill2, job.Skill3);
-                        break;
-
-                        case 3: SetJobParameters(insertCommand, job.JobId, job.JobName, job.Ability, job.Skill1, job.Skill2, job.Skill3);
-                        break;
-
-                        case 4: SetJobParameters(insertCommand, job.JobId, job.JobName, job.Ability, job.Skill1, job.Skill2, job.Skill3);
-                        break;
-
-                        case 5: SetJobParameters(insertCommand, job.JobId, job.JobName, job.Ability, job.Skill1, job.Skill2, job.Skill3);
-                        break;
-                    }
-
+                    insertCommand.Parameters.AddWithValue("@id", job.JobId);
+                    insertCommand.Parameters.AddWithValue("@name", job.JobName);
+                    insertCommand.Parameters.AddWithValue("@ability", job.Ability);
+                    insertCommand.Parameters.AddWithValue("@s1", job.Skill1);
+                    insertCommand.Parameters.AddWithValue("@s2", job.Skill2);
+                    insertCommand.Parameters.AddWithValue("@s3", job.Skill3);
+                    
                     insertCommand.ExecuteNonQuery();
                 }
             }
-        }
-
-        ///<summary>
-        ///Inserts each value in the Jobs table
-        ///</summary>
-        private static void SetJobParameters(SqliteCommand insertCommand, int id, string job, string ability, string s1, string s2, string s3)
-        {
-            insertCommand.Parameters.AddWithValue("@id", id);
-            insertCommand.Parameters.AddWithValue("@name", job);
-            insertCommand.Parameters.AddWithValue("@ability", ability);
-            insertCommand.Parameters.AddWithValue("@s1", s1);
-            insertCommand.Parameters.AddWithValue("@s2", s2);
-            insertCommand.Parameters.AddWithValue("@s3", s3);
         }
         #endregion 
 
