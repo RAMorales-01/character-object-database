@@ -116,43 +116,27 @@ namespace DatabaseUtility
                 }
             }
 
-            int[] raceId = { 1, 2, 3, 4 };//This array contains the id for the current available races. 
+            List<Race.RaceBasics> availableRaces = new List<Race.RaceBasics>
+            {
+                new Race.Human(),
+                new Race.Eleven(),
+                new Race.Fiendblood(),
+                new Race.Beastfolk()
+            };
 
-            foreach(int id in raceId)
+            foreach(var race in availableRaces)
             {
                 using(SqliteCommand insertCommand = connection.CreateCommand())
                 {
                     insertCommand.CommandText = @"INSERT INTO Races (Id, Name, Trait) VALUES (@id, @name, @trait)";
 
-                    switch(id)
-                    {
-                        case 1: SetRaceParameters(insertCommand, id, "Human", "+5 on initiative");
-                        break;
-
-                        case 2: SetRaceParameters(insertCommand, id, "Eleven", "+15 healing power");
-                        break;
-
-                        case 3: SetRaceParameters(insertCommand, id, "Fiendblood", "+10 fire resistance");
-                        break;
-
-                        case 4: SetRaceParameters(insertCommand, id, "Beastfolk", "+15 on evasion");
-                        break;
-                    }
+                    insertCommand.Parameters.AddWithValue("@id", race.RaceId);
+                    insertCommand.Parameters.AddWithValue("@name", race.RaceName);
+                    insertCommand.Parameters.AddWithValue("@trait", race.RaceTrait);           
 
                     insertCommand.ExecuteNonQuery();
                 }
-                
             }
-        }
-
-        ///<summary>
-        ///Inserts each value in the Races table
-        ///</summary>
-        private static void SetRaceParameters(SqliteCommand insertCommand, int id, string race, string trait)
-        {
-            insertCommand.Parameters.AddWithValue("@id", id);
-            insertCommand.Parameters.AddWithValue("@name", race);
-            insertCommand.Parameters.AddWithValue("@trait", trait);
         }
 
         ///<summary>
