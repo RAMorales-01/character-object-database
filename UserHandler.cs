@@ -25,18 +25,8 @@ namespace UserHandler
         //Representation for the submenu current options
         private enum Submenu
         {
-            DisplayEntryInfo = 1,
-            DisplayRaces,
+            DisplayRaces = 1,
             DisplayJobs,
-            GoBackToMain
-        }
-
-        //Representation for the submenu current options
-        private enum CharacterMenu
-        {
-            DisplayInfo = 1,
-            CreateNewEntry,
-            DeleteEntry,
             GoBackToMain
         }
 
@@ -121,13 +111,13 @@ namespace UserHandler
         ///</summary>
         public static void ShowSubmenu()
         {
-            int minPermited = (int)Submenu.DisplayEntryInfo;
+            int minPermited = (int)Submenu.DisplayRaces;
             int maxPermited = (int)Submenu.GoBackToMain;
 
             while(true)
             {
                 Console.Clear();
-                Console.WriteLine("\n1- Display character info\n2- Display all Races\n3- Display all Jobs\n4- Go back to main menu");
+                Console.WriteLine("\n1- Display all Races\n2- Display all Jobs\n3- Go back to main menu");
                 Console.Write("\nSelect and option: ");
                 string userInput = Console.ReadLine();
                 
@@ -165,41 +155,21 @@ namespace UserHandler
             }
         }
 
-        ///<summary>
-        ///Display the menu for the existing character entries.
-        ///</summary>
-        public static void ShowExistingCharacterMenu()
+        public static void ShowExistingEntryInfo()
         {
+            bool isThereAnEntry = DatabaseHandler.VerifyTableBeforeOperation();
 
-        }
-
-        ///<summary>
-        ///Method for the option Display character info in the Submenu
-        ///</summary> 
-        public static void DisplaySubmenuCharacterInfo(bool tableVerification)
-        {
-            Console.Clear();
-
-            if(tableVerification == false)
+            while(true)
             {
-                Console.WriteLine("\nThere are currently no character.\n");
-            }
-            else
-            {
-                var characterList = DatabaseHandler.GetIdAndName("characters");
-                DatabaseHandler.DisplayCharacterTable(characterList); 
-                var (idExist, selectedId) = Input.IsSelectedIdValid("Select: ", characterList);  
-
-                if(idExist == true)
+                if(isThereAnEntry == false)
                 {
-                    DatabaseHandler.DisplayCharacterSheet(DatabaseHandler.GetStatsFromId(selectedId));
-                    DatabaseHandler.DisplayCharacterSheet(DatabaseHandler.GetRaceFromId(selectedId));
-                    DatabaseHandler.DisplayCharacterSheet(DatabaseHandler.GetJobFromId(selectedId));
+                    Console.WriteLine("\nThere are currently no characters. Press any key to try again.");
+                    Console.ReadKey();
+                    break;
                 }
                 else
                 {
-                    Console.WriteLine($"ERROR: selected id {selectedId} does not belong to any existing character. Press any key to try again.");
-                    Console.ReadKey();
+                    //TODO: Show available entries and a Method to handle the selected id. 
                 }
             }
         }

@@ -69,16 +69,13 @@ namespace DatabaseMainEntry
         {
             switch(selectedOption)
             {
-                case 1: DatabaseHandler.DisplayCharacterTable(DatabaseHandler.GetIdAndName("characters"));
+                case 1: DatabaseHandler.DisplayRaceTable();
                 break;
 
-                case 2: DatabaseHandler.DisplayRaceTable();
+                case 2: DatabaseHandler.DisplayJobTable(); 
                 break;
 
-                case 3: DatabaseHandler.DisplayJobTable(); 
-                break;
-
-                case 4: Input.ShowMainMenu();
+                case 3: Input.ShowMainMenu();
                 break;
 
                 default: throw new ArgumentException($"Invalid operation selected, please select only one of the presented options", nameof(selectedOption));

@@ -70,7 +70,7 @@ namespace DatabaseUtility
         }
 
         ///<summary>
-        ///Helper method for Input.DisplaySubmenuCharacterInfo, Checks Characters table for entries, if entries equals 0 returns false.
+        ///Checks Characters table for existing entries, if entries equals 0 returns false.
         ///</summary>
         ///<returns>bool, false if table has 0 entries else returns true</returns> 
         public static bool VerifyTableBeforeOperation()
