@@ -11,7 +11,6 @@ namespace UserHandler
     ///</summary>
     class Input
     {
-        //TODO: implement the enum elements in the code
         #region Enums
         //Representation for the main menu current options 
         private enum MainMenu
@@ -26,8 +25,7 @@ namespace UserHandler
         //Representation for the submenu current options
         private enum Submenu
         {
-            DisplayEntryInfo = 1,
-            DisplayRaces,
+            DisplayRaces = 1,
             DisplayJobs,
             GoBackToMain
         }
@@ -67,9 +65,9 @@ namespace UserHandler
             while(true)
             {
                 Console.Clear();
-                Console.WriteLine("Welcome to the main menu, please select an option\n");
+                Console.WriteLine("Welcome user!\n");
                 Console.WriteLine("1- Display list of entries\n2- Display submenu\n3- Create entry\n4- Delete entry\n5- Exit");
-                Console.Write("\n: ");
+                Console.Write("\nSelect and option: ");
                 string userInput = Console.ReadLine();
 
                 var (isValid, selectedOption) = ValidateSelectedOption(userInput, minPermited, maxPermited);
@@ -78,27 +76,26 @@ namespace UserHandler
                 {
                     if(selectedOption == maxPermited)
                     {
-                        string exitDatabase = ChoiceConfirmation("Exit database? [Y/N]: ");
+                        string exitDatabase = ChoiceConfirmation("\nExit database? [Y/N]: ");
                         
                         if(exitDatabase == "yes")
                         {
                             break;
                         }
                     }
-                    else
+                    try
                     {
-                        try
-                        {
-                            DatabaseOptions.MainMenuOptions(selectedOption);
-                        }
-                        catch(ArgumentException ex)
-                        {
-                            Console.WriteLine($"\nAn error occurred: {ex.Message}");
-                        }
-                        catch(Exception ex)
-                        {
-                            Console.WriteLine($"\nA general error occurred: {ex.Message}");
-                        }
+                        DatabaseOptions.MainMenuOptions(selectedOption);
+                    }
+                    catch(ArgumentException ex)
+                    {
+                        Console.WriteLine($"\nAn error occurred: {ex.Message}.Press any key to try again");
+                        Console.ReadKey();
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine($"\nA general error occurred: {ex.Message}. Press any key to try again");
+                        Console.ReadKey();
                     }
                 }
                 else
@@ -114,15 +111,14 @@ namespace UserHandler
         ///</summary>
         public static void ShowSubmenu()
         {
-            int minPermited = (int)Submenu.DisplayEntryInfo;
+            int minPermited = (int)Submenu.DisplayRaces;
             int maxPermited = (int)Submenu.GoBackToMain;
 
             while(true)
             {
-                DatabaseHandler.DisplayCharacterTable(DatabaseHandler.GetIdAndName("characters"));
-
-                Console.WriteLine("\n1- Display character info\n2- Display all Races\n3- Display all Jobs\n4- Go back to main menu");
-                Console.Write("\n: ");
+                Console.Clear();
+                Console.WriteLine("\n1- Display all Races\n2- Display all Jobs\n3- Go back to main menu");
+                Console.Write("\nSelect and option: ");
                 string userInput = Console.ReadLine();
                 
                 var (isValid, selectedOption) = ValidateSelectedOption(userInput, minPermited, maxPermited);
@@ -141,11 +137,13 @@ namespace UserHandler
                         }
                         catch(ArgumentException ex)
                         {
-                            Console.WriteLine($"\nAn error occurred: {ex.Message}");
+                            Console.WriteLine($"\nAn error occurred: {ex.Message}.Press any key to try again");
+                            Console.ReadKey();
                         }
                         catch(Exception ex)
                         {
-                            Console.WriteLine($"\nA general error occurred: {ex.Message}");
+                            Console.WriteLine($"\nA general error occurred: {ex.Message}. Press any key to try again");
+                            Console.ReadKey();
                         }
                     }
                 }
