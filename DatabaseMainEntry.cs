@@ -30,7 +30,7 @@ namespace DatabaseMainEntry
             Thread.Sleep(1500);
             Console.Clear();
             
-            //Input.ShowMainMenu();
+            Input.ShowMainMenu();
              
             Console.Clear();
             Console.Write("\nGOODBYE!\n");
@@ -57,7 +57,7 @@ namespace DatabaseMainEntry
                 case 4: DatabaseHandler.DeleteAnEntryVerification();
                 break;
 
-                default: throw new ArgumentException($"Invalid operation selected", nameof(selectedOption));
+                default: throw new ArgumentException($"Invalid operation selected, please select only one of the presented options", nameof(selectedOption));
             }
         }
 
@@ -67,11 +67,9 @@ namespace DatabaseMainEntry
         ///<param name="selectedOption">int between 1 and 2 for the current available options in the submenu</param>
         public static void SubmenuOptions(int selectedOption)
         {
-            Console.Clear();
-
             switch(selectedOption)
             {
-                case 1: DatabaseHandler.ViewAnEntryVerification();
+                case 1: DatabaseHandler.DisplayCharacterTable(DatabaseHandler.GetIdAndName("characters"));
                 break;
 
                 case 2: DatabaseHandler.DisplayRaceTable();
@@ -83,7 +81,7 @@ namespace DatabaseMainEntry
                 case 4: Input.ShowMainMenu();
                 break;
 
-                default: throw new ArgumentException($"Invalid operation selected", nameof(selectedOption));
+                default: throw new ArgumentException($"Invalid operation selected, please select only one of the presented options", nameof(selectedOption));
             }
         }
     }

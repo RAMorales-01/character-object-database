@@ -70,10 +70,10 @@ namespace DatabaseUtility
         }
 
         ///<summary>
-        ///Check Characters table contains entries, if entries equals 0 returns false.
+        ///Helper method for Input.DisplaySubmenuCharacterInfo, Checks Characters table for entries, if entries equals 0 returns false.
         ///</summary>
         ///<returns>bool, false if table has 0 entries else returns true</returns> 
-        private static bool VerifyTableBeforeOperation()
+        public static bool VerifyTableBeforeOperation()
         {
             using(SqliteConnection connection = new SqliteConnection(_connection))
             {
@@ -119,7 +119,7 @@ namespace DatabaseUtility
             List<Race.RaceBasics> availableRaces = new List<Race.RaceBasics>
             {
                 new Race.Human(),
-                new Race.Eleven(),
+                new Race.Elven(),
                 new Race.Fiendblood(),
                 new Race.Beastfolk()
             };
@@ -364,7 +364,7 @@ namespace DatabaseUtility
         }
         #endregion
 
-        #region Search, Retrieve and Display 
+        #region Search and Retrieve 
         ///<summary>
         ///Retreives id and name of selected table.
         ///</summary>
@@ -408,7 +408,7 @@ namespace DatabaseUtility
         ///</summary>
         ///<param name="characterId">primary key of each existing entry on the table Characters</param>
         ///<returns>a List of Tuple, string for the column name(stat name) and int for the value of each column</returns> 
-        private static List<Tuple<string, string>> GetStatsFromId(int characterId)
+        public static List<Tuple<string, string>> GetStatsFromId(int characterId)
         {
             List<Tuple<string, string>> characterStats = new List<Tuple<string, string>>();
 
@@ -444,7 +444,7 @@ namespace DatabaseUtility
         ///</summary>
         ///<param name="characterId">primary key of each existing entry on the table Characters</param>
         ///<returns>a List of Tuple string for the column name(in this case is "Race") and string for the value inside the column</returns>
-        private static List<Tuple<string, string>> GetRaceFromId(int characterId)
+        public static List<Tuple<string, string>> GetRaceFromId(int characterId)
         {
             List<Tuple<string, string>> characterRaceInfo = new List<Tuple<string, string>>();
 
@@ -479,7 +479,7 @@ namespace DatabaseUtility
         ///</summary>
         ///<param name="characterId">primary key of each existing entry on the table Characters</param>
         ///<returns>a List of Tuple string for the column name("Job name", "Ability", "Skill1" and so on) and string for the value inside the column</returns>
-        private static List<Tuple<string, string>> GetJobFromId(int characterId)
+        public static List<Tuple<string, string>> GetJobFromId(int characterId)
         {
             List<Tuple<string, string>> characterJobInfo = new List<Tuple<string, string>>();
 
@@ -508,7 +508,9 @@ namespace DatabaseUtility
 
             return characterJobInfo;
         }
+        #endregion
 
+        #region Display Tables
         ///<summary>
         ///Display all the current existing entries in Characters table.
         ///</summary>
@@ -517,7 +519,8 @@ namespace DatabaseUtility
         {
             if(characterList.Count == 0)
             {
-                Console.WriteLine("\nThere are currently no characters.\n");
+                Console.WriteLine("\nThere are currently no characters. Press any key to try again.");
+                Console.ReadKey();
             }
             else
             {
@@ -559,6 +562,9 @@ namespace DatabaseUtility
                     }
                 }
             }
+
+            Console.WriteLine("To go back and select another option press any key.");
+            Console.ReadKey();
         }
 
         ///<summary>
@@ -593,13 +599,16 @@ namespace DatabaseUtility
                     }
                 }
             }
+
+            Console.WriteLine("To go back and select another option press any key.");
+            Console.ReadKey();
         }
 
         ///<summary>
         ///Display existing entry information(character name, race, job and 6 main stats).
         ///</summary>
         ///<param name="characterSheet">List of tuple, string(column name) and string(column value)</param>
-        private static void DisplayCharacterSheet(List<Tuple<string, string>> characterSheet)
+        public static void DisplayCharacterSheet(List<Tuple<string, string>> characterSheet)
         {
             Console.Clear();
 

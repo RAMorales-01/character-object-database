@@ -11,7 +11,6 @@ namespace UserHandler
     ///</summary>
     class Input
     {
-        //TODO: implement the enum elements in the code
         #region Enums
         //Representation for the main menu current options 
         private enum MainMenu
@@ -29,6 +28,15 @@ namespace UserHandler
             DisplayEntryInfo = 1,
             DisplayRaces,
             DisplayJobs,
+            GoBackToMain
+        }
+
+        //Representation for the submenu current options
+        private enum CharacterMenu
+        {
+            DisplayInfo = 1,
+            CreateNewEntry,
+            DeleteEntry,
             GoBackToMain
         }
 
@@ -67,9 +75,9 @@ namespace UserHandler
             while(true)
             {
                 Console.Clear();
-                Console.WriteLine("Welcome to the main menu, please select an option\n");
+                Console.WriteLine("Welcome user!\n");
                 Console.WriteLine("1- Display list of entries\n2- Display submenu\n3- Create entry\n4- Delete entry\n5- Exit");
-                Console.Write("\n: ");
+                Console.Write("\nSelect and option: ");
                 string userInput = Console.ReadLine();
 
                 var (isValid, selectedOption) = ValidateSelectedOption(userInput, minPermited, maxPermited);
@@ -78,27 +86,26 @@ namespace UserHandler
                 {
                     if(selectedOption == maxPermited)
                     {
-                        string exitDatabase = ChoiceConfirmation("Exit database? [Y/N]: ");
+                        string exitDatabase = ChoiceConfirmation("\nExit database? [Y/N]: ");
                         
                         if(exitDatabase == "yes")
                         {
                             break;
                         }
                     }
-                    else
+                    try
                     {
-                        try
-                        {
-                            DatabaseOptions.MainMenuOptions(selectedOption);
-                        }
-                        catch(ArgumentException ex)
-                        {
-                            Console.WriteLine($"\nAn error occurred: {ex.Message}");
-                        }
-                        catch(Exception ex)
-                        {
-                            Console.WriteLine($"\nA general error occurred: {ex.Message}");
-                        }
+                        DatabaseOptions.MainMenuOptions(selectedOption);
+                    }
+                    catch(ArgumentException ex)
+                    {
+                        Console.WriteLine($"\nAn error occurred: {ex.Message}.Press any key to try again");
+                        Console.ReadKey();
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine($"\nA general error occurred: {ex.Message}. Press any key to try again");
+                        Console.ReadKey();
                     }
                 }
                 else
@@ -119,10 +126,9 @@ namespace UserHandler
 
             while(true)
             {
-                DatabaseHandler.DisplayCharacterTable(DatabaseHandler.GetIdAndName("characters"));
-
+                Console.Clear();
                 Console.WriteLine("\n1- Display character info\n2- Display all Races\n3- Display all Jobs\n4- Go back to main menu");
-                Console.Write("\n: ");
+                Console.Write("\nSelect and option: ");
                 string userInput = Console.ReadLine();
                 
                 var (isValid, selectedOption) = ValidateSelectedOption(userInput, minPermited, maxPermited);
@@ -141,17 +147,58 @@ namespace UserHandler
                         }
                         catch(ArgumentException ex)
                         {
-                            Console.WriteLine($"\nAn error occurred: {ex.Message}");
+                            Console.WriteLine($"\nAn error occurred: {ex.Message}.Press any key to try again");
+                            Console.ReadKey();
                         }
                         catch(Exception ex)
                         {
-                            Console.WriteLine($"\nA general error occurred: {ex.Message}");
+                            Console.WriteLine($"\nA general error occurred: {ex.Message}. Press any key to try again");
+                            Console.ReadKey();
                         }
                     }
                 }
                 else
                 {
                     Console.WriteLine($"\nINVALID INPUT: expected positive integer between {minPermited} and {maxPermited}. Press any key to go back and try again.");
+                    Console.ReadKey();
+                }
+            }
+        }
+
+        ///<summary>
+        ///Display the menu for the existing character entries.
+        ///</summary>
+        public static void ShowExistingCharacterMenu()
+        {
+
+        }
+
+        ///<summary>
+        ///Method for the option Display character info in the Submenu
+        ///</summary> 
+        public static void DisplaySubmenuCharacterInfo(bool tableVerification)
+        {
+            Console.Clear();
+
+            if(tableVerification == false)
+            {
+                Console.WriteLine("\nThere are currently no character.\n");
+            }
+            else
+            {
+                var characterList = DatabaseHandler.GetIdAndName("characters");
+                DatabaseHandler.DisplayCharacterTable(characterList); 
+                var (idExist, selectedId) = Input.IsSelectedIdValid("Select: ", characterList);  
+
+                if(idExist == true)
+                {
+                    DatabaseHandler.DisplayCharacterSheet(DatabaseHandler.GetStatsFromId(selectedId));
+                    DatabaseHandler.DisplayCharacterSheet(DatabaseHandler.GetRaceFromId(selectedId));
+                    DatabaseHandler.DisplayCharacterSheet(DatabaseHandler.GetJobFromId(selectedId));
+                }
+                else
+                {
+                    Console.WriteLine($"ERROR: selected id {selectedId} does not belong to any existing character. Press any key to try again.");
                     Console.ReadKey();
                 }
             }
