@@ -32,7 +32,6 @@ namespace DatabaseMainEntry
             
             Input.ShowMainMenu();
              
-            Console.Clear();
             Console.Write("\nGOODBYE!\n");
         }
 
@@ -45,7 +44,7 @@ namespace DatabaseMainEntry
 
             switch(selectedOption)
             {
-                case 1: DatabaseHandler.DisplayCharacterTable(DatabaseHandler.GetIdAndName("characters"));
+                case 1: DatabaseHandler.ViewAnEntryVerification();
                 break;
 
                 case 2: Input.ShowSubmenu();

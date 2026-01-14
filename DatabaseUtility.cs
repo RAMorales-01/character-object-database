@@ -629,7 +629,8 @@ namespace DatabaseUtility
 
             if(isValid == false)
             {
-                Console.WriteLine("\nThere are currently no character.\n");
+                Console.WriteLine("\nThere are currently no character. Press any key to continue.\n");
+                Console.ReadKey();
             }
             else
             {

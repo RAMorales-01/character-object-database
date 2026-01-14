@@ -154,25 +154,6 @@ namespace UserHandler
                 }
             }
         }
-
-        public static void ShowExistingEntryInfo()
-        {
-            bool isThereAnEntry = DatabaseHandler.VerifyTableBeforeOperation();
-
-            while(true)
-            {
-                if(isThereAnEntry == false)
-                {
-                    Console.WriteLine("\nThere are currently no characters. Press any key to try again.");
-                    Console.ReadKey();
-                    break;
-                }
-                else
-                {
-                    //TODO: Show available entries and a Method to handle the selected id. 
-                }
-            }
-        }
         #endregion
         
         #region Add Name and Stats 
