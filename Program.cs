@@ -18,13 +18,13 @@ namespace CRUDTest
         static void Main(string[] args)
         {  
             Console.Clear();
-            Console.WriteLine("This program let the user create characters assign stats, select race and job. Delete existing ones, view stats and so on.");
+            Console.WriteLine("This program let the user create characters assign stats, select race and job.\nDelete existing ones, view stats and so on.\n");
             Console.WriteLine("\nPress any key to begin the test.");
             Console.ReadKey(true);
 
-            //DatabaseOptions.OpenDatabase();
+            DatabaseOptions.OpenDatabase();
 
-            //For testing remove after.
+            /*For testing remove after.
             Console.WriteLine();
             Character test = new Character("Alex", 16, 20, 14, 10, 10, 10);
             test.SetRace(new Race.Human(test));
@@ -32,7 +32,7 @@ namespace CRUDTest
 
             Console.WriteLine($"{test.Name}\n{test.AssignedRace.RaceName}\n{test.AssignedRace.RaceTrait}\n{test.AssignedJob.JobName}\n{test.AssignedJob.Ability}\n{test.AssignedJob.Skill1}\n{test.AssignedJob.Skill2}\n{test.AssignedJob.Skill3}");
             Console.WriteLine($"{test.Strength}\n{test.Constitution}\n{test.Dexterity}\n{test.Intelligence}\n{test.Wisdom}\n{test.Charisma}");
-            Console.ReadKey();
+            Console.ReadKey();*/
         }
     }
 }

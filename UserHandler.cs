@@ -68,7 +68,7 @@ namespace UserHandler
                 Console.WriteLine("Welcome user!\n");
                 Console.WriteLine("1- Display list of entries\n2- Display submenu\n3- Create entry\n4- Delete entry\n5- Exit");
                 Console.Write("\nSelect and option: ");
-                string userInput = Console.ReadLine();
+                string? userInput = Console.ReadLine();
 
                 var (isValid, selectedOption) = ValidateSelectedOption(userInput, minPermited, maxPermited);
 
@@ -119,7 +119,7 @@ namespace UserHandler
                 Console.Clear();
                 Console.WriteLine("\n1- Display all Races\n2- Display all Jobs\n3- Go back to main menu");
                 Console.Write("\nSelect and option: ");
-                string userInput = Console.ReadLine();
+                string? userInput = Console.ReadLine();
                 
                 var (isValid, selectedOption) = ValidateSelectedOption(userInput, minPermited, maxPermited);
 
@@ -166,7 +166,7 @@ namespace UserHandler
         {
             const int nameMaxLength = 10;
 
-            string nameInput = string.Empty;
+            string? nameInput = string.Empty;
 
             while(true)
             {
@@ -215,7 +215,7 @@ namespace UserHandler
                 Console.WriteLine($"You have {points} points remaining\n");
                 Console.WriteLine($"Current {statName} --> {minValue}");
                 Console.Write(prompt);
-                string userInput = Console.ReadLine();
+                string? userInput = Console.ReadLine();
 
                 var isInputValid = ValidateSelectedOption(userInput, minValue, maxValue);
 
@@ -343,7 +343,7 @@ namespace UserHandler
                 while(true)
                 {
                     Console.WriteLine($"\nYou added +{statInput} points to the stat of {statName}, is this correct?");
-                    string confirm = ChoiceConfirmation("Y/N: ");
+                    string confirm = ChoiceConfirmation("[Y/N]: ");
 
                     if(String.Equals(confirm, "yes"))
                     {
@@ -370,12 +370,12 @@ namespace UserHandler
         ///</summary>
         ///<param name="prompt">prompts user for input of 'y' or 'n'</param>
         ///<returns>string with value of "yes" or "no"</returns>
-        private static string ChoiceConfirmation(string prompt)
+        public static string ChoiceConfirmation(string prompt)
         {
             while(true)
             {
                 Console.Write(prompt);
-                string userInput = Console.ReadLine().ToLower();
+                string? userInput = Console.ReadLine().ToLower();
 
                 if(string.Equals(userInput, "y", StringComparison.OrdinalIgnoreCase) || string.Equals(userInput, "yes", StringComparison.OrdinalIgnoreCase))
                 {
@@ -433,7 +433,7 @@ namespace UserHandler
                 Console.WriteLine($"Wis: {wisdom}");
                 Console.WriteLine($"Cha: {charisma}\n");
                 
-                string confirm = ChoiceConfirmation("Y/N: ");
+                string confirm = ChoiceConfirmation("[Y/N]: ");
 
                 if(confirm == "yes")
                 {

@@ -293,9 +293,9 @@ namespace DatabaseUtility
             {
                 var characterList = GetIdAndName("characters");
                 DisplayCharacterTable(characterList);
-                var (idExist, selectedId) = Input.IsSelectedIdValid("Delete: ", characterList);
+                var (idExist, selectedId) = Input.IsSelectedIdValid("Delete id: ", characterList);
 
-                string confirm = Input.ChoiceConfirmation($"Delete character with id: {selectedId}?");
+                string confirm = Input.ChoiceConfirmation($"\nWARNING: Delete character with id {selectedId}? [Y/N]: ");
 
                 if(confirm == "yes")
                 {
@@ -303,6 +303,7 @@ namespace DatabaseUtility
                     {
                         DeleteCharacterFromDatabase(selectedId);
                         
+                        Console.Clear();
                         Console.WriteLine("Selected character has been successfully deleted!. Press any key to go back to main menu.");
                         Console.ReadKey();
                     }
@@ -436,8 +437,8 @@ namespace DatabaseUtility
                    {
                         for(int i = 0; i < reader.FieldCount; i++)//FieldCount gets the number of columns in the current row.
                         {
-                            string columnName = reader.GetName(i);
-                            string columnValue = Convert.ToString(reader.GetValue(i));
+                            string? columnName = reader.GetName(i);
+                            string? columnValue = Convert.ToString(reader.GetValue(i));
 
                             characterStats.Add(new Tuple<string, string>(columnName, columnValue));
                         }
@@ -534,7 +535,7 @@ namespace DatabaseUtility
             else
             {
                 Console.Clear();
-                Console.WriteLine("To view a character select his/her id.");
+                Console.WriteLine("Select character id.");
                 Console.WriteLine("\n ----- Characters -----\n");
 
                 foreach(KeyValuePair<int, string> kvp in characterList)
@@ -627,7 +628,7 @@ namespace DatabaseUtility
                 Console.WriteLine($"{sheet.Item1} -- {sheet.Item2}");
             }
 
-            Console.WriteLine("\n");
+            Console.WriteLine();
         }
 
         ///<summary>
@@ -646,13 +647,14 @@ namespace DatabaseUtility
             {
                 var characterList = GetIdAndName("characters");
                 DisplayCharacterTable(characterList); 
-                var (idExist, selectedId) = Input.IsSelectedIdValid("Select: ", characterList);  
+                var (idExist, selectedId) = Input.IsSelectedIdValid("View id: ", characterList);  
 
                  if(idExist == true)
                 {
                     DisplayCharacterSheet(GetStatsFromId(selectedId));
                     DisplayCharacterSheet(GetRaceFromId(selectedId));
                     DisplayCharacterSheet(GetJobFromId(selectedId));
+                    Console.WriteLine("\nPress any key to return to main menu.");
                     Console.ReadKey();
                 }
                 else
