@@ -215,7 +215,7 @@ namespace DatabaseUtility
                     Character character = new Character(name, strength, constitution, dexterity, intelligence, wisdom, charisma);
                     AssignRaceToCharacter(character, choosenRaceId);
                     AssignJobToCharacter(character, choosenJobId);
-                    
+
                     return character;
                 }
             }
@@ -231,32 +231,32 @@ namespace DatabaseUtility
             {
                 connection.Open();
 
-                using(SqliteCommand addCharacterCommand = connection.CreateCommand())
+                using(SqliteCommand addCharacter = connection.CreateCommand())
                 {
-                    addCharacterCommand.CommandText = @"INSERT INTO Characters (Name, Strength, Constitution, Dexterity, Intelligence, Wisdom, Charisma,
+                    addCharacter.CommandText = @"INSERT INTO Characters (Name, Strength, Constitution, Dexterity, Intelligence, Wisdom, Charisma,
                     RaceId, Race, Trait, 
                     JobId, Job, Ability, Skill1, Skill2, Skill3)
                     VALUES (@name, @strength, @constitution, @dexterity, @intelligence, @wisdom, @charisma,
                     @raceId, @race, @trait,
                     @jobId, @job, @ability, @s1, @s2, @s3)";
-                    addCharacterCommand.Parameters.AddWithValue("@name", character.Name);
-                    addCharacterCommand.Parameters.AddWithValue("@strength", character.Strength);
-                    addCharacterCommand.Parameters.AddWithValue("@constitution", character.Constitution);
-                    addCharacterCommand.Parameters.AddWithValue("@dexterity", character.Dexterity);
-                    addCharacterCommand.Parameters.AddWithValue("@intelligence", character.Intelligence);
-                    addCharacterCommand.Parameters.AddWithValue("@wisdom", character.Wisdom);
-                    addCharacterCommand.Parameters.AddWithValue("@charisma", character.Charisma);
-                    addCharacterCommand.Parameters.AddWithValue("@raceId", character.RaceId);
-                    addCharacterCommand.Parameters.AddWithValue("@race", character.AssignedRace.RaceName);
-                    addCharacterCommand.Parameters.AddWithValue("@trait", character.AssignedRace.RaceTrait);
-                    addCharacterCommand.Parameters.AddWithValue("@jobId", character.JobId);
-                    addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.JobName);
-                    addCharacterCommand.Parameters.AddWithValue("@ability", character.AssignedJob.Ability);
-                    addCharacterCommand.Parameters.AddWithValue("@s1", character.AssignedJob.Skill1);
-                    addCharacterCommand.Parameters.AddWithValue("@s2", character.AssignedJob.Skill2);
-                    addCharacterCommand.Parameters.AddWithValue("@s3", character.AssignedJob.Skill3);
+                    addCharacter.Parameters.AddWithValue("@name", character.Name);
+                    addCharacter.Parameters.AddWithValue("@strength", character.Strength);
+                    addCharacter.Parameters.AddWithValue("@constitution", character.Constitution);
+                    addCharacter.Parameters.AddWithValue("@dexterity", character.Dexterity);
+                    addCharacter.Parameters.AddWithValue("@intelligence", character.Intelligence);
+                    addCharacter.Parameters.AddWithValue("@wisdom", character.Wisdom);
+                    addCharacter.Parameters.AddWithValue("@charisma", character.Charisma);
+                    addCharacter.Parameters.AddWithValue("@raceId", character.RaceId);
+                    addCharacter.Parameters.AddWithValue("@race", character.AssignedRace.RaceName);
+                    addCharacter.Parameters.AddWithValue("@trait", character.AssignedRace.RaceTrait);
+                    addCharacter.Parameters.AddWithValue("@jobId", character.JobId);
+                    addCharacter.Parameters.AddWithValue("@job", character.AssignedJob.JobName);
+                    addCharacter.Parameters.AddWithValue("@ability", character.AssignedJob.Ability);
+                    addCharacter.Parameters.AddWithValue("@s1", character.AssignedJob.Skill1);
+                    addCharacter.Parameters.AddWithValue("@s2", character.AssignedJob.Skill2);
+                    addCharacter.Parameters.AddWithValue("@s3", character.AssignedJob.Skill3);
 
-                    addCharacterCommand.ExecuteNonQuery();
+                    addCharacter.ExecuteNonQuery();
                 }
             }
         }
@@ -304,7 +304,7 @@ namespace DatabaseUtility
                         DeleteCharacterFromDatabase(selectedId);
                         
                         Console.Clear();
-                        Console.WriteLine("Selected character has been successfully deleted!. Press any key to go back to main menu.");
+                        Console.WriteLine("\n\nSelected character has been successfully deleted!. Press any key to go back to main menu.");
                         Console.ReadKey();
                     }
                     else
@@ -426,19 +426,19 @@ namespace DatabaseUtility
             {
                 connection.Open();
 
-                SqliteCommand retrieveStatsCommand = connection.CreateCommand();
-                retrieveStatsCommand.CommandText = @"SELECT Strength, Constitution, Dexterity, Intelligence, Wisdom,
+                SqliteCommand retrieveStats = connection.CreateCommand();
+                retrieveStats.CommandText = @"SELECT Strength, Constitution, Dexterity, Intelligence, Wisdom,
                 Charisma FROM Characters WHERE id = @id";
-                retrieveStatsCommand.Parameters.AddWithValue("@id", characterId);
+                retrieveStats.Parameters.AddWithValue("@id", characterId);
                 
-                using(SqliteDataReader reader = retrieveStatsCommand.ExecuteReader())
+                using(SqliteDataReader reader = retrieveStats.ExecuteReader())
                 {
-                   while(reader.Read())
+                   if(reader.Read())
                    {
                         for(int i = 0; i < reader.FieldCount; i++)//FieldCount gets the number of columns in the current row.
                         {
-                            string? columnName = reader.GetName(i);
-                            string? columnValue = Convert.ToString(reader.GetValue(i));
+                            string columnName = reader.GetName(i);
+                            string columnValue = reader.GetValue(i)?.ToString() ?? string.Empty;
 
                             characterStats.Add(new Tuple<string, string>(columnName, columnValue));
                         }
@@ -468,12 +468,12 @@ namespace DatabaseUtility
 
                 using(SqliteDataReader reader = retrieveRace.ExecuteReader())
                 {
-                    while(reader.Read())
+                    if(reader.Read())
                     {
                         for(int i = 0; i < reader.FieldCount; i++)
                         {
-                            string columnName = reader.GetName(i);//gets name of column --> Race
-                            string columnValue = reader.GetString(i);//gets value inside the column Race(for example "Human")
+                            string columnName = reader.GetName(i);
+                            string columnValue = reader.GetValue(i)?.ToString() ?? string.Empty;
 
                             characterRaceInfo.Add(new Tuple<string, string>(columnName, columnValue));
                         }
@@ -503,12 +503,12 @@ namespace DatabaseUtility
 
                 using(SqliteDataReader reader = retrieveJob.ExecuteReader())
                 {
-                    while(reader.Read())
+                    if(reader.Read())
                     {
                         for(int i = 0; i < reader.FieldCount; i++)
                         {
                             string columnName = reader.GetName(i);
-                            string columnValue = reader.GetString(i);
+                            string columnValue = reader.GetValue(i)?.ToString() ?? string.Empty;
 
                             characterJobInfo.Add(new Tuple<string, string>(columnName, columnValue));
                         }
@@ -621,8 +621,6 @@ namespace DatabaseUtility
         ///<param name="characterSheet">List of tuple, string(column name) and string(column value)</param>
         public static void DisplayCharacterSheet(List<Tuple<string, string>> characterSheet)
         {
-            Console.Clear();
-
             foreach(var sheet in characterSheet)
             {
                 Console.WriteLine($"{sheet.Item1} -- {sheet.Item2}");
@@ -651,9 +649,12 @@ namespace DatabaseUtility
 
                  if(idExist == true)
                 {
+                    Console.Clear();
+
                     DisplayCharacterSheet(GetStatsFromId(selectedId));
                     DisplayCharacterSheet(GetRaceFromId(selectedId));
                     DisplayCharacterSheet(GetJobFromId(selectedId));
+                    
                     Console.WriteLine("\nPress any key to return to main menu.");
                     Console.ReadKey();
                 }

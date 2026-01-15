@@ -23,16 +23,6 @@ namespace CRUDTest
             Console.ReadKey(true);
 
             DatabaseOptions.OpenDatabase();
-
-            /*For testing remove after.
-            Console.WriteLine();
-            Character test = new Character("Alex", 16, 20, 14, 10, 10, 10);
-            test.SetRace(new Race.Human(test));
-            test.SetJob(new Job.Fighter(test));
-
-            Console.WriteLine($"{test.Name}\n{test.AssignedRace.RaceName}\n{test.AssignedRace.RaceTrait}\n{test.AssignedJob.JobName}\n{test.AssignedJob.Ability}\n{test.AssignedJob.Skill1}\n{test.AssignedJob.Skill2}\n{test.AssignedJob.Skill3}");
-            Console.WriteLine($"{test.Strength}\n{test.Constitution}\n{test.Dexterity}\n{test.Intelligence}\n{test.Wisdom}\n{test.Charisma}");
-            Console.ReadKey();*/
         }
     }
 }
