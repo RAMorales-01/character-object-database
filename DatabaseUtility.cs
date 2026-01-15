@@ -20,7 +20,7 @@ namespace DatabaseUtility
         ///</summary>
         public static void VerifyDatabaseIsCreated()
         {
-            string folder = Path.GetDirectoryName(_databasePathFile);
+            string? folder = Path.GetDirectoryName(_databasePathFile);
 
             if(!string.IsNullOrEmpty(folder))
             { 
@@ -83,7 +83,7 @@ namespace DatabaseUtility
                 {
                     checkCommand.CommandText = @"SELECT COUNT(*) FROM Characters";
 
-                    long count = (long)checkCommand.ExecuteScalar();
+                    long count = (long?)checkCommand.ExecuteScalar() ?? 0;//Safely handles null and uses the proper SQLite long type
 
                     if(count == 0)
                     {
@@ -236,7 +236,7 @@ namespace DatabaseUtility
                     addCharacterCommand.CommandText = @"INSERT INTO Characters (Name, Strength, Constitution, Dexterity, Intelligence, Wisdom, Charisma,
                     RaceId, Race, Trait, 
                     JobId, Job, Ability, Skill1, Skill2, Skill3)
-                    VALUES (@name, @strength, @constitution, @dexterity, @intelligence, @wisdom, @charaisma
+                    VALUES (@name, @strength, @constitution, @dexterity, @intelligence, @wisdom, @charisma,
                     @raceId, @race, @trait,
                     @jobId, @job, @ability, @s1, @s2, @s3)";
                     addCharacterCommand.Parameters.AddWithValue("@name", character.Name);
@@ -251,10 +251,11 @@ namespace DatabaseUtility
                     addCharacterCommand.Parameters.AddWithValue("@trait", character.AssignedRace.RaceTrait);
                     addCharacterCommand.Parameters.AddWithValue("@jobId", character.JobId);
                     addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.JobName);
-                    addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.Ability);
-                    addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.Skill1);
-                    addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.Skill2);
-                    addCharacterCommand.Parameters.AddWithValue("@job", character.AssignedJob.Skill3);
+                    addCharacterCommand.Parameters.AddWithValue("@ability", character.AssignedJob.Ability);
+                    addCharacterCommand.Parameters.AddWithValue("@s1", character.AssignedJob.Skill1);
+                    addCharacterCommand.Parameters.AddWithValue("@s2", character.AssignedJob.Skill2);
+                    addCharacterCommand.Parameters.AddWithValue("@s3", character.AssignedJob.Skill3);
+
                     addCharacterCommand.ExecuteNonQuery();
                 }
             }
@@ -294,15 +295,23 @@ namespace DatabaseUtility
                 DisplayCharacterTable(characterList);
                 var (idExist, selectedId) = Input.IsSelectedIdValid("Delete: ", characterList);
 
-                if(idExist == true)
+                string confirm = Input.ChoiceConfirmation($"Delete character with id: {selectedId}?");
+
+                if(confirm == "yes")
                 {
-                    DeleteCharacterFromDatabase(selectedId);
+                    if(idExist == true)
+                    {
+                        DeleteCharacterFromDatabase(selectedId);
+                        
+                        Console.WriteLine("Selected character has been successfully deleted!. Press any key to go back to main menu.");
+                        Console.ReadKey();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"ERROR: selected id {selectedId} does not belong to any existing character. Press any key to try again.");
+                        Console.ReadKey();
+                    }    
                 }
-                else
-                {
-                    Console.WriteLine($"ERROR: selected id {selectedId} does not belong to any existing character. Press any key to try again.");
-                    Console.ReadKey();
-                }    
             }
         }
         #endregion
@@ -525,6 +534,7 @@ namespace DatabaseUtility
             else
             {
                 Console.Clear();
+                Console.WriteLine("To view a character select his/her id.");
                 Console.WriteLine("\n ----- Characters -----\n");
 
                 foreach(KeyValuePair<int, string> kvp in characterList)
@@ -643,6 +653,7 @@ namespace DatabaseUtility
                     DisplayCharacterSheet(GetStatsFromId(selectedId));
                     DisplayCharacterSheet(GetRaceFromId(selectedId));
                     DisplayCharacterSheet(GetJobFromId(selectedId));
+                    Console.ReadKey();
                 }
                 else
                 {

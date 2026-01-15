@@ -270,9 +270,10 @@ namespace UserHandler
 
             while(true)
             {
+                Console.Clear();
                 DisplayListOptions(options); 
                 Console.WriteLine($"\nChoose {name} {typeInfo}");
-                var (isValid, selectedId) = Input.IsSelectedIdValid("Select: ", DatabaseHandler.GetIdAndName(typeInfo));
+                var (isValid, selectedId) = Input.IsSelectedIdValid("Select: ", DatabaseHandler.GetIdAndName("races"));
 
                 if(isValid)
                 {
@@ -434,7 +435,7 @@ namespace UserHandler
                 
                 string confirm = ChoiceConfirmation("Y/N: ");
 
-                if(String.Equals(confirm, "yes"))
+                if(confirm == "yes")
                 {
                     return true;
                 }
@@ -508,7 +509,7 @@ namespace UserHandler
                 }
                 else
                 {
-                    Console.WriteLine("\nERROR:invalid input expected positive integer(Character Id). Press any key to try again.");
+                    Console.WriteLine("\nERROR:invalid input expected positive integer. Press any key to try again.");
                 }
             }
         }
