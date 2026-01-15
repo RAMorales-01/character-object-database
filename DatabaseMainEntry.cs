@@ -31,8 +31,9 @@ namespace DatabaseMainEntry
             Console.Clear();
             
             Input.ShowMainMenu();
-             
-            Console.Write("\nGOODBYE!\n");
+            
+            Console.Clear();
+            Console.Write("\n\nGOODBYE!\n");
         }
 
         ///<summary>

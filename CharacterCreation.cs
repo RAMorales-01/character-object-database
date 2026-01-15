@@ -36,9 +36,9 @@ namespace CharacterCreation
         public int Intelligence {get; private set;}
         public int Wisdom {get; private set;}
         public int Charisma {get; private set;}
-        public Race.RaceBasics AssignedRace {get; set;}
+        public Race.RaceBasics AssignedRace {get; set;} = null!;
         public int RaceId {get; set;}
-        public Job.JobBasics AssignedJob {get; set;}
+        public Job.JobBasics AssignedJob {get; set;} = null!;
         public int JobId {get; set;}
         #endregion
         
