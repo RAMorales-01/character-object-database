@@ -1,9 +1,5 @@
 ﻿using System;
 using DatabaseMainEntry;
-//for testing remove after.
-using CharacterCreation;
-using RaceSelection;
-using JobSelection;
 
 namespace CRUDTest
 {
