@@ -29,7 +29,7 @@ namespace UserHandler
             DisplayJobs,
             GoBackToMain
         }
-
+        
         //Representation for the current available races for the character
         private enum Races
         {
@@ -152,6 +152,26 @@ namespace UserHandler
                     Console.WriteLine($"\nINVALID INPUT: expected positive integer between {minPermited} and {maxPermited}. Press any key to go back and try again.");
                     Console.ReadKey();
                 }
+            }
+        }
+
+        public static void ShowSubmenuAdditionalOptions()
+        {
+            Console.WriteLine($"\nTo view more information select an id.");
+            
+            var raceList = DatabaseHandler.GetIdAndName("races");
+            var (idExist, selectedId) = IsSelectedIdValid("View id: ", raceList);
+
+            if(idExist == true)
+            {
+                //TODO: Method that displays the additional information of the selected id.
+                Console.WriteLine("\nTEST: Successful!. Press any key to continue");
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.WriteLine($"ERROR: selected id {selectedId} does not belong to any existing character. Press any key to try again.");
+                Console.ReadKey();
             }
         }
         #endregion
@@ -484,21 +504,20 @@ namespace UserHandler
         }
 
         ///<summary>
-        ///Validates that the selected character entry exist in the Characters table.
+        ///Validates that the selected id exist in table(Characters, Races or Jobs).
         ///</summary>
         ///<param name="prompt">prompts user to enter the id for the selected operation</param>
-        ///<param name="characterList">Dictionary with character id(key) and name of the character(value)</param>
+        ///<param name="list">Dictionary with id(key) and name of the id(value)</param>
         ///<returns>Tupel, boolean if true id exist inside the table else returns false, integer of selected the id</returns>
-        public static (bool exist, int characterId) IsSelectedIdValid(string prompt, Dictionary<int, string> characterList)
+        public static (bool exist, int selectedId) IsSelectedIdValid(string prompt, Dictionary<int, string> list)
         {
             while(true)
             {
-                Console.WriteLine("\n");
                 Console.Write(prompt);
 
                 if(int.TryParse(Console.ReadLine(), out int userInput))
                 {
-                    if(characterList.ContainsKey(userInput))
+                    if(list.ContainsKey(userInput))
                     {
                         return (true, userInput);
                     }

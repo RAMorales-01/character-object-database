@@ -69,7 +69,7 @@ namespace DatabaseMainEntry
         {
             switch(selectedOption)
             {
-                case 1: DatabaseHandler.DisplayRaceTable();
+                case 1: DatabaseHandler.ViewRaceInformation();
                 break;
 
                 case 2: DatabaseHandler.DisplayJobTable(); 
