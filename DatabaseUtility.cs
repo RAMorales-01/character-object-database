@@ -548,7 +548,7 @@ namespace DatabaseUtility
         ///<summary>
         ///Display all the info of the Races table.
         ///</summary>
-        public static void DisplayRaceTable()
+        private static void DisplayRaceTable()
         {
             Console.Clear();
 
@@ -573,9 +573,6 @@ namespace DatabaseUtility
                     }
                 }
             }
-
-            Console.WriteLine("To go back and select another option press any key.");
-            Console.ReadKey();
         }
 
         ///<summary>
@@ -647,7 +644,7 @@ namespace DatabaseUtility
                 DisplayCharacterTable(characterList); 
                 var (idExist, selectedId) = Input.IsSelectedIdValid("View id: ", characterList);  
 
-                 if(idExist == true)
+                if(idExist == true)
                 {
                     Console.Clear();
 
@@ -663,6 +660,23 @@ namespace DatabaseUtility
                     Console.WriteLine($"ERROR: selected id {selectedId} does not belong to any existing character. Press any key to try again.");
                     Console.ReadKey();
                 } 
+            }
+        }
+
+        public static void ViewRaceInformation()
+        {
+            while(true)
+            {
+                Console.Clear();
+                DisplayRaceTable();
+                Input.ShowSubmenuAdditionalOptions();
+
+                string confirm = Input.ChoiceConfirmation($"\nView information of another id? [Y/N]: ");
+
+                if(confirm == "no")
+                {
+                    break;
+                }
             }
         }
         #endregion
